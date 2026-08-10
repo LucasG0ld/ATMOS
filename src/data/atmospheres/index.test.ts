@@ -37,4 +37,16 @@ describe("atmosphere catalog", () => {
     expect(new Set(ids).size).toBe(ids.length);
     expect(new Set(slugs).size).toBe(slugs.length);
   });
+
+  it("provides paired responsive visuals for every new atmosphere", () => {
+    for (const atmosphere of [quietCoffeeShop, deepForest, fireplace]) {
+      expect(atmosphere.visuals.backgroundSrc).toMatch(
+        new RegExp(`/images/atmospheres/${atmosphere.slug}-desktop\\.webp$`),
+      );
+      expect(atmosphere.visuals.mobileBackgroundSrc).toMatch(
+        new RegExp(`/images/atmospheres/${atmosphere.slug}-mobile\\.webp$`),
+      );
+      expect(atmosphere.visuals.mobileFocalPoint).toBeDefined();
+    }
+  });
 });

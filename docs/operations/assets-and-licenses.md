@@ -38,6 +38,7 @@ Refuser les extractions YouTube, Spotify, réseaux sociaux, œuvres dont l’aut
 - Conserver cadrage original et point focal utile.
 - Supprimer les métadonnées inutiles lors de l’export web.
 - Ne pas agrandir artificiellement une source insuffisante.
+- Déclarer explicitement toute génération par IA, archiver prompt, outil, date, empreintes et conditions applicables ; ne jamais la présenter comme une création photographique humaine.
 
 ## Fonts et icônes
 

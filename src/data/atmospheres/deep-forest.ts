@@ -1,4 +1,5 @@
 import { defineAtmosphere } from "./define-atmosphere";
+import { withBasePath } from "../../config/site";
 
 export const deepForest = defineAtmosphere({
   id: "deep-forest",
@@ -17,8 +18,13 @@ export const deepForest = defineAtmosphere({
     focus: "#dce8b7",
   },
   visuals: {
+    backgroundSrc: withBasePath("/images/atmospheres/deep-forest-desktop.webp"),
+    mobileBackgroundSrc: withBasePath(
+      "/images/atmospheres/deep-forest-mobile.webp",
+    ),
     backgroundAlt: "",
     focalPoint: { x: 52, y: 42 },
+    mobileFocalPoint: { x: 50, y: 50 },
     fallbackBackground:
       "radial-gradient(circle at 48% 18%, rgb(176 194 141 / 20%) 0, transparent 22rem), radial-gradient(circle at 72% 66%, rgb(39 78 52 / 34%) 0, transparent 32rem), linear-gradient(128deg, #09110c 0%, #193022 54%, #0b1710 100%)",
   },

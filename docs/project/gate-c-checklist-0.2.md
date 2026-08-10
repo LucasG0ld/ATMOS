@@ -18,7 +18,7 @@
 
 ## Visuels et audio
 
-- [ ] Chaque nouvelle ambiance possède fallback, visuel ou décision sans image, crédits et revue responsive.
+- [x] Chaque nouvelle ambiance possède fallback, visuel ou décision sans image, crédits et revue responsive.
 - [ ] Deux ou trois couches licenciées, bouclées et mixées par ambiance.
 - [ ] Écoute longue individuelle et transitions croisées sans clic ni saturation.
 - [ ] Échec d’une couche ou d’une ambiance récupérable sans son résiduel.

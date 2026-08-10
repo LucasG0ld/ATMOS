@@ -8,6 +8,7 @@
 }
 
 .background,
+.picture,
 .haze,
 .rain,
 .veil {
@@ -17,10 +18,26 @@
 }
 
 .background {
-  z-index: -4;
+  z-index: -5;
   background: var(--atmos-visual-background);
   background-position: var(--atmos-focal-x) var(--atmos-focal-y);
   background-size: cover;
+  transition:
+    transform var(--duration-scene) var(--ease-out),
+    filter var(--duration-scene) var(--ease-out);
+}
+
+.picture {
+  z-index: -4;
+  overflow: hidden;
+}
+
+.visual {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--atmos-focal-x) var(--atmos-focal-y);
+  animation: visualIn var(--duration-reveal) var(--ease-out) both;
   transition:
     transform var(--duration-scene) var(--ease-out),
     filter var(--duration-scene) var(--ease-out);
@@ -72,9 +89,19 @@
 }
 
 .scene:has([data-atmosphere-link]:is(:hover, :focus-visible, :active))
-  .background {
+  :is(.background, .visual) {
   filter: brightness(1.08) saturate(1.04);
   transform: scale(1.025);
+}
+
+@keyframes visualIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .scene:has([data-atmosphere-link]:is(:hover, :focus-visible, :active)) .haze {
@@ -82,6 +109,10 @@
 }
 
 @media (max-width: 48rem) {
+  .visual {
+    object-position: var(--atmos-mobile-focal-x) var(--atmos-mobile-focal-y);
+  }
+
   .haze {
     background:
       linear-gradient(180deg, rgb(5 10 15 / 32%), rgb(5 10 15 / 68%)),
@@ -106,12 +137,17 @@
 
 @media (prefers-reduced-motion: reduce) {
   .background,
+  .visual,
   .haze {
     transition-duration: 0ms;
   }
 
   .scene:has([data-atmosphere-link]:is(:hover, :focus-visible, :active))
-    .background {
+    :is(.background, .visual) {
     transform: none;
+  }
+
+  .visual {
+    animation: none;
   }
 }

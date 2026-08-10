@@ -22,6 +22,7 @@
     "smoke:production": "node scripts/smoke-production.mjs",
     "audio:prepare": "node scripts/prepare-audio.mjs && node scripts/validate-audio.mjs",
     "audio:check": "node scripts/validate-audio.mjs",
+    "images:check": "node scripts/validate-image-assets.mjs",
     "budget:check": "node scripts/validate-build-budgets.mjs",
     "audit:prod": "npm audit --omit=dev",
     "visual:capture": "npm run build && node scripts/capture-visual-references.mjs",

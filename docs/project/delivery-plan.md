@@ -193,7 +193,7 @@ Décider explicitement si l’interface satisfait les principes du brief. Corrig
 
 ## Lot 11 — Identités visuelles
 
-**Statut : en attente.**
+**Statut : terminé le 2026-08-10.**
 
 ### Livrables
 

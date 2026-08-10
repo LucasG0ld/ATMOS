@@ -46,6 +46,11 @@ jobs:
         env:
           FFMPEG_PATH: ffmpeg
 
+      - name: Check visual assets
+        run: npm run images:check
+        env:
+          FFMPEG_PATH: ffmpeg
+
       - name: Build
         run: npm run build
 

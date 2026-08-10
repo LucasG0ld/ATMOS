@@ -71,15 +71,16 @@
 
 ## Statut des actifs
 
-| Ambiance          | Fallback CSS | Visuel licencié | Audio licencié | Mix validé | Intégrable       |
-| ----------------- | ------------ | --------------- | -------------- | ---------- | ---------------- |
-| Rainy Apartment   | validé       | non requis 0.1  | validé         | validé     | oui              |
-| Quiet Coffee Shop | validé Lot 9 | à sourcer       | à sourcer      | non        | données et route |
-| Deep Forest       | validé Lot 9 | à sourcer       | à sourcer      | non        | données et route |
-| Fireplace         | validé Lot 9 | à sourcer       | à sourcer      | non        | données et route |
+| Ambiance          | Fallback CSS | Visuel licencié | Audio licencié | Mix validé | Intégrable            |
+| ----------------- | ------------ | --------------- | -------------- | ---------- | --------------------- |
+| Rainy Apartment   | validé       | non requis 0.1  | validé         | validé     | oui                   |
+| Quiet Coffee Shop | validé Lot 9 | validé Lot 11   | à sourcer      | non        | visuel oui, audio non |
+| Deep Forest       | validé Lot 9 | validé Lot 11   | à sourcer      | non        | visuel oui, audio non |
+| Fireplace         | validé Lot 9 | validé Lot 11   | à sourcer      | non        | visuel oui, audio non |
 
 ## Gate créative
 
-Avant le Lot 11, valider pour chaque ambiance : palette, description, fallback,
-composition desktop/mobile et absence de cliché visuel. Avant le Lot 12, valider
-séparément chaque source, licence, couche, durée cible et intention de mix.
+La gate visuelle du Lot 11 est validée : palette, description, fallback,
+composition desktop/mobile, provenance et absence de cliché ont été revus
+séparément. Avant le Lot 12, valider chaque source audio, licence, couche, durée
+cible et intention de mix.

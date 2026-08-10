@@ -8,9 +8,9 @@ Le projet démarre par un prototype visuel complet de **Rainy Apartment**. Le mo
 
 ## État du projet
 
-- Phase actuelle : MVP 0.1 publié ; Lots 8 à 10 du MVP 0.2 terminés sur `mvp-0.2`.
-- Code applicatif : accueil éditorial à quatre destinations, previews visuelles et navigation interne accessible ; audio Rainy Apartment actif et états de préparation génériques pour les trois nouvelles ambiances.
-- Prochaine étape : Lot 11 — identités visuelles.
+- Phase actuelle : MVP 0.1 publié ; Lots 8 à 11 du MVP 0.2 terminés sur `mvp-0.2`.
+- Code applicatif : catalogue à quatre destinations, navigation accessible et identités visuelles responsive finalisées ; audio Rainy Apartment actif et états de préparation génériques pour les trois nouvelles ambiances.
+- Prochaine étape : Lot 12 — actifs et mixages audio.
 - Langue de l’interface : anglais.
 - Langue de la documentation : français.
 
@@ -55,6 +55,7 @@ npm run lint        # exécute ESLint
 npm run typecheck   # vérifie TypeScript sans émission
 npm run test        # exécute les tests une fois
 npm run audio:check # contrôle formats, durées, jointures et budget audio
+npm run images:check # contrôle dimensions et budgets des visuels responsive
 npm run build       # crée le build de production
 npm run budget:check # contrôle les budgets JS, CSS et fonts après build
 npm run test:e2e    # exécute la recette sur cinq profils navigateur/mobile

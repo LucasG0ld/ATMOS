@@ -10,12 +10,18 @@ export type AtmosphereTheme = {
 
 export type AtmosphereVisuals = {
   backgroundSrc?: string;
+  mobileBackgroundSrc?: string;
   backgroundAlt: string;
   focalPoint: {
     x: number;
     y: number;
   };
+  mobileFocalPoint?: {
+    x: number;
+    y: number;
+  };
   fallbackBackground: string;
+  texture?: "rain";
 };
 
 export type SoundLayer = {

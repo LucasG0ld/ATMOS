@@ -133,3 +133,16 @@ peuvent entrer dans le parcours immédiat.
 - Les images non actives restent hors chemin critique, à l’exception d’une preview.
 - Une régression de plus de 10 % de LCP, TBT ou taille JS par rapport à 0.1 exige correction ou exception documentée.
 - Le test mémoire mesure au minimum dix changements successifs et vérifie le retour au régime actif + cible.
+
+### Mesure des identités visuelles — Lot 11
+
+| Ambiance          | Desktop 1536 × 864 | Mobile 640 × 1024 |     Total |
+| ----------------- | -----------------: | ----------------: | --------: |
+| Quiet Coffee Shop |           44,3 Kio |          24,6 Kio |  68,9 Kio |
+| Deep Forest       |          220,8 Kio |         130,3 Kio | 351,1 Kio |
+| Fireplace         |           60,3 Kio |          37,3 Kio |  97,6 Kio |
+
+Les six exports totalisent 517,5 Kio. Une page ne sélectionne qu’une variante
+via `<picture>` ; le fallback CSS reste visible avant ou en cas d’échec. Chaque
+fichier demeure sous la cible de 500 Kio et le contrôle `npm run images:check`
+est exécuté en CI.

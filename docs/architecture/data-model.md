@@ -26,12 +26,18 @@ type AtmosphereTheme = {
 
 type AtmosphereVisuals = {
   backgroundSrc?: string;
+  mobileBackgroundSrc?: string;
   backgroundAlt: string;
   focalPoint: {
     x: number;
     y: number;
   };
+  mobileFocalPoint?: {
+    x: number;
+    y: number;
+  };
   fallbackBackground: string;
+  texture?: "rain";
 };
 
 type SoundLayer = {
@@ -54,6 +60,8 @@ type Atmosphere = {
 ```
 
 `defaultVolume` est compris entre 0 et 1 dans le domaine audio. L’UI peut convertir en pourcentage. `displayName` autorise une composition visuelle sur plusieurs lignes sans altérer le nom accessible. `fallbackBackground` garantit une scène complète avant ou sans photographie. Pour une image purement atmosphérique sans information, `backgroundAlt` doit être vide ; le titre fournit alors le contexte.
+
+`mobileBackgroundSrc` est une variante réellement recadrée, pas une miniature dupliquée. Elle exige `backgroundSrc` et peut disposer d’un point focal propre. `texture` réserve les effets décoratifs à l’ambiance qui les déclare ; aucune pluie ne doit apparaître implicitement sur les autres scènes.
 
 ## Exemple Rainy Apartment
 

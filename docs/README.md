@@ -44,6 +44,7 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [Sécurité et vie privée](operations/security-and-privacy.md).
 - [Actifs et licences](operations/assets-and-licenses.md).
 - [Actifs audio Rainy Apartment](operations/audio-assets.md) — sources, preuves, transformations et validation.
+- [Actifs visuels 0.2](operations/visual-assets-0.2.md) — prompts, droits, transformations et empreintes.
 - [Maintenance et exploitation](operations/maintenance.md).
 - [Registre des actifs](../ASSET_CREDITS.md).
 - [Politique de sécurité](../SECURITY.md).

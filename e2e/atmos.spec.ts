@@ -224,6 +224,38 @@ test("catalog previews and player navigation keep URLs and audio coherent", asyn
   await expect(page).toHaveURL(/\/atmosphere\/quiet-coffee-shop$/);
 });
 
+test("responsive visual identities load the right asset and keep a fallback", async ({
+  page,
+}) => {
+  await page.goto("/atmosphere/deep-forest");
+  const visual = page.locator("[data-atmosphere-visual]");
+  await expect(visual).toBeVisible();
+
+  const loadedVisual = await visual.evaluate((image: HTMLImageElement) => ({
+    currentSrc: image.currentSrc,
+    naturalHeight: image.naturalHeight,
+    naturalWidth: image.naturalWidth,
+  }));
+  const isMobile = (page.viewportSize()?.width ?? 1280) <= 768;
+
+  expect(loadedVisual.currentSrc).toContain(
+    isMobile ? "deep-forest-mobile.webp" : "deep-forest-desktop.webp",
+  );
+  expect(loadedVisual.naturalWidth).toBe(isMobile ? 640 : 1536);
+  expect(loadedVisual.naturalHeight).toBe(isMobile ? 1024 : 864);
+
+  await page.route("**/images/atmospheres/*.webp", (route) => route.abort());
+  await page.goto("/");
+  await page.getByRole("link", { name: /Fireplace/ }).focus();
+  const fallback = page
+    .locator('[data-atmosphere="fireplace"]')
+    .locator('div[aria-hidden="true"]')
+    .first();
+
+  await expect(fallback).toHaveCSS("background-image", /gradient/);
+  await expect(page.getByRole("link", { name: /Fireplace/ })).toBeEnabled();
+});
+
 test("home and player have no serious automated accessibility violation", async ({
   page,
 }) => {

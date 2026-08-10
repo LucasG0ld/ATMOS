@@ -19,6 +19,7 @@ export const rainyApartment = defineAtmosphere({
   visuals: {
     backgroundAlt: "",
     focalPoint: { x: 68, y: 42 },
+    texture: "rain",
     fallbackBackground:
       "radial-gradient(circle at 78% 24%, rgb(201 157 104 / 24%) 0, transparent 23rem), radial-gradient(circle at 66% 56%, rgb(50 73 91 / 38%) 0, transparent 32rem), linear-gradient(118deg, #090f16 0%, #111d28 58%, #0a121a 100%)",
   },

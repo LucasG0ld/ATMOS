@@ -2,6 +2,7 @@ import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { rainyApartment } from "../../data/atmospheres/rainy-apartment";
+import { deepForest } from "../../data/atmospheres/deep-forest";
 
 import { AtmosphereScene } from "./atmosphere-scene";
 
@@ -23,5 +24,29 @@ describe("AtmosphereScene", () => {
     });
     expect(scene?.querySelectorAll('[aria-hidden="true"]')).toHaveLength(4);
     expect(scene).toHaveTextContent("Scene content");
+  });
+
+  it("renders responsive visual media over the CSS fallback", () => {
+    const { container } = render(
+      <AtmosphereScene atmosphere={deepForest}>
+        <main>Forest content</main>
+      </AtmosphereScene>,
+    );
+    const picture = container.querySelector("picture");
+    const source = picture?.querySelector("source");
+    const visual = picture?.querySelector("img");
+
+    expect(visual).toHaveAttribute("aria-hidden", "true");
+    expect(source).toHaveAttribute(
+      "srcset",
+      "/images/atmospheres/deep-forest-mobile.webp",
+    );
+    expect(source).toHaveAttribute("media", "(max-width: 48rem)");
+    expect(visual).toHaveAttribute(
+      "src",
+      "/images/atmospheres/deep-forest-desktop.webp",
+    );
+    expect(visual).toHaveAttribute("alt", "");
+    expect(visual).toHaveAttribute("fetchpriority", "high");
   });
 });
