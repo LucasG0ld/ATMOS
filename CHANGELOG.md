@@ -22,6 +22,7 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 - Contrôle CI des dimensions et du budget image, références visuelles et contraste des nouveaux thèmes.
 - Neuf couches audio licenciées pour Quiet Coffee Shop, Deep Forest et Fireplace, avec boucles, filtrage et mastering reproductibles.
 - Mixages par défaut alignés à 1,5 LU, validation des jointures, true peaks et budgets du catalogue en CI.
+- Recette d’écoute longue des trois nouvelles ambiances validée sur desktop et mobile.
 
 ## [0.1.0] — 2026-08-10
 

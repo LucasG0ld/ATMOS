@@ -20,7 +20,8 @@
 
 - [x] Chaque nouvelle ambiance possède fallback, visuel ou décision sans image, crédits et revue responsive.
 - [x] Deux ou trois couches licenciées, bouclées et mixées par ambiance.
-- [ ] Écoute longue individuelle et transitions croisées sans clic ni saturation.
+- [x] Écoute longue individuelle des trois nouvelles ambiances sans clic, fatigue ou saturation.
+- [ ] Transitions croisées sans clic ni saturation.
 - [ ] Échec d’une couche ou d’une ambiance récupérable sans son résiduel.
 - [ ] Un seul `AudioContext`, deux bus maximum et nettoyage démontré.
 
@@ -48,3 +49,9 @@
 
 Gate C n’est validée qu’après consignation des exceptions, acceptation explicite
 des risques résiduels et approbation du tag `v0.2.0` par le responsable du projet.
+
+### Recette manuelle du Lot 12
+
+Le 2026-08-10, LucasG0ld a validé l’écoute des trois nouvelles ambiances sur
+desktop et mobile, sans problème signalé. Cette validation clôt le Lot 12 ; elle
+ne couvre pas les crossfades qui seront introduits au Lot 13.

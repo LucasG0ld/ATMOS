@@ -38,6 +38,6 @@ Le brief n’explicite pas entièrement certains besoins de livraison. Ils sont 
 
 ## Points volontairement non décidés
 
-- Visuels et sons des trois nouvelles ambiances : sourcés, crédités et prévalidés pendant les Lots 11 et 12 ; écoute longue du Lot 12 restante.
+- Visuels et sons des trois nouvelles ambiances : sourcés, crédités et validés pendant les Lots 11 et 12, avec écoute longue sur desktop et mobile.
 - Licence du code source : choix du propriétaire requis avant la release 0.2.
 - Analytics : absentes par défaut, décision de confidentialité préalable obligatoire.

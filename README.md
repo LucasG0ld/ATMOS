@@ -8,9 +8,9 @@ Le projet démarre par un prototype visuel complet de **Rainy Apartment**. Le mo
 
 ## État du projet
 
-- Phase actuelle : MVP 0.1 publié ; Lots 8 à 11 du MVP 0.2 terminés sur `mvp-0.2`.
+- Phase actuelle : MVP 0.1 publié ; Lots 8 à 12 du MVP 0.2 terminés sur `mvp-0.2`.
 - Code applicatif : catalogue à quatre destinations, navigation accessible, identités visuelles responsive et trois couches audio mixées par ambiance.
-- Prochaine étape : recette d’écoute du Lot 12, puis Lot 13 — session persistante et crossfades.
+- Prochaine étape : Lot 13 — session persistante et crossfades.
 - Langue de l’interface : anglais.
 - Langue de la documentation : français.
 

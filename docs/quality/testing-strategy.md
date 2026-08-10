@@ -79,8 +79,10 @@ La candidate 0.1 automatise cinq projets Playwright : Chromium desktop, Firefox 
 
 Le Lot 12 applique la même frontière au catalogue 0.2 : Chromium et Firefox
 décodent réellement les trois nouvelles couches après Play ; WebKit vérifie le
-fallback récupérable et sert séparément les trois MP3 avec le bon type MIME. Une
-écoute Safari/iOS réelle des nouveaux mixes reste requise avant la Gate C.
+fallback récupérable et sert séparément les trois MP3 avec le bon type MIME. La
+recette d’écoute longue des trois nouveaux mixes a été validée sur desktop et
+mobile le 2026-08-10. Le navigateur mobile n’ayant pas été consigné, la ligne
+Safari iOS réel de la Gate C reste à contrôler lors de la recette de release.
 
 ## CI attendue
 
