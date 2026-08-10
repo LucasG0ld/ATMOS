@@ -33,13 +33,13 @@
 
 ## Gate B — validations manuelles et externes
 
-- [ ] Écoute d’au moins dix minutes : niveaux, jointures, pause/reprise rapide et tonnerre espacé.
-- [ ] Safari macOS réel : Play, MP3, sliders, onglet masqué et reprise.
+- [x] Écoute d’au moins dix minutes : fonctionnelle, aucun problème rencontré lors de la recette utilisateur.
+- [ ] Safari macOS réel : non exécuté, aucun appareil compatible disponible.
 - [x] Safari iOS réel : fonctionnel, aucun problème rencontré lors de la recette utilisateur.
 - [x] Chrome Android réel : fonctionnel, aucun problème rencontré lors de la recette utilisateur.
-- [ ] Lecteur d’écran desktop et mobile : noms, états Loading/Retry et sliders.
+- [x] Lecteur d’écran desktop et mobile : fonctionnel, aucun problème rencontré lors de la recette utilisateur.
 - [x] Zoom 200 % : fonctionnel, aucun problème rencontré lors de la recette utilisateur.
-- [ ] Texte agrandi et contraste élevé sur les deux routes.
+- [x] Texte agrandi et contraste élevé : fonctionnels, aucun problème rencontré lors de la recette utilisateur.
 - [x] Production HTTPS depuis un cache vide, sans erreur console ni ressource critique en 404.
 - [x] URL de production officielle : `https://lucasg0ld.github.io/ATMOS/` ; propriétaire du dépôt et responsable du déploiement : LucasG0ld.
 - [x] Signalement privé de vulnérabilité GitHub activé et renseigné dans `SECURITY.md`.
@@ -56,7 +56,7 @@
 
 Mesures de laboratoire, cache froid et throttling Lighthouse. Elles ne remplacent pas les données terrain, indisponibles avant un trafic suffisant.
 
-La partie automatisable et distante de Gate B est validée. iOS, Android et le zoom 200 % sont également validés. L’écoute longue, Safari macOS, les technologies d’assistance, le texte agrandi et le contraste élevé restent ouverts dans la [fiche de recette Gate B](gate-b-manual-test.md).
+La partie automatisable et distante de Gate B est validée. L’écoute longue, iOS, Android, les technologies d’assistance, le zoom 200 %, le texte agrandi et le contraste élevé sont également validés. Safari macOS réel reste le seul contrôle non exécuté, faute d’appareil disponible. Sa couverture compensatoire repose sur Safari iOS réel et WebKit desktop automatisé ; la clôture exige soit un test externe, soit l’acceptation explicite de ce risque résiduel par le responsable du projet.
 
 ## Commande de recette locale
 

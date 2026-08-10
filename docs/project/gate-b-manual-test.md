@@ -22,13 +22,21 @@ Capture ou vidéo, si utile :
 
 ## Résultats reçus
 
-| Contrôle            | Résultat | Détail                              |
-| ------------------- | -------- | ----------------------------------- |
-| Zoom 200 %          | Validé   | Fonctionnel, aucun problème signalé |
-| Chrome Android réel | Validé   | Fonctionnel, aucun problème signalé |
-| Safari sur iOS réel | Validé   | Fonctionnel, aucun problème signalé |
+| Contrôle                           | Résultat    | Détail                                |
+| ---------------------------------- | ----------- | ------------------------------------- |
+| Zoom 200 %                         | Validé      | Fonctionnel, aucun problème signalé   |
+| Chrome Android réel                | Validé      | Fonctionnel, aucun problème signalé   |
+| Safari sur iOS réel                | Validé      | Fonctionnel, aucun problème signalé   |
+| Écoute de 10 minutes               | Validé      | Fonctionnelle, aucun problème signalé |
+| Lecteurs d’écran desktop et mobile | Validé      | Fonctionnels, aucun problème signalé  |
+| Texte agrandi et contraste élevé   | Validé      | Fonctionnels, aucun problème signalé  |
+| Safari macOS réel                  | Non exécuté | Aucun appareil compatible disponible  |
 
 Les modèles d’appareil et versions du système/navigateur n’ont pas été fournis ; ils pourront être ajoutés ultérieurement sans remettre en cause ces validations.
+
+Safari macOS réel reste couvert partiellement par Safari iOS réel et par la
+matrice WebKit desktop automatisée. Cette compensation doit être acceptée
+explicitement comme risque résiduel si aucun test externe n’est organisé.
 
 ## Écoute longue — au moins dix minutes
 
