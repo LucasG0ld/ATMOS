@@ -73,7 +73,7 @@
 
 | Ambiance          | Fallback CSS | Visuel licencié | Audio licencié | Mix validé | Intégrable            |
 | ----------------- | ------------ | --------------- | -------------- | ---------- | --------------------- |
-| Rainy Apartment   | validé       | non requis 0.1  | validé         | validé     | oui                   |
+| Rainy Apartment   | validé       | validé Lot 11   | validé         | validé     | oui                   |
 | Quiet Coffee Shop | validé Lot 9 | validé Lot 11   | à sourcer      | non        | visuel oui, audio non |
 | Deep Forest       | validé Lot 9 | validé Lot 11   | à sourcer      | non        | visuel oui, audio non |
 | Fireplace         | validé Lot 9 | validé Lot 11   | à sourcer      | non        | visuel oui, audio non |

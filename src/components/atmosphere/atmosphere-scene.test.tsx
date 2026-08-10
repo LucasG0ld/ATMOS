@@ -22,7 +22,14 @@ describe("AtmosphereScene", () => {
       "--atmos-background": rainyApartment.theme.background,
       "--atmos-foreground": rainyApartment.theme.foreground,
     });
-    expect(scene?.querySelectorAll('[aria-hidden="true"]')).toHaveLength(4);
+    expect(scene?.querySelector("[data-atmosphere-visual]")).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
+    expect(scene?.querySelector('[class*="rain"]')).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
     expect(scene).toHaveTextContent("Scene content");
   });
 

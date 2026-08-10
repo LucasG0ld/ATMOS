@@ -16,6 +16,16 @@ const maxImageBytes = 500 * 1024;
 
 const expectedFiles = [
   {
+    filename: "rainy-apartment-desktop.webp",
+    width: 1536,
+    height: 864,
+  },
+  {
+    filename: "rainy-apartment-mobile.webp",
+    width: 640,
+    height: 1024,
+  },
+  {
     filename: "quiet-coffee-shop-desktop.webp",
     width: 1536,
     height: 864,

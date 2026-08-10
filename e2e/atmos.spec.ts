@@ -227,7 +227,7 @@ test("catalog previews and player navigation keep URLs and audio coherent", asyn
 test("responsive visual identities load the right asset and keep a fallback", async ({
   page,
 }) => {
-  await page.goto("/atmosphere/deep-forest");
+  await page.goto("/atmosphere/rainy-apartment");
   const visual = page.locator("[data-atmosphere-visual]");
   await expect(visual).toBeVisible();
 
@@ -239,7 +239,7 @@ test("responsive visual identities load the right asset and keep a fallback", as
   const isMobile = (page.viewportSize()?.width ?? 1280) <= 768;
 
   expect(loadedVisual.currentSrc).toContain(
-    isMobile ? "deep-forest-mobile.webp" : "deep-forest-desktop.webp",
+    isMobile ? "rainy-apartment-mobile.webp" : "rainy-apartment-desktop.webp",
   );
   expect(loadedVisual.naturalWidth).toBe(isMobile ? 640 : 1536);
   expect(loadedVisual.naturalHeight).toBe(isMobile ? 1024 : 864);

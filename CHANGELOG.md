@@ -16,7 +16,7 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 - Accueil éditorial à quatre destinations avec preview visuelle au focus et après intention de survol.
 - Dialogue natif `Atmospheres` dans le player avec liens réels, ambiance courante, gestion d’`Escape` et restauration du focus.
 - Parcours catalogue, navigation, historique et absence d’audio avant Play couverts sur desktop et mobile.
-- Identités visuelles originales de Quiet Coffee Shop, Deep Forest et Fireplace, avec exports WebP desktop/mobile.
+- Identités visuelles originales des quatre ambiances, avec exports WebP desktop/mobile.
 - Rendu responsive par `<picture>`, points focaux mobiles et fallback CSS conservé en cas d’échec média.
 - Provenance IA, prompts, conditions, transformations, empreintes et crédits archivés pour les visuels 0.2.
 - Contrôle CI des dimensions et du budget image, références visuelles et contraste des nouveaux thèmes.

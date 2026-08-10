@@ -138,11 +138,12 @@ peuvent entrer dans le parcours immédiat.
 
 | Ambiance          | Desktop 1536 × 864 | Mobile 640 × 1024 |     Total |
 | ----------------- | -----------------: | ----------------: | --------: |
+| Rainy Apartment   |           52,8 Kio |          46,8 Kio |  99,6 Kio |
 | Quiet Coffee Shop |           44,3 Kio |          24,6 Kio |  68,9 Kio |
 | Deep Forest       |          220,8 Kio |         130,3 Kio | 351,1 Kio |
 | Fireplace         |           60,3 Kio |          37,3 Kio |  97,6 Kio |
 
-Les six exports totalisent 517,5 Kio. Une page ne sélectionne qu’une variante
+Les huit exports totalisent 617,2 Kio. Une page ne sélectionne qu’une variante
 via `<picture>` ; le fallback CSS reste visible avant ou en cas d’échec. Chaque
 fichier demeure sous la cible de 500 Kio et le contrôle `npm run images:check`
 est exécuté en CI.
