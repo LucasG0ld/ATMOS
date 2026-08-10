@@ -40,3 +40,8 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 - En-têtes CSP, anti-framing, confidentialité, permissions et cache audio pour le build de production.
 - Contrôle automatisé des budgets JS, CSS et fonts ainsi que références visuelles desktop/mobile.
 - Métadonnées sociales minimales, 404 navigateur et matrice de release 0.1.
+- Export statique et déploiement continu sur GitHub Pages sous `/ATMOS`.
+- Smoke test reproductible du parcours de production, cache désactivé et médias réels.
+- Mesures Lighthouse mobile et desktop de l’accueil et du player.
+- Signalement privé de vulnérabilité GitHub documenté.
+- Délai de récupération lorsque le contexte Web Audio reste suspendu.

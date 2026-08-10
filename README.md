@@ -10,7 +10,7 @@ Le projet démarre par un prototype visuel complet de **Rainy Apartment**. Le mo
 
 - Phase actuelle : Lots 0 à 6 terminés, stabilisation locale du Lot 7 terminée.
 - Code applicatif : candidate 0.1 Rainy Apartment visuelle et sonore.
-- Prochaine étape : Gate B, recette sur appareils réels et déploiement de préproduction.
+- Prochaine étape : terminer la Gate B manuelle sur appareils réels ; la validation automatisée de production est terminée.
 - Langue de l’interface : anglais.
 - Langue de la documentation : français.
 
@@ -58,6 +58,7 @@ npm run audio:check # contrôle formats, durées, jointures et budget audio
 npm run build       # crée le build de production
 npm run budget:check # contrôle les budgets JS, CSS et fonts après build
 npm run test:e2e    # exécute la recette sur cinq profils navigateur/mobile
+npm run smoke:production # contrôle le parcours critique sur l’URL publique, cache désactivé
 ```
 
 ## Documentation

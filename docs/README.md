@@ -32,6 +32,7 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [Performance](quality/performance.md).
 - [Références visuelles](quality/visual-references.md).
 - [Checklist de release 0.1](project/release-checklist-0.1.md).
+- [Fiche de recette manuelle Gate B](project/gate-b-manual-test.md).
 
 ## Exploitation et conformité
 

@@ -45,6 +45,10 @@ rester configurée sur **GitHub Actions**.
 
 ## Smoke test production
 
+Exécuter `npm run smoke:production` pour contrôler le parcours public avec un
+contexte navigateur neuf et le cache désactivé, puis compléter les vérifications
+manuelles ci-dessous.
+
 - Accueil charge sans erreur et affiche l’action principale.
 - Route Rainy Apartment directe et retour fonctionnent.
 - Image ou fallback, horloge et contrôles sont visibles.

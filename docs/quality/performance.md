@@ -95,3 +95,17 @@ Mesure locale du build de production le 2026-08-10, taille gzip pour JS/CSS et t
 `npm run budget:check` reproduit les quatre premières mesures depuis les manifests Next.js et bloque la CI en cas de dépassement. `npm run audio:check` couvre le dernier budget. Le parcours Playwright confirme qu’aucune requête `/audio/` ne part avant Play.
 
 Le moteur Web Audio léger reste dans le chunk du player afin que la création et la reprise du contexte commencent pendant le geste utilisateur, notamment pour Safari. Les buffers et les 1,92 Mio de médias restent différés. Ce compromis sera réévalué si le chunk player approche de son budget.
+
+## Lighthouse en production — Gate B
+
+Mesure de laboratoire Lighthouse 13.4.1 le 2026-08-10 sur
+`https://lucasg0ld.github.io/ATMOS/`, avec cache froid et profils mobile/desktop :
+
+| Route / profil  | Performance | Accessibilité | Bonnes pratiques | SEO | FCP   | LCP   | TBT    | CLS   |
+| --------------- | ----------: | ------------: | ---------------: | --: | ----- | ----- | ------ | ----- |
+| Accueil mobile  |          99 |           100 |              100 | 100 | 1,1 s | 1,8 s | 90 ms  | 0,005 |
+| Accueil desktop |         100 |           100 |              100 | 100 | 0,3 s | 0,4 s | 0 ms   | 0,004 |
+| Player mobile   |          99 |           100 |              100 | 100 | 1,1 s | 2,0 s | 110 ms | 0     |
+| Player desktop  |         100 |           100 |              100 | 100 | 0,3 s | 0,4 s | 0 ms   | 0     |
+
+Les résultats satisfont les cibles de la candidate. Ils ne constituent pas des Core Web Vitals terrain ; ceux-ci nécessitent un volume suffisant de visites réelles.
