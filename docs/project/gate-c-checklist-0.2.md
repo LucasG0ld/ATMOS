@@ -10,10 +10,10 @@
 
 ## Catalogue et navigation
 
-- [ ] Quatre destinations lisibles sans hover ni média.
+- [x] Quatre destinations lisibles sans hover ni média.
 - [x] Quatre routes directes, métadonnées et 404 validées.
-- [ ] Preview clavier/souris sans audio et tactile sans double tap.
-- [ ] Navigation interne, `aria-current`, `Escape`, focus et historique cohérents.
+- [x] Preview clavier/souris sans audio et tactile sans double tap.
+- [x] Navigation interne, `aria-current`, `Escape`, focus et historique cohérents.
 - [x] Une ambiance s’ajoute sans condition spécifique dans les composants.
 
 ## Visuels et audio
@@ -26,7 +26,7 @@
 
 ## Préchargement et performance
 
-- [ ] Zéro audio avant le premier Play.
+- [x] Zéro audio avant le premier Play.
 - [ ] Au plus une cible visuelle et une cible audio éligible préchargées.
 - [ ] `Save-Data`, connexion lente et annulation testés.
 - [ ] Budgets JS, CSS, images, audio et mémoire respectés.

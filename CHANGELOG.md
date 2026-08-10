@@ -13,6 +13,9 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 - Registre ordonné de quatre ambiances et génération statique de leurs routes et métadonnées.
 - Fallbacks CSS de Quiet Coffee Shop, Deep Forest et Fireplace, sans média non licencié.
 - État générique et accessible pour les ambiances dont les couches audio sont encore en préparation.
+- Accueil éditorial à quatre destinations avec preview visuelle au focus et après intention de survol.
+- Dialogue natif `Atmospheres` dans le player avec liens réels, ambiance courante, gestion d’`Escape` et restauration du focus.
+- Parcours catalogue, navigation, historique et absence d’audio avant Play couverts sur desktop et mobile.
 
 ## [0.1.0] — 2026-08-10
 

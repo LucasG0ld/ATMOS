@@ -177,7 +177,7 @@ Décider explicitement si l’interface satisfait les principes du brief. Corrig
 
 ## Lot 10 — Accueil catalogue et navigation
 
-**Statut : en attente.**
+**Statut : terminé le 2026-08-10.**
 
 ### Livrables
 

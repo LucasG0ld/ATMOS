@@ -2,6 +2,14 @@
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
   gap: clamp(3rem, 8vh, 7rem);
+  transition:
+    opacity var(--duration-control) var(--ease-out),
+    filter var(--duration-control) var(--ease-out);
+}
+
+.frame[data-navigating="true"] {
+  filter: brightness(0.72);
+  opacity: 0.72;
 }
 
 .header {
@@ -37,6 +45,14 @@
   animation-delay: 120ms;
 }
 
+.destinationList {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  border-top: 1px solid
+    color-mix(in srgb, var(--atmos-foreground) 24%, transparent);
+}
+
 .destination {
   position: relative;
   display: grid;
@@ -45,7 +61,7 @@
   gap: clamp(1rem, 3vw, 2.5rem);
   min-height: 6rem;
   padding-block: clamp(1.25rem, 2.5vw, 2rem);
-  border-block: 1px solid
+  border-bottom: 1px solid
     color-mix(in srgb, var(--atmos-foreground) 24%, transparent);
   transition:
     color var(--duration-control) var(--ease-out),
@@ -61,6 +77,14 @@
   background: var(--atmos-surface);
   opacity: 0;
   transition: opacity var(--duration-control) var(--ease-out);
+}
+
+.destination[data-preview-active="true"] {
+  padding-inline: var(--space-4);
+}
+
+.destination[data-preview-active="true"]::before {
+  opacity: 1;
 }
 
 .index {
@@ -103,6 +127,10 @@
   transform: translate(0.2rem, -0.2rem);
 }
 
+.destination[data-preview-active="true"] .icon {
+  color: var(--atmos-foreground);
+}
+
 .destination:active {
   color: var(--atmos-accent);
 }
@@ -127,10 +155,6 @@
 
   .context {
     max-width: 9rem;
-  }
-
-  .hero {
-    align-self: end;
   }
 
   .destination {
@@ -164,6 +188,7 @@
 
   .destination,
   .destination::before,
+  .frame,
   .icon {
     transition-duration: 0ms;
   }

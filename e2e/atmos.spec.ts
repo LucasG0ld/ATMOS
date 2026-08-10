@@ -132,6 +132,18 @@ test("keyboard order follows the visual reading order", async ({
   await expect(
     page.getByRole("link", { name: /Rainy Apartment/ }),
   ).toBeFocused();
+  for (const name of ["Quiet Coffee Shop", "Deep Forest", "Fireplace"]) {
+    await page.keyboard.press("Tab");
+    await expect(
+      page.getByRole("link", { name: new RegExp(name) }),
+    ).toBeFocused();
+  }
+  await page.keyboard.press("Shift+Tab");
+  await page.keyboard.press("Shift+Tab");
+  await page.keyboard.press("Shift+Tab");
+  await expect(
+    page.getByRole("link", { name: /Rainy Apartment/ }),
+  ).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(
     page.getByRole("heading", { name: "Rainy Apartment" }),
@@ -139,6 +151,8 @@ test("keyboard order follows the visual reading order", async ({
 
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "ATMOS — Home" })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Atmospheres" })).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("link", { name: "Back to atmospheres" }),
@@ -153,6 +167,61 @@ test("keyboard order follows the visual reading order", async ({
   await expect(
     page.getByRole("button", { name: "Play Rainy Apartment" }),
   ).toBeFocused();
+});
+
+test("catalog previews and player navigation keep URLs and audio coherent", async ({
+  page,
+}) => {
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) audioRequests.push(request.url());
+  });
+
+  await page.goto("/");
+  const destinations = page.getByRole("navigation", { name: "Atmospheres" });
+  await expect(destinations.getByRole("link")).toHaveCount(4);
+
+  await destinations.getByRole("link", { name: /Deep Forest/ }).focus();
+  await expect(page.locator('[data-atmosphere="deep-forest"]')).toBeVisible();
+  expect(audioRequests).toEqual([]);
+
+  await destinations.getByRole("link", { name: /Quiet Coffee Shop/ }).click();
+  await expect(page).toHaveURL(/\/atmosphere\/quiet-coffee-shop$/);
+  await expect(
+    page.getByRole("heading", { name: "Quiet Coffee Shop" }),
+  ).toBeVisible();
+  expect(audioRequests).toEqual([]);
+
+  const menuTrigger = page.getByRole("button", { name: "Atmospheres" });
+  await menuTrigger.click();
+  const dialog = page.getByRole("dialog", { name: "Atmospheres" });
+  await expect(dialog).toBeVisible();
+  await expect(
+    dialog.getByRole("link", {
+      name: "Quiet Coffee Shop, current atmosphere",
+    }),
+  ).toBeFocused();
+  await expect(
+    dialog.getByRole("link", {
+      name: "Quiet Coffee Shop, current atmosphere",
+    }),
+  ).toHaveAttribute("aria-current", "page");
+  await expectNoSeriousAccessibilityViolation(page);
+
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(menuTrigger).toBeFocused();
+
+  await menuTrigger.click();
+  await dialog.getByRole("link", { name: /Deep Forest/ }).click();
+  await expect(page).toHaveURL(/\/atmosphere\/deep-forest$/);
+  await expect(
+    page.getByRole("heading", { name: "Deep Forest" }),
+  ).toBeVisible();
+  expect(audioRequests).toEqual([]);
+
+  await page.goBack();
+  await expect(page).toHaveURL(/\/atmosphere\/quiet-coffee-shop$/);
 });
 
 test("home and player have no serious automated accessibility violation", async ({
@@ -174,11 +243,24 @@ test("home and player have no serious automated accessibility violation", async 
   await expectNoSeriousAccessibilityViolation(page);
 });
 
-test("player remains usable at narrow width with reduced motion", async ({
+test("catalog and player remain usable at narrow width with reduced motion", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 320, height: 568 });
   await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+
+  await expect(
+    page.getByRole("navigation", { name: "Atmospheres" }).getByRole("link"),
+  ).toHaveCount(4);
+  expect(
+    await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth <=
+        document.documentElement.clientWidth,
+    ),
+  ).toBe(true);
+
   await page.goto("/atmosphere/rainy-apartment");
 
   await expect(
