@@ -223,7 +223,7 @@ Décider explicitement si l’interface satisfait les principes du brief. Corrig
 
 ## Lot 13 — Session persistante et crossfades
 
-**Statut : implémenté le 2026-08-10 ; recette auditive des crossfades en attente.**
+**Statut : terminé le 2026-08-10 ; recette desktop et mobile validée.**
 
 ### Livrables
 

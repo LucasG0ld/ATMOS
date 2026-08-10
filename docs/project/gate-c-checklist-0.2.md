@@ -21,7 +21,7 @@
 - [x] Chaque nouvelle ambiance possède fallback, visuel ou décision sans image, crédits et revue responsive.
 - [x] Deux ou trois couches licenciées, bouclées et mixées par ambiance.
 - [x] Écoute longue individuelle des trois nouvelles ambiances sans clic, fatigue ou saturation.
-- [ ] Transitions croisées sans clic ni saturation.
+- [x] Transitions croisées sans clic ni saturation.
 - [x] Échec d’une couche ou d’une ambiance récupérable sans son résiduel.
 - [x] Un seul `AudioContext`, deux bus maximum et nettoyage démontré.
 
@@ -54,5 +54,12 @@ des risques résiduels et approbation du tag `v0.2.0` par le responsable du proj
 
 Le 2026-08-10, LucasG0ld a validé l’écoute des trois nouvelles ambiances sur
 desktop et mobile, sans problème signalé. Cette validation clôt le Lot 12 ; elle
-ne couvre pas les crossfades désormais implémentés au Lot 13 et encore à valider
-à l’écoute.
+ne couvrait pas encore les crossfades introduits au Lot 13.
+
+### Recette manuelle du Lot 13
+
+Le 2026-08-10, LucasG0ld a validé sur desktop et mobile la continuité de session,
+les changements rapides d’ambiance, les crossfades, Pause/Play après transition
+et l’arrêt du son en quittant le player. Aucun problème n’a été signalé. Les
+navigateurs exacts n’ayant pas été consignés, les contrôles Safari iOS et Android
+Chrome de la recette de release restent distincts.
