@@ -35,7 +35,9 @@ src/
 │   ├── layout.tsx
 │   ├── page.tsx
 │   ├── not-found.tsx
-│   └── atmosphere/[slug]/page.tsx
+│   └── atmosphere/
+│       ├── layout.tsx
+│       └── [slug]/page.tsx
 ├── components/
 │   ├── atmosphere/
 │   ├── controls/
@@ -86,7 +88,11 @@ Ne pas créer tous les dossiers à vide. Une frontière apparaît lorsqu’un pr
 
 ### État
 
-Pour le prototype, l’état local et un hook de composition suffisent. Un Context ciblé peut partager l’état du player. Zustand n’est introduit que si les interactions entre changement d’ambiance, timer, Focus Mode et persistance rendent le Context objectivement difficile à maintenir.
+Depuis le Lot 13, un Context ciblé dans `app/atmosphere/layout.tsx` conserve
+l’intention de lecture et l’orchestrateur audio pendant les changements de slug.
+Il est détruit dès que l’utilisateur quitte les routes du player. Zustand n’est
+introduit que si les interactions futures rendent ce Context objectivement
+difficile à maintenir.
 
 Éviter un store global unique. Distinguer :
 
@@ -118,10 +124,11 @@ Route résout Atmosphere
 Page rend scène + données initiales
         │
         ▼
-Player client reçoit layers/volumes
+Session cliente reçoit ambiance/layers/volumes
         │
         ├── interaction slider ──► état demandé ──► gain layer
-        └── interaction play ────► init/load ─────► master gain
+        ├── interaction play ────► init/load ─────► master gain
+        └── nouveau slug en lecture ─► bus entrant ─► crossfade
 ```
 
 L’UI reflète l’intention confirmée par le moteur. Une erreur moteur doit revenir à un état stable et explicable.

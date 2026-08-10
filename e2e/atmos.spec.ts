@@ -280,6 +280,77 @@ test("a new catalog mix stays deferred and loads its three layers after Play", a
   );
 });
 
+test("a playing session survives atmosphere navigation with one audio context", async ({
+  browserName,
+  page,
+}) => {
+  await page.route("**/audio/*.mp3", async (route) => {
+    if (
+      ["forest-air", "moving-leaves", "distant-stream"].some((name) =>
+        route.request().url().includes(name),
+      )
+    ) {
+      await new Promise((resolve) => setTimeout(resolve, 600));
+    }
+    await route.continue().catch(() => undefined);
+  });
+  await page.addInitScript(() => {
+    const browserWindow = window as Window & {
+      __atmosAudioContextCount?: number;
+    };
+    const OriginalAudioContext = window.AudioContext;
+    browserWindow.__atmosAudioContextCount = 0;
+    if (!OriginalAudioContext) return;
+    window.AudioContext = new Proxy(OriginalAudioContext, {
+      construct(target, argumentsList) {
+        browserWindow.__atmosAudioContextCount =
+          (browserWindow.__atmosAudioContextCount ?? 0) + 1;
+        return Reflect.construct(target, argumentsList);
+      },
+    });
+  });
+
+  await page.goto("/atmosphere/rainy-apartment");
+  await page.getByRole("button", { name: "Play Rainy Apartment" }).click();
+  const initialOutcome = page.getByRole("button", {
+    name: /^(Pause|Retry) Rainy Apartment$/,
+  });
+  await expect(initialOutcome).toBeVisible({ timeout: 15_000 });
+  if ((await initialOutcome.getAttribute("aria-label"))?.startsWith("Retry")) {
+    expect(browserName).toBe("webkit");
+    return;
+  }
+
+  await page.getByRole("button", { name: "Atmospheres" }).click();
+  await page
+    .getByRole("dialog")
+    .getByRole("link", { name: /Deep Forest/ })
+    .click();
+  await expect(page).toHaveURL(/\/atmosphere\/deep-forest$/);
+  await expect(
+    page.getByRole("heading", { name: "Deep Forest" }),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "Atmospheres" }).click();
+  await page
+    .getByRole("dialog")
+    .getByRole("link", { name: /Fireplace/ })
+    .click();
+  await expect(page).toHaveURL(/\/atmosphere\/fireplace$/);
+  await expect(
+    page.getByRole("button", { name: "Pause Fireplace" }),
+  ).toBeVisible({ timeout: 15_000 });
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          (window as Window & { __atmosAudioContextCount?: number })
+            .__atmosAudioContextCount,
+      ),
+    )
+    .toBe(1);
+});
+
 test("responsive visual identities load the right asset and keep a fallback", async ({
   page,
 }) => {

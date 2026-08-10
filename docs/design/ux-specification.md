@@ -118,7 +118,7 @@ Le gradient de thème est rendu avant l’image. L’arrivée de l’image utili
 Le mouvement traduit une continuité, jamais une récompense ludique.
 
 - Entrée de page : fondu et translation de faible amplitude.
-- Changement d’ambiance futur : baisse de luminosité, crossfade du média et du thème, puis titre.
+- Changement d’ambiance : couche sortante assombrie et fondue pendant que la nouvelle scène et son titre apparaissent.
 - Interaction : 120–240 ms environ.
 - Composition : 400–800 ms environ, à valider en contexte.
 - Courbes : décélération douce ; éviter ressort, rebond et overshoot.

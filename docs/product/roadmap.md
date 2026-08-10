@@ -39,7 +39,7 @@ La roadmap est orientée résultats. Une phase ne commence que lorsque les crit�
 
 ## MVP 0.2 — Catalogue initial
 
-**Statut : Lots 8 à 11 terminés sur `mvp-0.2` ; Lot 12 implémenté, recette d’écoute en attente.**
+**Statut : Lots 8 à 12 terminés sur `mvp-0.2` ; Lot 13 implémenté, recette auditive des crossfades en attente.**
 
 **Résultat :** l’utilisateur explore plusieurs personnalités sans rupture d’expérience.
 

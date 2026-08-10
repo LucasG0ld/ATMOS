@@ -84,11 +84,19 @@ recette d’écoute longue des trois nouveaux mixes a été validée sur desktop
 mobile le 2026-08-10. Le navigateur mobile n’ayant pas été consigné, la ligne
 Safari iOS réel de la Gate C reste à contrôler lors de la recette de release.
 
+Le Lot 13 ajoute des tests unitaires du graphe à deux bus, du retrait du bus
+sortant, des couches partielles et de l’annulation d’une cible lente. Les tests
+de session couvrent la continuité React, une cible lente et le Retry. La matrice
+Playwright compte désormais 50 scénarios : 48 validations et les 2 reports
+clavier WebKit existants. Chromium, Firefox et le profil Chromium mobile
+confirment Rainy Apartment → Deep Forest → Fireplace avec un seul `AudioContext` ;
+WebKit conserve sa dégradation récupérable sous Windows.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.
 
-État 0.1 : la CI exécute également `audio:check`, `budget:check`, puis 30 cas Playwright sur les cinq projets. Deux contrôles d’ordre clavier sont explicitement reportés pour WebKit, dont le réglage Safari par défaut exclut les liens de la tabulation ; 28 validations sont automatisées. axe-core bloque toute violation automatisable critique ou sérieuse avec les tags WCAG 2 A/AA, 2.1 AA et 2.2 AA.
+État 0.2 : la CI exécute également `audio:check`, `budget:check`, puis la matrice Playwright sur cinq projets. Deux contrôles d’ordre clavier sont explicitement reportés pour WebKit, dont le réglage Safari par défaut exclut les liens de la tabulation. axe-core bloque toute violation automatisable critique ou sérieuse avec les tags WCAG 2 A/AA, 2.1 AA et 2.2 AA.
 
 ## Données et isolation
 

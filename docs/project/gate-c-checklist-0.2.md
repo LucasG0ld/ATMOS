@@ -22,8 +22,8 @@
 - [x] Deux ou trois couches licenciées, bouclées et mixées par ambiance.
 - [x] Écoute longue individuelle des trois nouvelles ambiances sans clic, fatigue ou saturation.
 - [ ] Transitions croisées sans clic ni saturation.
-- [ ] Échec d’une couche ou d’une ambiance récupérable sans son résiduel.
-- [ ] Un seul `AudioContext`, deux bus maximum et nettoyage démontré.
+- [x] Échec d’une couche ou d’une ambiance récupérable sans son résiduel.
+- [x] Un seul `AudioContext`, deux bus maximum et nettoyage démontré.
 
 ## Préchargement et performance
 
@@ -54,4 +54,5 @@ des risques résiduels et approbation du tag `v0.2.0` par le responsable du proj
 
 Le 2026-08-10, LucasG0ld a validé l’écoute des trois nouvelles ambiances sur
 desktop et mobile, sans problème signalé. Cette validation clôt le Lot 12 ; elle
-ne couvre pas les crossfades qui seront introduits au Lot 13.
+ne couvre pas les crossfades désormais implémentés au Lot 13 et encore à valider
+à l’écoute.

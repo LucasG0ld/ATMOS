@@ -16,6 +16,7 @@ function createMockEngine(): AudioEngineController {
     play: vi.fn().mockResolvedValue(undefined),
     setLayerVolume: vi.fn(),
     setPageHidden: vi.fn().mockResolvedValue(undefined),
+    transition: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
   };
 }
 

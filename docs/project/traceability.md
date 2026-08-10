@@ -39,5 +39,6 @@ Le brief n’explicite pas entièrement certains besoins de livraison. Ils sont 
 ## Points volontairement non décidés
 
 - Visuels et sons des trois nouvelles ambiances : sourcés, crédités et validés pendant les Lots 11 et 12, avec écoute longue sur desktop et mobile.
+- Session et transitions : implémentation de l’ADR-0002 au Lot 13, avec un contexte, deux bus, annulation et récupération automatisés ; recette auditive restante.
 - Licence du code source : choix du propriétaire requis avant la release 0.2.
 - Analytics : absentes par défaut, décision de confidentialité préalable obligatoire.

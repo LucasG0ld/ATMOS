@@ -102,7 +102,9 @@ export default async function AtmospherePage({ params }: AtmospherePageProps) {
 
           <Reveal className={styles.controlsColumn} delay={0.28}>
             <VisualControls
+              atmosphere={atmosphere}
               atmosphereName={atmosphere.name}
+              key={atmosphere.id}
               sounds={atmosphere.sounds}
             />
           </Reveal>

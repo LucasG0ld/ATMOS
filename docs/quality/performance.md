@@ -160,3 +160,12 @@ est exécuté en CI.
 Le catalogue totalise 5,81 Mio sur 12 Mio. Aucun fichier n’est demandé avant
 Play. `npm run audio:check` vérifie format, durée, jointure, budget par ambiance,
 true peak et cohérence des quatre mixages par défaut.
+
+### Empreinte de transition — Lot 13
+
+Le player pèse 53,8 Kio de JavaScript applicatif gzip après ajout de la session,
+contre un budget de 140 Kio appliqué par le contrôle actuel. Le moteur conserve
+un seul contexte et au plus deux bus. À partir des durées mono 44,1 kHz, la pire
+paire de buffers PCM du catalogue est estimée à 56,6 Mio pour Rainy Apartment et
+Quiet Coffee Shop, sous la cible provisoire de 64 Mio. Le Lot 14 complétera cette
+estimation par une mesure mémoire navigateur sur une série de transitions.
