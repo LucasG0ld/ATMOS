@@ -34,10 +34,12 @@
 ## Gate B — validations manuelles et externes
 
 - [ ] Écoute d’au moins dix minutes : niveaux, jointures, pause/reprise rapide et tonnerre espacé.
-- [ ] Safari macOS et Safari iOS réels : Play, MP3, sliders, onglet masqué et reprise.
-- [ ] Chrome Android réel : toucher, orientation, safe areas et consommation.
+- [ ] Safari macOS réel : Play, MP3, sliders, onglet masqué et reprise.
+- [x] Safari iOS réel : fonctionnel, aucun problème rencontré lors de la recette utilisateur.
+- [x] Chrome Android réel : fonctionnel, aucun problème rencontré lors de la recette utilisateur.
 - [ ] Lecteur d’écran desktop et mobile : noms, états Loading/Retry et sliders.
-- [ ] Zoom 200 %, texte agrandi et contraste élevé sur les deux routes.
+- [x] Zoom 200 % : fonctionnel, aucun problème rencontré lors de la recette utilisateur.
+- [ ] Texte agrandi et contraste élevé sur les deux routes.
 - [x] Production HTTPS depuis un cache vide, sans erreur console ni ressource critique en 404.
 - [x] URL de production officielle : `https://lucasg0ld.github.io/ATMOS/` ; propriétaire du dépôt et responsable du déploiement : LucasG0ld.
 - [x] Signalement privé de vulnérabilité GitHub activé et renseigné dans `SECURITY.md`.
@@ -54,7 +56,7 @@
 
 Mesures de laboratoire, cache froid et throttling Lighthouse. Elles ne remplacent pas les données terrain, indisponibles avant un trafic suffisant.
 
-La partie automatisable et distante de Gate B est validée. La recette sur appareils réels, l’écoute longue, les technologies d’assistance et le zoom manuel restent ouvertes dans la [fiche de recette Gate B](gate-b-manual-test.md).
+La partie automatisable et distante de Gate B est validée. iOS, Android et le zoom 200 % sont également validés. L’écoute longue, Safari macOS, les technologies d’assistance, le texte agrandi et le contraste élevé restent ouverts dans la [fiche de recette Gate B](gate-b-manual-test.md).
 
 ## Commande de recette locale
 

@@ -20,6 +20,16 @@ Comportement observé :
 Capture ou vidéo, si utile :
 ```
 
+## Résultats reçus
+
+| Contrôle            | Résultat | Détail                              |
+| ------------------- | -------- | ----------------------------------- |
+| Zoom 200 %          | Validé   | Fonctionnel, aucun problème signalé |
+| Chrome Android réel | Validé   | Fonctionnel, aucun problème signalé |
+| Safari sur iOS réel | Validé   | Fonctionnel, aucun problème signalé |
+
+Les modèles d’appareil et versions du système/navigateur n’ont pas été fournis ; ils pourront être ajoutés ultérieurement sans remettre en cause ces validations.
+
 ## Écoute longue — au moins dix minutes
 
 - [ ] Aucun clic, blanc, coupure ou variation brutale aux jointures.
