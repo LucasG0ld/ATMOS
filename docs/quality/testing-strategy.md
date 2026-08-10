@@ -75,7 +75,7 @@ Tolérances contrôlées ; stabiliser heure et animations afin d’éviter les f
 
 Les versions exactes sont relevées à chaque release, pas figées ici.
 
-La candidate 0.1 automatise cinq projets Playwright : Chromium desktop, Firefox desktop, WebKit desktop, Chromium mobile émulé et WebKit mobile émulé. Le binaire WebKit Playwright sous Windows ne fournit pas `AudioContext` : il valide donc l’état récupérable sans audio. La lecture réelle reste automatisée sous Chromium et Firefox ; Safari macOS/iOS réel demeure obligatoire à la Gate B.
+La candidate 0.1 automatise cinq projets Playwright : Chromium desktop, Firefox desktop, WebKit desktop, Chromium mobile émulé et WebKit mobile émulé. Le binaire WebKit Playwright sous Windows ne fournit pas `AudioContext` : il valide donc l’état récupérable sans audio. La lecture réelle reste automatisée sous Chromium et Firefox. Safari iOS réel a été validé à la Gate B. Safari macOS réel n’a pas pu être exécuté faute d’appareil ; sa couverture compensatoire par Safari iOS et WebKit desktop a été acceptée comme risque résiduel pour 0.1.
 
 ## CI attendue
 

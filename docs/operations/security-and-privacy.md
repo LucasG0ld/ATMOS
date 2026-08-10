@@ -78,4 +78,4 @@ Aucun secret attendu au MVP. Si un service est ajouté : variables serveur uniqu
 4. Corriger, tester et redéployer.
 5. Documenter chronologie, impact et prévention.
 
-Compléter le canal privé dans `SECURITY.md` avant la première publication publique.
+Le signalement privé de vulnérabilité GitHub est activé et documenté dans `SECURITY.md`.

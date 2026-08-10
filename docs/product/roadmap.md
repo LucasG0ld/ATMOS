@@ -25,7 +25,7 @@ La roadmap est orientée résultats. Une phase ne commence que lorsque les crit�
 
 **Sortie :** revue visuelle desktop/mobile validée, aucun blocage d’accessibilité, contrôles compris lors d’un test rapide.
 
-## MVP 0.1 — Rainy Apartment sonore — candidate locale
+## MVP 0.1 — Rainy Apartment sonore — terminé
 
 **Résultat :** les trois couches sont réellement écoutables et réglables.
 
@@ -35,7 +35,7 @@ La roadmap est orientée résultats. Une phase ne commence que lorsque les crit�
 - Tests de cycle de vie et validation multi-navigateurs.
 - Mesures de performance média.
 
-**Sortie :** recette automatisée locale terminée ; Gate B sur appareils réels et déploiement de préproduction encore requis.
+**Sortie :** production GitHub Pages, Gate B automatisée et manuelle validées le 2026-08-10. Le contrôle Safari macOS réel, impossible faute d’appareil, est couvert partiellement par Safari iOS réel et WebKit desktop automatisé ; le responsable du projet a explicitement accepté ce risque résiduel.
 
 ## MVP 0.2 — Catalogue initial
 

@@ -2,7 +2,7 @@
 
 ## État
 
-**Candidate locale prête. Publication bloquée jusqu’à validation de la Gate B.**
+**Gate B validée le 2026-08-10. Lot 7 terminé et release ATMOS 0.1 approuvée.**
 
 ## Vérifications automatisées — 2026-08-10
 
@@ -34,7 +34,7 @@
 ## Gate B — validations manuelles et externes
 
 - [x] Écoute d’au moins dix minutes : fonctionnelle, aucun problème rencontré lors de la recette utilisateur.
-- [ ] Safari macOS réel : non exécuté, aucun appareil compatible disponible.
+- [x] Safari macOS réel : non exécuté faute d’appareil ; risque résiduel explicitement accepté par LucasG0ld, avec couverture compensatoire Safari iOS et WebKit desktop.
 - [x] Safari iOS réel : fonctionnel, aucun problème rencontré lors de la recette utilisateur.
 - [x] Chrome Android réel : fonctionnel, aucun problème rencontré lors de la recette utilisateur.
 - [x] Lecteur d’écran desktop et mobile : fonctionnel, aucun problème rencontré lors de la recette utilisateur.
@@ -56,7 +56,7 @@
 
 Mesures de laboratoire, cache froid et throttling Lighthouse. Elles ne remplacent pas les données terrain, indisponibles avant un trafic suffisant.
 
-La partie automatisable et distante de Gate B est validée. L’écoute longue, iOS, Android, les technologies d’assistance, le zoom 200 %, le texte agrandi et le contraste élevé sont également validés. Safari macOS réel reste le seul contrôle non exécuté, faute d’appareil disponible. Sa couverture compensatoire repose sur Safari iOS réel et WebKit desktop automatisé ; la clôture exige soit un test externe, soit l’acceptation explicite de ce risque résiduel par le responsable du projet.
+La Gate B est validée. L’écoute longue, iOS, Android, les technologies d’assistance, le zoom 200 %, le texte agrandi et le contraste élevé sont validés. Safari macOS réel reste non exécuté faute d’appareil ; LucasG0ld, responsable du projet et du déploiement, a explicitement accepté ce risque résiduel avec couverture compensatoire par Safari iOS réel et WebKit desktop automatisé.
 
 ## Commande de recette locale
 
@@ -73,4 +73,4 @@ npm run test:e2e
 npm run audit:prod
 ```
 
-Après validation, marquer le Lot 7 terminé, renseigner l’URL de preview, puis taguer `v0.1.0` selon la procédure de maintenance.
+Décision de release : aucun défaut critique ou majeur ouvert ; publication 0.1 approuvée et tag `v0.1.0` autorisé.

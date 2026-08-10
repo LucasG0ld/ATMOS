@@ -128,7 +128,7 @@ Décider explicitement si l’interface satisfait les principes du brief. Corrig
 
 ## Lot 7 — Stabilisation 0.1
 
-**Statut : stabilisation locale terminée le 2026-08-10 ; Gate B de release en attente.**
+**Statut : terminé le 2026-08-10 ; Gate B validée et release 0.1 approuvée.**
 
 ### Livrables
 
