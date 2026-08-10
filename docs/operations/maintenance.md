@@ -43,6 +43,13 @@ rester configurée sur **GitHub Actions**.
 7. Effectuer un smoke test depuis un cache vide.
 8. Taguer la version lorsque la stratégie de versionnage est active.
 
+Pour le point 4, construire d’abord avec `npm run build`, puis exécuter
+`npm run budget:check`, `npm run performance:runtime` et
+`npm run performance:lighthouse`. Cette dernière commande audite les cinq routes
+en profils mobile et desktop ; une route et un profil peuvent être ciblés, par
+exemple `npm run performance:lighthouse -- home mobile`. Les rapports temporaires
+sont écrits sous `.cache/`.
+
 ## Smoke test production
 
 Exécuter `npm run smoke:production` pour contrôler le parcours public avec un

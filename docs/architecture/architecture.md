@@ -94,6 +94,12 @@ Il est détruit dès que l’utilisateur quitte les routes du player. Zustand n�
 introduit que si les interactions futures rendent ce Context objectivement
 difficile à maintenir.
 
+Le Lot 14 isole les décisions d’anticipation dans
+`features/preloading/media-preloader.ts`. L’accueil ne prépare qu’un visuel
+responsive. Dans le player, le provider transmet l’intention au moteur, qui ne
+prépare l’audio compressé qu’après une première activation réussie et selon les
+capacités réseau annoncées.
+
 Éviter un store global unique. Distinguer :
 
 - état de données : ambiance sélectionnée ;

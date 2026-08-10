@@ -22,6 +22,8 @@ réutilisable.
 ```ts
 type AudioEngine = {
   load(layers: readonly SoundLayer[]): Promise<void>;
+  preload(layers: readonly SoundLayer[]): Promise<void>;
+  cancelPreload(): void;
   transition(layers: readonly SoundLayer[]): Promise<void>;
   play(): Promise<void>;
   pause(): void;
@@ -60,7 +62,15 @@ Ne jamais promettre une lecture automatique à l’arrivée. Le contexte est cr�
 - Vérifier `response.ok` avant lecture du corps.
 - Décoder hors du chemin de rendu React.
 - Signaler l’échec par couche afin de conserver les autres.
-- En 0.2, borner le cache de buffers et ne précharger qu’une ambiance probable après l’essentiel visuel.
+- En 0.2, ne précharger qu’une ambiance probable après l’essentiel visuel.
+
+Depuis le Lot 14, le préchargement conserve au plus une cible sous forme
+compressée (`ArrayBuffer`). Il ne crée pas d’`AudioContext` et ne décode aucun
+buffer. Une nouvelle intention annule les fetchs précédents et remplace ce cache ;
+une sélection explicite de la même cible réutilise les octets déjà reçus avant de
+décoder. `Save-Data`, le mode hors ligne, `slow-2g`/`2g` et un débit annoncé sous
+1,5 Mbit/s désactivent cette anticipation. Le cache HTTP immuable reste le second
+niveau, sans service worker.
 
 Le choix final de format dépend de tests navigateur. Fournir plusieurs sources uniquement si le gain de compatibilité le justifie ; documenter codecs et licences.
 

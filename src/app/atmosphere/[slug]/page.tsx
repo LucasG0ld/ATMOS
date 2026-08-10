@@ -50,7 +50,7 @@ export default async function AtmospherePage({ params }: AtmospherePageProps) {
   );
 
   return (
-    <AtmosphereScene atmosphere={atmosphere} className={styles.scene}>
+    <AtmosphereScene atmosphere={atmosphere}>
       <main className={`safe-area-frame min-h-dvh ${styles.frame}`}>
         <header className={styles.header}>
           <Wordmark />
@@ -76,7 +76,7 @@ export default async function AtmospherePage({ params }: AtmospherePageProps) {
           </Reveal>
 
           <div className={styles.editorial}>
-            <Reveal delay={0.12}>
+            <div>
               <p className={`text-label ${styles.eyebrow}`}>
                 Atmosphere · {String(atmosphereIndex + 1).padStart(2, "0")}
               </p>
@@ -91,13 +91,11 @@ export default async function AtmospherePage({ params }: AtmospherePageProps) {
                   </span>
                 ))}
               </h1>
-            </Reveal>
+            </div>
 
-            <Reveal delay={0.2}>
-              <p className={`text-body ${styles.description}`}>
-                {atmosphere.description}
-              </p>
-            </Reveal>
+            <p className={`text-body ${styles.description}`}>
+              {atmosphere.description}
+            </p>
           </div>
 
           <Reveal className={styles.controlsColumn} delay={0.28}>

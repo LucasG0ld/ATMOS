@@ -26,6 +26,9 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 - Session audio persistante limitée aux routes du player, avec un seul `AudioContext` et deux bus maximum.
 - Crossfades audio de 1,8 seconde, annulation des cibles obsolètes, reprise après erreur et transition visuelle coordonnée.
 - Recette des crossfades et de la continuité de session validée sur desktop et mobile.
+- Préchargement borné à une cible visuelle et, après Play, une cible audio compressée sans décodage anticipé.
+- Désactivation du préchargement audio avec `Save-Data`, connexion lente ou hors ligne, annulation des cibles obsolètes et réutilisation lors d’une sélection explicite.
+- Mesures reproductibles des bundles, de Lighthouse et de dix transitions ; police latine locale allégée et visuel mobile Deep Forest optimisé.
 
 ## [0.1.0] — 2026-08-10
 

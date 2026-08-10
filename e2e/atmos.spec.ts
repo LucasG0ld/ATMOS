@@ -351,6 +351,82 @@ test("a playing session survives atmosphere navigation with one audio context", 
     .toBe(1);
 });
 
+test("audio preload starts only after Play, is reused, and respects Save-Data", async ({
+  browserName,
+  page,
+}) => {
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) {
+      audioRequests.push(new URL(request.url()).pathname);
+    }
+  });
+
+  await page.goto("/atmosphere/rainy-apartment");
+  await page.getByRole("button", { name: "Atmospheres" }).click();
+  const initialDialog = page.getByRole("dialog", { name: "Atmospheres" });
+  await initialDialog.getByRole("link", { name: /Deep Forest/ }).focus();
+  expect(audioRequests).toEqual([]);
+  await page.keyboard.press("Escape");
+
+  await page.getByRole("button", { name: "Play Rainy Apartment" }).click();
+  const initialOutcome = page.getByRole("button", {
+    name: /^(Pause|Retry) Rainy Apartment$/,
+  });
+  await expect(initialOutcome).toBeVisible({ timeout: 15_000 });
+  if ((await initialOutcome.getAttribute("aria-label"))?.startsWith("Retry")) {
+    expect(browserName).toBe("webkit");
+    return;
+  }
+  await expect.poll(() => audioRequests.length).toBe(3);
+
+  await page.getByRole("button", { name: "Atmospheres" }).click();
+  const dialog = page.getByRole("dialog", { name: "Atmospheres" });
+  const forestLink = dialog.getByRole("link", { name: /Deep Forest/ });
+  await forestLink.focus();
+  await expect
+    .poll(
+      () =>
+        audioRequests.filter((path) =>
+          ["forest-air", "moving-leaves", "distant-stream"].some((name) =>
+            path.includes(name),
+          ),
+        ).length,
+    )
+    .toBe(3);
+  await forestLink.click();
+  await expect(
+    page.getByRole("button", { name: "Pause Deep Forest" }),
+  ).toBeVisible({ timeout: 15_000 });
+  expect(
+    audioRequests.filter((path) =>
+      ["forest-air", "moving-leaves", "distant-stream"].some((name) =>
+        path.includes(name),
+      ),
+    ),
+  ).toHaveLength(3);
+
+  await page.evaluate(() => {
+    Object.defineProperty(navigator, "connection", {
+      configurable: true,
+      value: { downlink: 10, effectiveType: "4g", saveData: true },
+    });
+  });
+  await page.getByRole("button", { name: "Atmospheres" }).click();
+  await page
+    .getByRole("dialog", { name: "Atmospheres" })
+    .getByRole("link", { name: /Fireplace/ })
+    .focus();
+  await page.waitForTimeout(300);
+  expect(
+    audioRequests.filter((path) =>
+      ["fire.mp3", "winter-wind", "quiet-room"].some((name) =>
+        path.includes(name),
+      ),
+    ),
+  ).toHaveLength(0);
+});
+
 test("responsive visual identities load the right asset and keep a fallback", async ({
   page,
 }) => {

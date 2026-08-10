@@ -97,6 +97,14 @@ session sur desktop et mobile le 2026-08-10, sans problème signalé. Les
 navigateurs exacts n’ont pas été consignés ; cette recette ne remplace donc pas
 les lignes Safari iOS et Android Chrome de la Gate C.
 
+Le Lot 14 porte la suite à 82 tests unitaires/composants. Elle couvre la politique
+`Save-Data`/connexion, le remplacement d’une preview responsive, l’absence de
+décodage anticipé, la réutilisation d’un téléchargement, l’annulation d’une cible
+obsolète et dix transitions avec un seul contexte et un seul bus final. La
+matrice Playwright compte 55 scénarios : 53 validations et les 2 reports clavier
+WebKit existants. Un scénario réseau confirme zéro audio avant Play, la
+réutilisation de la cible préchargée et le blocage sous `Save-Data`.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

@@ -40,11 +40,6 @@
   max-width: 14ch;
 }
 
-.navigation {
-  animation: reveal var(--duration-reveal) var(--ease-out) both;
-  animation-delay: 120ms;
-}
-
 .destinationList {
   padding: 0;
   margin: 0;
@@ -135,18 +130,6 @@
   color: var(--atmos-accent);
 }
 
-@keyframes reveal {
-  from {
-    opacity: 0;
-    transform: translateY(0.75rem);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @media (max-width: 40rem) {
   .frame {
     grid-template-rows: auto 1fr auto;
@@ -182,10 +165,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .navigation {
-    animation: none;
-  }
-
   .destination,
   .destination::before,
   .frame,

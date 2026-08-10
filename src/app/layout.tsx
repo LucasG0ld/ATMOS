@@ -1,8 +1,16 @@
 import type { Metadata, Viewport } from "next";
-
-import "@fontsource-variable/instrument-sans/wght.css";
+import localFont from "next/font/local";
 
 import "./globals.css";
+
+const instrumentSans = localFont({
+  display: "swap",
+  fallback: ["Helvetica Neue", "Arial", "sans-serif"],
+  preload: true,
+  src: "../../node_modules/@fontsource-variable/instrument-sans/files/instrument-sans-latin-wght-normal.woff2",
+  variable: "--font-instrument-sans",
+  weight: "400 700",
+});
 
 export const metadata: Metadata = {
   applicationName: "ATMOS",
@@ -46,7 +54,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={instrumentSans.variable}>{children}</body>
     </html>
   );
 }

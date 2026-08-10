@@ -10,10 +10,12 @@ import { VisualControls } from "./visual-controls";
 
 function createMockEngine(): AudioEngineController {
   return {
+    cancelPreload: vi.fn(),
     destroy: vi.fn().mockResolvedValue(undefined),
     load: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
     pause: vi.fn(),
     play: vi.fn().mockResolvedValue(undefined),
+    preload: vi.fn().mockResolvedValue(undefined),
     setLayerVolume: vi.fn(),
     setPageHidden: vi.fn().mockResolvedValue(undefined),
     transition: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),

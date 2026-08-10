@@ -238,7 +238,7 @@ Décider explicitement si l’interface satisfait les principes du brief. Corrig
 
 ## Lot 14 — Préchargement et performance
 
-**Statut : en attente.**
+**Statut : terminé le 2026-08-10 ; contrôles automatisés validés.**
 
 ### Livrables
 
@@ -250,6 +250,10 @@ Décider explicitement si l’interface satisfait les principes du brief. Corrig
 
 - Une action explicite reste prioritaire.
 - Budgets 0.2 et baseline 0.1 respectés.
+
+Le laboratoire local confirme les budgets et l’absence de fuite après dix
+transitions. Les mesures Lighthouse de production restent une validation de
+release du Lot 15, après déploiement de la candidate.
 
 ## Lot 15 — Stabilisation 0.2
 

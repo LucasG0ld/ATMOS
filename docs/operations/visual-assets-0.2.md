@@ -88,7 +88,7 @@ Avoid: close-up fire stock photo, luxury showroom, oversized flames, Christmas i
 
 - Sources générées : PNG RGB, 1536 × 1024.
 - Desktop : recadrage 1536 × 864, WebP qualité 78, métadonnées retirées.
-- Mobile : recadrage vertical 640 × 1024, WebP qualité 78, métadonnées retirées.
+- Mobile : recadrage vertical 640 × 1024, WebP qualité 78 ; Deep Forest qualité 52 après revue visuelle ; métadonnées retirées.
 - Outil : `ffmpeg-static@5.3.0`, encodeur `libwebp`.
 - Aucun agrandissement et aucune retouche générative après sélection.
 
@@ -98,10 +98,14 @@ Avoid: close-up fire stock photo, luxury showroom, oversized flames, Christmas i
 | ----------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
 | Rainy Apartment   | `4b4ff7b0ebfd7fd8d74a9bb714dde1e70406a5858dca7f8372f36c15ea791437` | `5cacafcdea79e79167daf6982c6f74daaba6f53227820fa9cf82be35cef1ec5b` | `f487f3d56ab6fe0f5a2e20441866d2bacb841a0a339775fc7f02c2797a3dd61e` |
 | Quiet Coffee Shop | `a003abc5131e6d17ed5c2427acc309fb611ea2285aa489b6e37ea7899ed0dc9e` | `10257a1772e8199fa3cc920bbf917f97632e654eb2d97beab567a4974f555532` | `39d15e74199a56c3ca679297e7bb2a87f2100e2ab447b65e4efe2313d4e0955b` |
-| Deep Forest       | `07d53552537c1bd1f23c9371f3bb4648f35ab2fda25e035877e81809752290b0` | `4f817af352ae7d0de6fe20fe31babc5089fb345ae3e40e2f74ac84e25514d7e3` | `11738485514458d4fce17d55126ec4ea7d0a6242f47706d9397812a6847c70d5` |
+| Deep Forest       | `07d53552537c1bd1f23c9371f3bb4648f35ab2fda25e035877e81809752290b0` | `4f817af352ae7d0de6fe20fe31babc5089fb345ae3e40e2f74ac84e25514d7e3` | `89dafacceade86a3d1ca9bef23926fd63cd10b8f0700c5a8df3dcb580c416250` |
 | Fireplace         | `d26b974b6decfae64f23755ca594d22468cdaaf9d42cc4f950b4f8a1a483d8bf` | `2f3ce72f66e337f946238cbd3b830646c889a6b92eb4683e67cb46cc1fe0600e` | `dc433e1864661a367fb8c567d1bf1ea1281fd69ede71864296b276d021d31b7c` |
 
 `npm run images:check` vérifie les huit exports, leurs dimensions et le plafond de
 500 Kio par fichier. Les fichiers WebP versionnés sont les masters de diffusion ;
 les empreintes des PNG permettent de vérifier une archive source externe si elle
 doit être réutilisée.
+
+Au Lot 14, l’export mobile Deep Forest a été réencodé en WebP qualité 52 après
+comparaison visuelle avec le master. Il pèse 89,5 Kio au lieu de 130,3 Kio, sans
+changement de dimensions ni de contenu.

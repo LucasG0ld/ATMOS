@@ -4,6 +4,10 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import {
+  createVisualPreloader,
+  type BoundedVisualPreloader,
+} from "../../features/preloading/media-preloader";
 import type { Atmosphere } from "../../types/atmosphere";
 import { AtmosphereScene } from "../atmosphere/atmosphere-scene";
 import { Wordmark } from "../shared/wordmark";
@@ -19,12 +23,14 @@ export function AtmosphereCatalogue({ atmospheres }: AtmosphereCatalogueProps) {
   const [previewSlug, setPreviewSlug] = useState(atmospheres[0]?.slug ?? "");
   const [navigating, setNavigating] = useState(false);
   const previewTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const visualPreloaderRef = useRef<BoundedVisualPreloader | null>(null);
   const previewAtmosphere =
     atmospheres.find(({ slug }) => slug === previewSlug) ?? atmospheres[0];
 
   useEffect(
     () => () => {
       if (previewTimerRef.current) clearTimeout(previewTimerRef.current);
+      visualPreloaderRef.current?.cancel();
     },
     [],
   );
@@ -37,9 +43,15 @@ export function AtmosphereCatalogue({ atmospheres }: AtmosphereCatalogueProps) {
     previewTimerRef.current = null;
   };
 
+  const preloadVisual = (atmosphere: Atmosphere) => {
+    visualPreloaderRef.current ??= createVisualPreloader();
+    visualPreloaderRef.current.preload(atmosphere);
+  };
+
   const previewAfterIntent = (atmosphere: Atmosphere, pointerType: string) => {
     if (pointerType !== "mouse") return;
     clearPreviewTimer();
+    preloadVisual(atmosphere);
     previewTimerRef.current = setTimeout(() => {
       setPreviewSlug(atmosphere.slug);
       previewTimerRef.current = null;
@@ -48,6 +60,7 @@ export function AtmosphereCatalogue({ atmospheres }: AtmosphereCatalogueProps) {
 
   const previewImmediately = (atmosphere: Atmosphere) => {
     clearPreviewTimer();
+    preloadVisual(atmosphere);
     setPreviewSlug(atmosphere.slug);
   };
 

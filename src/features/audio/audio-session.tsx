@@ -12,6 +12,11 @@ import {
 } from "react";
 
 import type { Atmosphere } from "../../types/atmosphere";
+import {
+  allowsAudioPreload,
+  createVisualPreloader,
+  type BoundedVisualPreloader,
+} from "../preloading/media-preloader";
 
 import {
   createAudioEngine,
@@ -30,6 +35,7 @@ type AudioSessionSnapshot = {
 };
 
 type AudioSessionController = AudioSessionSnapshot & {
+  preloadAtmosphere(atmosphere: Atmosphere): void;
   selectAtmosphere(atmosphere: Atmosphere): void;
   setLayerVolume(layerId: string, volume: number): void;
   togglePlayback(
@@ -96,10 +102,14 @@ export function AudioSessionProvider({
   const activeAtmosphereIdRef = useRef<string | undefined>(undefined);
   const currentAtmosphereRef = useRef<Atmosphere | undefined>(undefined);
   const engineRef = useRef<AudioEngineController | undefined>(undefined);
+  const hasActivatedAudioRef = useRef(false);
   const intentPlayingRef = useRef(false);
   const operationRef = useRef(0);
   const unavailableLayerIdsRef = useRef<readonly string[]>([]);
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+  const visualPreloaderRef = useRef<BoundedVisualPreloader | undefined>(
     undefined,
   );
   const [outgoingAtmosphere, setOutgoingAtmosphere] = useState<
@@ -139,6 +149,7 @@ export function AudioSessionProvider({
       const previousAtmosphere = currentAtmosphereRef.current;
       if (previousAtmosphere?.id === atmosphere.id) return;
       currentAtmosphereRef.current = atmosphere;
+      visualPreloaderRef.current?.cancel();
 
       if (previousAtmosphere) {
         if (transitionTimerRef.current) {
@@ -189,6 +200,22 @@ export function AudioSessionProvider({
     [applyResult, reportFailure],
   );
 
+  const preloadAtmosphere = useCallback((atmosphere: Atmosphere) => {
+    if (currentAtmosphereRef.current?.id === atmosphere.id) return;
+    visualPreloaderRef.current ??= createVisualPreloader();
+    visualPreloaderRef.current.preload(atmosphere);
+
+    const engine = engineRef.current;
+    if (
+      !hasActivatedAudioRef.current ||
+      !engine ||
+      !allowsAudioPreload(navigator)
+    ) {
+      return;
+    }
+    void engine.preload(atmosphere.sounds).catch(() => undefined);
+  }, []);
+
   const togglePlayback = useCallback(
     async (
       atmosphere: Atmosphere,
@@ -230,6 +257,7 @@ export function AudioSessionProvider({
         if (operation !== operationRef.current) return;
 
         activeAtmosphereIdRef.current = atmosphere.id;
+        hasActivatedAudioRef.current = true;
         intentPlayingRef.current = true;
         applyResult(result);
       } catch (error) {
@@ -254,6 +282,7 @@ export function AudioSessionProvider({
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       operationRef.current += 1;
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+      visualPreloaderRef.current?.cancel();
       const engine = engineRef.current;
       engineRef.current = undefined;
       if (engine) void engine.destroy().catch(() => undefined);
@@ -264,6 +293,7 @@ export function AudioSessionProvider({
     <AudioSessionContext.Provider
       value={{
         ...snapshot,
+        preloadAtmosphere,
         selectAtmosphere,
         setLayerVolume,
         togglePlayback,

@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
 
+import { useAudioSession } from "../../features/audio/audio-session";
 import type { Atmosphere } from "../../types/atmosphere";
 
 import styles from "./atmosphere-menu.module.css";
@@ -17,6 +18,7 @@ export function AtmosphereMenu({
   atmospheres,
   currentSlug,
 }: AtmosphereMenuProps) {
+  const audioSession = useAudioSession();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const currentLinkRef = useRef<HTMLAnchorElement>(null);
@@ -83,6 +85,16 @@ export function AtmosphereMenu({
                       className={styles.link}
                       href={`/atmosphere/${atmosphere.slug}`}
                       onClick={closeMenu}
+                      onFocus={() => {
+                        if (!isCurrent) {
+                          audioSession?.preloadAtmosphere(atmosphere);
+                        }
+                      }}
+                      onPointerEnter={(event) => {
+                        if (!isCurrent && event.pointerType === "mouse") {
+                          audioSession?.preloadAtmosphere(atmosphere);
+                        }
+                      }}
                       ref={isCurrent ? currentLinkRef : undefined}
                     >
                       <span

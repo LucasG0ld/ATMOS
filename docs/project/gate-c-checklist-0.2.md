@@ -28,9 +28,9 @@
 ## Préchargement et performance
 
 - [x] Zéro audio avant le premier Play.
-- [ ] Au plus une cible visuelle et une cible audio éligible préchargées.
-- [ ] `Save-Data`, connexion lente et annulation testés.
-- [ ] Budgets JS, CSS, images, audio et mémoire respectés.
+- [x] Au plus une cible visuelle et une cible audio éligible préchargées.
+- [x] `Save-Data`, connexion lente et annulation testés.
+- [x] Budgets JS, CSS, images, audio et mémoire respectés.
 - [ ] Lighthouse accueil et quatre players comparé à la baseline 0.1.
 
 ## Qualité et release

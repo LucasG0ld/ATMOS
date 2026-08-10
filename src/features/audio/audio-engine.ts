@@ -12,6 +12,8 @@ export type AudioLoadResult = {
 
 export type AudioEngineController = {
   load(layers: readonly SoundLayer[]): Promise<AudioLoadResult>;
+  preload(layers: readonly SoundLayer[]): Promise<void>;
+  cancelPreload(): void;
   transition(layers: readonly SoundLayer[]): Promise<AudioLoadResult>;
   play(): Promise<void>;
   pause(): void;
@@ -33,6 +35,21 @@ type AudioBus = {
   layerGains: Map<string, GainNode>;
   sources: Map<string, AudioBufferSourceNode>;
 };
+
+type CompressedAudio = {
+  buffers: Map<string, ArrayBuffer>;
+  key: string;
+};
+
+type PendingPreload = {
+  abortController: AbortController;
+  key: string;
+  promise: Promise<CompressedAudio>;
+};
+
+function layersKey(layers: readonly SoundLayer[]): string {
+  return layers.map(({ src }) => src).join("\u0000");
+}
 
 function clampVolume(value: number): number {
   if (!Number.isFinite(value)) return 0;
@@ -61,6 +78,7 @@ function abortError(): Error {
 export class WebAudioEngine implements AudioEngineController {
   private activeBus?: AudioBus;
   private context?: AudioContext;
+  private compressedPreload?: CompressedAudio;
   private destroyPromise?: Promise<void>;
   private destroyed = false;
   private layerVolumes = new Map<string, number>();
@@ -69,6 +87,7 @@ export class WebAudioEngine implements AudioEngineController {
   private masterGain?: GainNode;
   private operationId = 0;
   private playing = false;
+  private pendingPreload?: PendingPreload;
   private retiringBus?: AudioBus;
   private retiringTimer?: ReturnType<typeof setTimeout>;
   private transitionAbortController?: AbortController;
@@ -96,6 +115,42 @@ export class WebAudioEngine implements AudioEngineController {
     });
 
     return this.loadPromise;
+  }
+
+  preload(layers: readonly SoundLayer[]): Promise<void> {
+    this.assertAvailable();
+    const key = layersKey(layers);
+    if (this.compressedPreload?.key === key) return Promise.resolve();
+    if (this.pendingPreload?.key === key) {
+      return this.pendingPreload.promise.then(() => undefined);
+    }
+
+    this.cancelPreload();
+    const abortController = new AbortController();
+    const promise = this.fetchCompressedLayers(layers, abortController.signal);
+    const pending: PendingPreload = { abortController, key, promise };
+    this.pendingPreload = pending;
+
+    return promise
+      .then((preload) => {
+        if (
+          this.pendingPreload === pending &&
+          !abortController.signal.aborted
+        ) {
+          this.compressedPreload = preload;
+          this.pendingPreload = undefined;
+        }
+      })
+      .catch((error: unknown) => {
+        if (this.pendingPreload === pending) this.pendingPreload = undefined;
+        throw error;
+      });
+  }
+
+  cancelPreload(): void {
+    this.pendingPreload?.abortController.abort();
+    this.pendingPreload = undefined;
+    this.compressedPreload = undefined;
   }
 
   async transition(layers: readonly SoundLayer[]): Promise<AudioLoadResult> {
@@ -256,18 +311,22 @@ export class WebAudioEngine implements AudioEngineController {
     signal: AbortSignal,
   ): Promise<{ bus: AudioBus; result: AudioLoadResult }> {
     const context = this.ensureContext();
+    const compressedLayers = await this.takeCompressedPreload(layers, signal);
+    if (signal.aborted) throw abortError();
     const results = await Promise.allSettled(
       layers.map(async (layer) => {
-        const response = await this.dependencies.fetch(layer.src, { signal });
-        if (!response.ok) {
-          throw new Error(
-            `Unable to load ${layer.id}: HTTP ${response.status}`,
-          );
+        let encodedAudio = compressedLayers.get(layer.src);
+        if (!encodedAudio) {
+          const response = await this.dependencies.fetch(layer.src, { signal });
+          if (!response.ok) {
+            throw new Error(
+              `Unable to load ${layer.id}: HTTP ${response.status}`,
+            );
+          }
+          encodedAudio = await response.arrayBuffer();
         }
 
-        const buffer = await context.decodeAudioData(
-          await response.arrayBuffer(),
-        );
+        const buffer = await context.decodeAudioData(encodedAudio.slice(0));
         return { buffer, layer };
       }),
     );
@@ -308,6 +367,63 @@ export class WebAudioEngine implements AudioEngineController {
     }
 
     return { bus, result: { unavailableLayerIds } };
+  }
+
+  private async fetchCompressedLayers(
+    layers: readonly SoundLayer[],
+    signal: AbortSignal,
+  ): Promise<CompressedAudio> {
+    const results = await Promise.allSettled(
+      layers.map(async (layer) => {
+        const response = await this.dependencies.fetch(layer.src, { signal });
+        if (!response.ok) {
+          throw new Error(
+            `Unable to preload ${layer.id}: HTTP ${response.status}`,
+          );
+        }
+        return [layer.src, await response.arrayBuffer()] as const;
+      }),
+    );
+    if (signal.aborted) throw abortError();
+
+    const buffers = new Map<string, ArrayBuffer>();
+    for (const result of results) {
+      if (result.status === "fulfilled") buffers.set(...result.value);
+    }
+    if (buffers.size === 0) {
+      throw new Error("No audio layer could be preloaded.");
+    }
+    return { buffers, key: layersKey(layers) };
+  }
+
+  private async takeCompressedPreload(
+    layers: readonly SoundLayer[],
+    signal: AbortSignal,
+  ): Promise<Map<string, ArrayBuffer>> {
+    const key = layersKey(layers);
+    const pending = this.pendingPreload;
+    if (pending?.key === key) {
+      await Promise.race([
+        pending.promise,
+        new Promise<never>((_, reject) => {
+          signal.addEventListener("abort", () => reject(abortError()), {
+            once: true,
+          });
+        }),
+      ]);
+    } else if (pending) {
+      this.cancelPreload();
+    }
+
+    if (signal.aborted) throw abortError();
+    if (this.compressedPreload?.key !== key) {
+      if (this.compressedPreload) this.compressedPreload = undefined;
+      return new Map();
+    }
+
+    const buffers = this.compressedPreload.buffers;
+    this.compressedPreload = undefined;
+    return buffers;
   }
 
   private async resumeContext() {
@@ -396,6 +512,7 @@ export class WebAudioEngine implements AudioEngineController {
   }
 
   private async resetGraph() {
+    this.cancelPreload();
     this.loadAbortController?.abort();
     this.transitionAbortController?.abort();
     this.loadAbortController = undefined;

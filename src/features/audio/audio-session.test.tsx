@@ -4,18 +4,21 @@ import { describe, expect, it, vi } from "vitest";
 
 import { VisualControls } from "../../components/controls/visual-controls";
 import { deepForest } from "../../data/atmospheres/deep-forest";
+import { fireplace } from "../../data/atmospheres/fireplace";
 import { rainyApartment } from "../../data/atmospheres/rainy-apartment";
 import type { Atmosphere } from "../../types/atmosphere";
 
 import type { AudioEngineController, AudioLoadResult } from "./audio-engine";
-import { AudioSessionProvider } from "./audio-session";
+import { AudioSessionProvider, useAudioSession } from "./audio-session";
 
 function createMockEngine(): AudioEngineController {
   return {
+    cancelPreload: vi.fn(),
     destroy: vi.fn().mockResolvedValue(undefined),
     load: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
     pause: vi.fn(),
     play: vi.fn().mockResolvedValue(undefined),
+    preload: vi.fn().mockResolvedValue(undefined),
     setLayerVolume: vi.fn(),
     setPageHidden: vi.fn().mockResolvedValue(undefined),
     transition: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
@@ -47,7 +50,49 @@ function Session({
   );
 }
 
+function PreloadProbe() {
+  const session = useAudioSession();
+  return (
+    <>
+      <button onClick={() => session?.preloadAtmosphere(deepForest)}>
+        Preload forest
+      </button>
+      <button onClick={() => session?.preloadAtmosphere(fireplace)}>
+        Preload fireplace
+      </button>
+    </>
+  );
+}
+
 describe("AudioSessionProvider", () => {
+  it("defers audio preloading until Play and respects Save-Data", async () => {
+    const user = userEvent.setup();
+    const engine = createMockEngine();
+    const createEngine = () => engine;
+    render(
+      <AudioSessionProvider createEngine={createEngine}>
+        <Player atmosphere={rainyApartment} />
+        <PreloadProbe />
+      </AudioSessionProvider>,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Preload forest" }));
+    expect(engine.preload).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole("button", { name: /Play Rainy/ }));
+    await screen.findByRole("button", { name: /Pause Rainy/ });
+    await user.click(screen.getByRole("button", { name: "Preload forest" }));
+    expect(engine.preload).toHaveBeenCalledWith(deepForest.sounds);
+
+    Object.defineProperty(navigator, "connection", {
+      configurable: true,
+      value: { effectiveType: "4g", saveData: true },
+    });
+    await user.click(screen.getByRole("button", { name: "Preload fireplace" }));
+    expect(engine.preload).toHaveBeenCalledTimes(1);
+    Reflect.deleteProperty(navigator, "connection");
+  });
+
   it("keeps one engine alive and crossfades when the route atmosphere changes", async () => {
     const user = userEvent.setup();
     const engine = createMockEngine();
