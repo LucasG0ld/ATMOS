@@ -2,6 +2,7 @@ import type { SoundLayer } from "../../types/atmosphere";
 
 const LAYER_RAMP_SECONDS = 0.05;
 const MASTER_RAMP_SECONDS = 0.35;
+const RESUME_TIMEOUT_MS = 5_000;
 
 export type AudioLoadResult = {
   unavailableLayerIds: readonly string[];
@@ -19,6 +20,7 @@ export type AudioEngineController = {
 type AudioEngineDependencies = {
   createContext: () => AudioContext;
   fetch: typeof globalThis.fetch;
+  resumeTimeoutMs?: number;
 };
 
 function clampVolume(value: number): number {
@@ -207,7 +209,23 @@ export class WebAudioEngine implements AudioEngineController {
   }
 
   private async resumeContext() {
-    if (this.context?.state === "suspended") await this.context.resume();
+    const context = this.context;
+    if (context?.state !== "suspended") return;
+
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    try {
+      await Promise.race([
+        context.resume(),
+        new Promise<never>((_, reject) => {
+          timeoutId = setTimeout(
+            () => reject(new Error("Audio context could not be resumed.")),
+            this.dependencies.resumeTimeoutMs ?? RESUME_TIMEOUT_MS,
+          );
+        }),
+      ]);
+    } finally {
+      if (timeoutId) clearTimeout(timeoutId);
+    }
   }
 
   private startSources() {

@@ -156,6 +156,23 @@ describe("WebAudioEngine", () => {
     expect(fake.sources).toHaveLength(2);
   });
 
+  it("fails cleanly when a suspended audio context cannot resume", async () => {
+    const fake = createFakeContext();
+    fake.rawContext.resume.mockImplementation(() => new Promise(() => {}));
+    const fetchAudio = vi.fn(async () => successfulResponse());
+    const engine = new WebAudioEngine({
+      createContext: () => fake.context,
+      fetch: fetchAudio as typeof fetch,
+      resumeTimeoutMs: 1,
+    });
+
+    await expect(engine.load(rainyApartment.sounds)).rejects.toThrow(
+      "Audio context could not be resumed",
+    );
+    expect(fetchAudio).not.toHaveBeenCalled();
+    expect(fake.rawContext.close).toHaveBeenCalledTimes(1);
+  });
+
   it("rebuilds a clean graph when every layer fails and the user retries", async () => {
     const first = createFakeContext();
     const second = createFakeContext();

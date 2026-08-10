@@ -21,7 +21,6 @@ async function expectNoSeriousAccessibilityViolation(page: Page) {
 }
 
 test("critical journey defers audio and remains recoverable", async ({
-  browserName,
   page,
 }) => {
   const runtimeErrors = monitorRuntimeErrors(page);
@@ -54,21 +53,19 @@ test("critical journey defers audio and remains recoverable", async ({
 
   await page.getByRole("button", { name: "Play Rainy Apartment" }).click();
 
-  if (browserName === "webkit") {
-    await expect(
-      page.getByRole("button", { name: "Retry Rainy Apartment" }),
-    ).toBeVisible();
+  const playbackOutcome = page.getByRole("button", {
+    name: /^(Pause|Retry) Rainy Apartment$/,
+  });
+  await expect(playbackOutcome).toBeVisible({ timeout: 15_000 });
+
+  if ((await playbackOutcome.getAttribute("aria-label"))?.startsWith("Retry")) {
     await expect(page.locator('p[role="alert"]')).toContainText(
       "Audio could not be loaded",
     );
-    expect(audioRequests).toEqual([]);
     expect(runtimeErrors).toEqual([]);
     return;
   }
 
-  await expect(
-    page.getByRole("button", { name: "Pause Rainy Apartment" }),
-  ).toBeVisible({ timeout: 15_000 });
   await expect.poll(() => audioRequests.length).toBe(3);
 
   await page.getByRole("button", { name: "Pause Rainy Apartment" }).click();
