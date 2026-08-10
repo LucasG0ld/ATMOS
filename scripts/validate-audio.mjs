@@ -4,7 +4,7 @@ import { createRequire } from "node:module";
 import { join, resolve } from "node:path";
 
 const require = createRequire(import.meta.url);
-const ffmpegPath = require("ffmpeg-static");
+const ffmpegPath = process.env.FFMPEG_PATH || require("ffmpeg-static");
 const audioDirectory = resolve(import.meta.dirname, "..", "public", "audio");
 const maxTotalBytes = 8 * 1024 * 1024;
 
@@ -20,6 +20,7 @@ function inspect(path) {
     ["-hide_banner", "-i", path, "-f", "null", "-"],
     { encoding: "utf8", maxBuffer: 2 * 1024 * 1024 },
   );
+  if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(result.stderr);
 
   const durationMatch = result.stderr.match(
@@ -57,6 +58,7 @@ function measureBoundary(path) {
     ],
     { encoding: "buffer", maxBuffer: 16 * 1024 * 1024 },
   );
+  if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(result.stderr.toString("utf8"));
 
   const firstSample = result.stdout.readInt16LE(0);
