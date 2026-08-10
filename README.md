@@ -23,7 +23,7 @@ Le projet démarre par un prototype visuel complet de **Rainy Apartment**. Le mo
 - Lucide React pour les icônes ;
 - Web Audio API pour le moteur sonore ;
 - stockage local pour les préférences du MVP ;
-- déploiement sur Vercel.
+- export statique et déploiement continu sur GitHub Pages.
 
 Les versions sont verrouillées dans `package.json` et `package-lock.json`. TypeScript 6 et ESLint 9 sont volontairement retenus jusqu’à ce que l’outillage ESLint de Next.js prenne en charge leurs versions majeures suivantes.
 
@@ -37,6 +37,15 @@ npm run dev
 ```
 
 L’application est ensuite disponible sur `http://localhost:3000`.
+
+## Déploiement
+
+La branche `main` est publiée automatiquement à l’adresse
+[lucasg0ld.github.io/ATMOS](https://lucasg0ld.github.io/ATMOS/) par le workflow
+`Deploy GitHub Pages`. Le build de déploiement active l’export statique Next.js
+et le préfixe `/ATMOS`; ces paramètres ne modifient pas le développement local.
+
+Dans GitHub, la source Pages doit rester configurée sur **GitHub Actions**.
 
 ## Commandes
 

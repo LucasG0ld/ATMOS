@@ -6,7 +6,10 @@
 - **Preview** : validation par changement ou pull request.
 - **Production** : branche protégée et release approuvée.
 
-Le fournisseur cible est Vercel, à confirmer lors de l’initialisation. Les paramètres exacts, domaines et responsables seront ajoutés sans inscrire de secrets.
+La production statique est hébergée par GitHub Pages à l’adresse
+`https://lucasg0ld.github.io/ATMOS/`. Le workflow `Deploy GitHub Pages` construit
+et publie automatiquement la branche `main`. La source Pages du dépôt doit
+rester configurée sur **GitHub Actions**.
 
 ## Cadence
 

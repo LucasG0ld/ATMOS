@@ -1,4 +1,5 @@
 import { defineAtmosphere } from "./define-atmosphere";
+import { withBasePath } from "../../config/site";
 
 export const rainyApartment = defineAtmosphere({
   id: "rainy-apartment",
@@ -25,19 +26,19 @@ export const rainyApartment = defineAtmosphere({
     {
       id: "rain",
       name: "Rain",
-      src: "/audio/rain.mp3",
+      src: withBasePath("/audio/rain.mp3"),
       defaultVolume: 0.65,
     },
     {
       id: "window-rain",
       name: "Window Rain",
-      src: "/audio/window-rain.mp3",
+      src: withBasePath("/audio/window-rain.mp3"),
       defaultVolume: 0.4,
     },
     {
       id: "distant-thunder",
       name: "Distant Thunder",
-      src: "/audio/distant-thunder.mp3",
+      src: withBasePath("/audio/distant-thunder.mp3"),
       defaultVolume: 0.15,
     },
   ],

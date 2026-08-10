@@ -45,6 +45,12 @@ La candidate 0.1 configure dans `next.config.ts` :
 
 HSTS et redirection HTTPS restent à valider sur l’hébergeur réel afin de ne pas casser les environnements locaux. La suite navigateur contrôle la présence des en-têtes critiques et le type MIME audio.
 
+GitHub Pages sert un export statique et ne permet pas de définir les en-têtes
+personnalisés de `next.config.ts`. Ceux-ci restent actifs sur un hébergement
+Next.js avec serveur, mais ne s’appliquent pas au déploiement Pages. Cette
+limitation doit être réévaluée avant d’ajouter des sources distantes, des
+données sensibles ou une logique authentifiée.
+
 ## Dépendances
 
 - Lockfile versionné et installation figée en CI.
