@@ -39,6 +39,8 @@ La roadmap est orientée résultats. Une phase ne commence que lorsque les crit�
 
 ## MVP 0.2 — Catalogue initial
 
+**Statut : cadrage du Lot 8 prêt pour revue sur `mvp-0.2`.**
+
 **Résultat :** l’utilisateur explore plusieurs personnalités sans rupture d’expérience.
 
 - Quiet Coffee Shop, Deep Forest et Fireplace.

@@ -2,6 +2,15 @@
 
 Tous les changements notables du projet sont consignés ici. Le format s’inspire de Keep a Changelog et le projet utilisera le versionnage sémantique à partir de sa première version publiée.
 
+## Non publié
+
+### Ajouté
+
+- Cadrage du catalogue 0.2 : exigences, matrice des ambiances et UX de navigation.
+- ADR pour la session audio persistante, les crossfades et le préchargement borné.
+- Lots 8 à 15, budgets 0.2, risques associés et checklist Gate C.
+- Stratégie de branches protégeant la production 0.1 pendant le développement 0.2.
+
 ## [0.1.0] — 2026-08-10
 
 ### Ajouté

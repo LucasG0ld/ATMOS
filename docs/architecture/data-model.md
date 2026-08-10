@@ -98,6 +98,23 @@ const rainyApartment = {
 
 Les chemins et formats ci-dessus sont illustratifs jusqu’à sélection des actifs.
 
+## Catalogue 0.2
+
+Le tableau `atmospheres` est le registre unique. Son ordre définit l’index
+éditorial `01–04` ; aucun champ `order` dupliqué n’est nécessaire. Le thème et
+`visuals` existants alimentent aussi les previews : ne pas créer un second objet
+de présentation qui pourrait diverger du player.
+
+L’ajout d’une ambiance exige uniquement :
+
+1. une définition conforme à `Atmosphere` ;
+2. son export dans le registre ;
+3. ses médias locaux validés et crédités.
+
+Un composant qui branche sur un slug pour choisir contenu, style ou comportement
+viole le critère de sortie 0.2. Un futur besoin d’image mobile distincte pourra
+étendre `AtmosphereVisuals` après preuve par les actifs réels, pas avant.
+
 ## Invariants à valider
 
 - `id` et `slug` non vides, uniques et conformes à `^[a-z0-9]+(?:-[a-z0-9]+)*$`.

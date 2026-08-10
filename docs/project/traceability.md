@@ -20,6 +20,11 @@ Cette matrice permet de retrouver où chaque thème du brief initial devient une
 | 46                 | critères de réussite                                           | [Vision et périmètre](../product/vision-and-scope.md), [MVP](../product/mvp-requirements.md) et [Définition de terminé](definition-of-done.md)                                 |
 | 49–50              | méthode de travail avec Codex                                  | [AGENTS.md](../../AGENTS.md), [Contribution](../../CONTRIBUTING.md) et [Plan de réalisation](delivery-plan.md)                                                                 |
 
+Pour le MVP 0.2, les sections catalogue, navigation, transitions et performance
+sont précisées par la [spécification 0.2](../product/mvp-requirements-0.2.md), la
+[matrice des ambiances](../product/atmosphere-matrix-0.2.md), l’[UX catalogue](../design/catalogue-ux-0.2.md)
+et l’[ADR-0002](../architecture/decisions/0002-catalogue-transitions-and-preloading.md).
+
 ## Éléments ajoutés pour rendre le projet maintenable
 
 Le brief n’explicite pas entièrement certains besoins de livraison. Ils sont couverts par :
@@ -33,8 +38,6 @@ Le brief n’explicite pas entièrement certains besoins de livraison. Ils sont 
 
 ## Points volontairement non décidés
 
-- Actifs et typographie définitifs : à valider sur le prototype.
-- Versions de dépendances et commandes exactes : à enregistrer au scaffold.
-- Licence du code source : choix du propriétaire requis avant publication.
-- Canal de signalement et responsables d’exploitation : à renseigner avant production.
+- Visuels et sons des trois nouvelles ambiances : à sourcer et valider pendant les Lots 11 et 12.
+- Licence du code source : choix du propriétaire requis avant la release 0.2.
 - Analytics : absentes par défaut, décision de confidentialité préalable obligatoire.

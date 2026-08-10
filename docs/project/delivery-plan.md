@@ -141,3 +141,127 @@ Décider explicitement si l’interface satisfait les principes du brief. Corrig
 
 - Tous les critères du MVP et la définition de terminé satisfaits.
 - Aucun défaut critique ou majeur ouvert sur le parcours principal.
+
+## Lot 8 — Cadrage produit et UX 0.2
+
+**Statut : prêt pour revue sur la branche `mvp-0.2`.**
+
+### Livrables
+
+- Exigences fonctionnelles 0.2 et parcours critique.
+- Matrice éditoriale, visuelle et sonore des quatre ambiances.
+- Spécification UX du catalogue, des previews et de la navigation interne.
+- ADR catalogue, session persistante, crossfade et préchargement.
+- Budgets 0.2, registre des risques et checklist Gate C.
+
+### Validation
+
+- Périmètre, vocabulaire et identités approuvés.
+- Décisions techniques acceptées avant refactor du moteur.
+- Aucun média non licencié ajouté au dépôt.
+
+## Lot 9 — Registre et routes du catalogue
+
+**Statut : en attente du Lot 8.**
+
+### Livrables
+
+- Définitions validées Quiet Coffee Shop, Deep Forest et Fireplace avec fallbacks CSS.
+- Registre ordonné, invariants d’unicité et génération statique des quatre routes.
+- Player générique démontré avec données et médias dégradés.
+
+### Validation
+
+- Ajouter une ambiance de test ne modifie aucun composant.
+- Routes, métadonnées, préfixe GitHub Pages et 404 passent les tests.
+
+## Lot 10 — Accueil catalogue et navigation
+
+**Statut : en attente.**
+
+### Livrables
+
+- Liste éditoriale à quatre destinations et previews visuelles.
+- Action `Atmospheres` et navigation interne du player.
+- Focus, historique, toucher, mouvement réduit et erreurs de preview.
+
+### Validation
+
+- Aucun audio avant Play.
+- Aucun double tap, piège clavier ou saut de layout.
+- URL et ambiance courante restent synchronisées.
+
+## Lot 11 — Identités visuelles
+
+**Statut : en attente.**
+
+### Livrables
+
+- Fallbacks et médias finaux des trois nouvelles ambiances.
+- Points focaux, thèmes, variantes responsive, preuves de licence et crédits.
+- Références visuelles desktop/mobile.
+
+### Validation
+
+- Revue créative distincte pour chaque ambiance.
+- Lisibilité, contraste, zoom et budgets images conformes.
+
+## Lot 12 — Actifs et mixages audio
+
+**Statut : en attente.**
+
+### Livrables
+
+- Deux ou trois couches finales par nouvelle ambiance.
+- Pipeline reproductible, crédits, caractéristiques et validation de boucle.
+- Mixages par défaut cohérents entre les quatre ambiances.
+
+### Validation
+
+- Écoute longue sans jointure, fatigue ou saturation.
+- Actifs et total du catalogue dans les budgets.
+
+## Lot 13 — Session persistante et crossfades
+
+**Statut : en attente.**
+
+### Livrables
+
+- Un `AudioContext`, deux bus maximum et session persistante du player.
+- Crossfade, annulation des cibles obsolètes et reprise après erreur.
+- Transition visuelle coordonnée sans API expérimentale critique.
+
+### Validation
+
+- Navigation rapide sans son doublé, clic, fuite ou URL incohérente.
+- Cible lente et couche partielle testées.
+
+## Lot 14 — Préchargement et performance
+
+**Statut : en attente.**
+
+### Livrables
+
+- Préchargement d’une cible visuelle et, après Play, d’une cible audio éligible.
+- Conditions `Save-Data`/connexion, annulation et cache borné.
+- Mesures réseau, mémoire, bundles et Lighthouse.
+
+### Validation
+
+- Une action explicite reste prioritaire.
+- Budgets 0.2 et baseline 0.1 respectés.
+
+## Lot 15 — Stabilisation 0.2
+
+**Statut : en attente.**
+
+### Livrables
+
+- Matrice multi-navigateurs/appareils, accessibilité et écoute croisée.
+- Smoke test des quatre routes et scénarios dégradés.
+- Documentation de release, rollback et Gate C.
+
+### Validation
+
+- Gate C approuvée sans défaut critique ou majeur.
+- Tag `v0.2.0` autorisé explicitement.

@@ -8,9 +8,9 @@ Le projet démarre par un prototype visuel complet de **Rainy Apartment**. Le mo
 
 ## État du projet
 
-- Phase actuelle : Lots 0 à 7 et Gate B terminés.
+- Phase actuelle : MVP 0.1 publié ; Lot 8 du MVP 0.2 prêt pour revue sur `mvp-0.2`.
 - Code applicatif : ATMOS 0.1 Rainy Apartment visuelle et sonore publiée.
-- Prochaine étape : cadrage du MVP 0.2 — catalogue initial.
+- Prochaine étape : valider le cadrage 0.2 puis démarrer le Lot 9 — registre et routes du catalogue.
 - Langue de l’interface : anglais.
 - Langue de la documentation : français.
 

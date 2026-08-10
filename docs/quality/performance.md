@@ -109,3 +109,27 @@ Mesure de laboratoire Lighthouse 13.4.1 le 2026-08-10 sur
 | Player desktop  |         100 |           100 |              100 | 100 | 0,3 s | 0,4 s | 0 ms   | 0     |
 
 Les résultats satisfont les cibles de la candidate. Ils ne constituent pas des Core Web Vitals terrain ; ceux-ci nécessitent un volume suffisant de visites réelles.
+
+## Budgets du MVP 0.2
+
+La baseline 0.1 reste la référence. Les plafonds existants de page ne sont pas
+multipliés par le nombre d’ambiances : seul le média actif et une cible bornée
+peuvent entrer dans le parcours immédiat.
+
+| Ressource                                  | Cible 0.2                          | Plafond bloquant |
+| ------------------------------------------ | ---------------------------------- | ---------------- |
+| JavaScript accueil initial                 | ≤ 110 Kio gzip hors framework      | 120 Kio          |
+| JavaScript player avant Play               | ≤ 150 Kio gzip hors framework      | 170 Kio          |
+| CSS par route                              | ≤ 65 Kio gzip                      | 75 Kio           |
+| Visuel actif adapté au viewport            | ≤ 500 Kio                          | 700 Kio          |
+| Preview visuelle préchargée                | une cible, ≤ 500 Kio               | 700 Kio          |
+| Audio compressé d’une ambiance             | ≤ 3 Mio                            | 5 Mio            |
+| Audio compressé total des quatre ambiances | ≤ 12 Mio                           | 16 Mio           |
+| Audio préchargé après Play                 | une cible, ≤ 3 Mio                 | 5 Mio            |
+| Buffers PCM décodés                        | actif + cible, estimation ≤ 64 Mio | 80 Mio           |
+
+- Accueil et player ne chargent aucun audio avant Play.
+- `Save-Data` ou connexion classée lente désactivent le préchargement audio.
+- Les images non actives restent hors chemin critique, à l’exception d’une preview.
+- Une régression de plus de 10 % de LCP, TBT ou taille JS par rapport à 0.1 exige correction ou exception documentée.
+- Le test mémoire mesure au minimum dix changements successifs et vérifie le retour au régime actif + cible.

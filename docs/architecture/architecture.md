@@ -155,3 +155,5 @@ Le MVP utilise : erreurs console en développement, erreurs de build/test et con
 - v1 : schéma de mix personnalisé et migrations locales.
 
 Ces évolutions doivent prolonger les contrats existants, pas être anticipées par des abstractions vides.
+
+Le cadrage 0.2 est détaillé dans l’[ADR-0002](decisions/0002-catalogue-transitions-and-preloading.md) : registre ordonné, session persistante limitée au player, un seul contexte audio avec deux bus et préchargement d’une cible maximum.

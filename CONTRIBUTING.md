@@ -1,5 +1,12 @@
 # Contribuer à ATMOS
 
+## Branches de livraison
+
+- `main` représente la production GitHub Pages et ne reçoit que des changements validés.
+- Le MVP 0.2 est développé sur `mvp-0.2` puis intégré par pull request après Gate C.
+- Utiliser une branche courte issue de `mvp-0.2` lorsqu’un lot nécessite plusieurs contributeurs ou une revue isolée.
+- Ne pas pousser une tranche incomplète sur `main` ; vérifier CI, documentation et rollback avant fusion.
+
 ## Avant de commencer
 
 1. Lire la [spécification du MVP](docs/product/mvp-requirements.md) et le document lié au changement.
