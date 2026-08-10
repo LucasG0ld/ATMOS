@@ -12,7 +12,7 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 - Stratégie de branches protégeant la production 0.1 pendant le développement 0.2.
 - Registre ordonné de quatre ambiances et génération statique de leurs routes et métadonnées.
 - Fallbacks CSS de Quiet Coffee Shop, Deep Forest et Fireplace, sans média non licencié.
-- État générique et accessible pour les ambiances dont les couches audio sont encore en préparation.
+- État générique et accessible pour de futures ambiances dont les couches audio seraient encore en préparation.
 - Accueil éditorial à quatre destinations avec preview visuelle au focus et après intention de survol.
 - Dialogue natif `Atmospheres` dans le player avec liens réels, ambiance courante, gestion d’`Escape` et restauration du focus.
 - Parcours catalogue, navigation, historique et absence d’audio avant Play couverts sur desktop et mobile.
@@ -20,6 +20,8 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 - Rendu responsive par `<picture>`, points focaux mobiles et fallback CSS conservé en cas d’échec média.
 - Provenance IA, prompts, conditions, transformations, empreintes et crédits archivés pour les visuels 0.2.
 - Contrôle CI des dimensions et du budget image, références visuelles et contraste des nouveaux thèmes.
+- Neuf couches audio licenciées pour Quiet Coffee Shop, Deep Forest et Fireplace, avec boucles, filtrage et mastering reproductibles.
+- Mixages par défaut alignés à 1,5 LU, validation des jointures, true peaks et budgets du catalogue en CI.
 
 ## [0.1.0] — 2026-08-10
 

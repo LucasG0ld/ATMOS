@@ -147,3 +147,16 @@ Les huit exports totalisent 617,2 Kio. Une page ne sélectionne qu’une variant
 via `<picture>` ; le fallback CSS reste visible avant ou en cas d’échec. Chaque
 fichier demeure sous la cible de 500 Kio et le contrôle `npm run images:check`
 est exécuté en CI.
+
+### Mesure des actifs audio — Lot 12
+
+| Ambiance          | Couches | Taille totale | Budget par ambiance |
+| ----------------- | ------: | ------------: | ------------------: |
+| Rainy Apartment   |       3 |      1,92 Mio |            3,00 Mio |
+| Quiet Coffee Shop |       3 |      1,93 Mio |            3,00 Mio |
+| Deep Forest       |       3 |      0,99 Mio |            3,00 Mio |
+| Fireplace         |       3 |      0,97 Mio |            3,00 Mio |
+
+Le catalogue totalise 5,81 Mio sur 12 Mio. Aucun fichier n’est demandé avant
+Play. `npm run audio:check` vérifie format, durée, jointure, budget par ambiance,
+true peak et cohérence des quatre mixages par défaut.

@@ -77,6 +77,11 @@ Les versions exactes sont relevées à chaque release, pas figées ici.
 
 La candidate 0.1 automatise cinq projets Playwright : Chromium desktop, Firefox desktop, WebKit desktop, Chromium mobile émulé et WebKit mobile émulé. Le binaire WebKit Playwright sous Windows ne fournit pas `AudioContext` : il valide donc l’état récupérable sans audio. La lecture réelle reste automatisée sous Chromium et Firefox. Safari iOS réel a été validé à la Gate B. Safari macOS réel n’a pas pu être exécuté faute d’appareil ; sa couverture compensatoire par Safari iOS et WebKit desktop a été acceptée comme risque résiduel pour 0.1.
 
+Le Lot 12 applique la même frontière au catalogue 0.2 : Chromium et Firefox
+décodent réellement les trois nouvelles couches après Play ; WebKit vérifie le
+fallback récupérable et sert séparément les trois MP3 avec le bon type MIME. Une
+écoute Safari/iOS réelle des nouveaux mixes reste requise avant la Gate C.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

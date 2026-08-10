@@ -208,7 +208,7 @@ Décider explicitement si l’interface satisfait les principes du brief. Corrig
 
 ## Lot 12 — Actifs et mixages audio
 
-**Statut : en attente.**
+**Statut : implémenté le 2026-08-10 ; recette d’écoute longue en attente.**
 
 ### Livrables
 

@@ -224,6 +224,62 @@ test("catalog previews and player navigation keep URLs and audio coherent", asyn
   await expect(page).toHaveURL(/\/atmosphere\/quiet-coffee-shop$/);
 });
 
+test("a new catalog mix stays deferred and loads its three layers after Play", async ({
+  browserName,
+  page,
+}) => {
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) {
+      audioRequests.push(new URL(request.url()).pathname);
+    }
+  });
+
+  await page.goto("/atmosphere/deep-forest");
+  await expect(page.getByRole("slider", { name: "Forest Air" })).toHaveValue(
+    "58",
+  );
+  await expect(page.getByRole("slider", { name: "Moving Leaves" })).toHaveValue(
+    "30",
+  );
+  await expect(
+    page.getByRole("slider", { name: "Distant Stream" }),
+  ).toHaveValue("18");
+  expect(audioRequests).toEqual([]);
+
+  await page.getByRole("button", { name: "Play Deep Forest" }).click();
+  const playbackOutcome = page.getByRole("button", {
+    name: /^(Pause|Retry) Deep Forest$/,
+  });
+  await expect(playbackOutcome).toBeVisible({ timeout: 15_000 });
+
+  if ((await playbackOutcome.getAttribute("aria-label"))?.startsWith("Retry")) {
+    expect(browserName).toBe("webkit");
+    await expect(page.locator('p[role="alert"]')).toContainText(
+      "Audio could not be loaded",
+    );
+    for (const path of [
+      "/audio/distant-stream.mp3",
+      "/audio/forest-air.mp3",
+      "/audio/moving-leaves.mp3",
+    ]) {
+      const response = await page.request.get(path);
+      expect(response.status()).toBe(200);
+      expect(response.headers()["content-type"]).toContain("audio/mpeg");
+    }
+    return;
+  }
+
+  await expect.poll(() => audioRequests.length).toBe(3);
+  expect(audioRequests.sort()).toEqual(
+    [
+      "/audio/distant-stream.mp3",
+      "/audio/forest-air.mp3",
+      "/audio/moving-leaves.mp3",
+    ].sort(),
+  );
+});
+
 test("responsive visual identities load the right asset and keep a fallback", async ({
   page,
 }) => {

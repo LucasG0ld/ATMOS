@@ -40,7 +40,7 @@ describe("AtmospherePage", () => {
     ]);
   });
 
-  it("renders a generic player while a new atmosphere audio is pending", async () => {
+  it("renders the final mix for a catalog atmosphere", async () => {
     const page = await AtmospherePage({
       params: Promise.resolve({ slug: "deep-forest" }),
     });
@@ -51,10 +51,19 @@ describe("AtmospherePage", () => {
       screen.getByRole("heading", { name: "Deep Forest" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Atmosphere · 03")).toBeInTheDocument();
-    expect(screen.queryByRole("slider")).not.toBeInTheDocument();
+    expect(screen.getAllByRole("slider")).toHaveLength(3);
+    expect(screen.getByRole("slider", { name: "Forest Air" })).toHaveValue(
+      "58",
+    );
+    expect(screen.getByRole("slider", { name: "Moving Leaves" })).toHaveValue(
+      "30",
+    );
+    expect(screen.getByRole("slider", { name: "Distant Stream" })).toHaveValue(
+      "18",
+    );
     expect(
-      screen.getByRole("button", { name: "Audio unavailable for Deep Forest" }),
-    ).toBeDisabled();
+      screen.getByRole("button", { name: "Play Deep Forest" }),
+    ).toBeEnabled();
   });
 
   it("rejects a slug that is not part of the catalog", async () => {

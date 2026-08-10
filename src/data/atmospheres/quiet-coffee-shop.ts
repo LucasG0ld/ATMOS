@@ -30,5 +30,24 @@ export const quietCoffeeShop = defineAtmosphere({
     fallbackBackground:
       "radial-gradient(circle at 72% 22%, rgb(255 219 166 / 28%) 0, transparent 24rem), radial-gradient(circle at 28% 68%, rgb(120 73 42 / 32%) 0, transparent 30rem), linear-gradient(120deg, #17110d 0%, #3a291d 55%, #1b130e 100%)",
   },
-  sounds: [],
+  sounds: [
+    {
+      id: "cafe-room",
+      name: "Café Room",
+      src: withBasePath("/audio/cafe-room.mp3"),
+      defaultVolume: 0.55,
+    },
+    {
+      id: "soft-clatter",
+      name: "Cups & Porcelain",
+      src: withBasePath("/audio/soft-clatter.mp3"),
+      defaultVolume: 0.24,
+    },
+    {
+      id: "morning-street",
+      name: "Morning Street",
+      src: withBasePath("/audio/morning-street.mp3"),
+      defaultVolume: 0.14,
+    },
+  ],
 });

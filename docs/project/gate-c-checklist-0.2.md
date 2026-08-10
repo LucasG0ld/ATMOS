@@ -4,7 +4,7 @@
 
 - [x] Exigences 0.2 et matrice des quatre ambiances approuvées.
 - [x] ADR-0002 acceptée.
-- [ ] Sources et licences des nouveaux médias archivées avant commit.
+- [x] Sources et licences des nouveaux médias archivées avant commit.
 - [ ] Licence du code source décidée et fichier `LICENSE` ajouté ou absence explicitement assumée.
 - [ ] Aucun périmètre 0.3 introduit implicitement.
 
@@ -19,7 +19,7 @@
 ## Visuels et audio
 
 - [x] Chaque nouvelle ambiance possède fallback, visuel ou décision sans image, crédits et revue responsive.
-- [ ] Deux ou trois couches licenciées, bouclées et mixées par ambiance.
+- [x] Deux ou trois couches licenciées, bouclées et mixées par ambiance.
 - [ ] Écoute longue individuelle et transitions croisées sans clic ni saturation.
 - [ ] Échec d’une couche ou d’une ambiance récupérable sans son résiduel.
 - [ ] Un seul `AudioContext`, deux bus maximum et nettoyage démontré.

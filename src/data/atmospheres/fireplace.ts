@@ -28,5 +28,24 @@ export const fireplace = defineAtmosphere({
     fallbackBackground:
       "radial-gradient(circle at 58% 64%, rgb(222 116 52 / 36%) 0, transparent 22rem), radial-gradient(circle at 70% 38%, rgb(255 190 104 / 18%) 0, transparent 28rem), linear-gradient(122deg, #100b09 0%, #2d1a13 58%, #140d0a 100%)",
   },
-  sounds: [],
+  sounds: [
+    {
+      id: "fire",
+      name: "Fire",
+      src: withBasePath("/audio/fire.mp3"),
+      defaultVolume: 0.64,
+    },
+    {
+      id: "winter-wind",
+      name: "Winter Wind",
+      src: withBasePath("/audio/winter-wind.mp3"),
+      defaultVolume: 0.18,
+    },
+    {
+      id: "quiet-room",
+      name: "Quiet Room",
+      src: withBasePath("/audio/quiet-room.mp3"),
+      defaultVolume: 0.12,
+    },
+  ],
 });

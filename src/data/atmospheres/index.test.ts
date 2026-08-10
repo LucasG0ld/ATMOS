@@ -49,4 +49,17 @@ describe("atmosphere catalog", () => {
       expect(atmosphere.visuals.mobileFocalPoint).toBeDefined();
     }
   });
+
+  it("provides three independently mixed local layers for every atmosphere", () => {
+    for (const atmosphere of atmospheres) {
+      expect(atmosphere.sounds).toHaveLength(3);
+      expect(new Set(atmosphere.sounds.map(({ id }) => id)).size).toBe(3);
+
+      for (const sound of atmosphere.sounds) {
+        expect(sound.src).toMatch(new RegExp(`/audio/${sound.id}\\.mp3$`));
+        expect(sound.defaultVolume).toBeGreaterThan(0);
+        expect(sound.defaultVolume).toBeLessThanOrEqual(0.65);
+      }
+    }
+  });
 });

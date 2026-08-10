@@ -122,7 +122,7 @@ L’ajout d’une ambiance exige uniquement :
 Pendant les Lots 9 à 11, `sounds: []` représente explicitement une ambiance
 dont les actifs audio ne sont pas encore intégrés. Le player affiche alors un
 état indisponible non interactif et n’initialise jamais le moteur. Une entrée
-destinée à la release 0.2 devra contenir deux ou trois couches validées au Lot 12.
+destinée à la release 0.2 contient trois couches validées au Lot 12.
 
 Un composant qui branche sur un slug pour choisir contenu, style ou comportement
 viole le critère de sortie 0.2. Un futur besoin d’image mobile distincte pourra
