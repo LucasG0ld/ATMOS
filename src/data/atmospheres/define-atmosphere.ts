@@ -51,7 +51,6 @@ export function defineAtmosphere<const T extends Atmosphere>(
     "background source must be an absolute local path",
   );
 
-  assert(atmosphere.sounds.length > 0, "at least one sound is required");
   const soundIds = new Set<string>();
   for (const sound of atmosphere.sounds) {
     assert(slugPattern.test(sound.id), `invalid sound id "${sound.id}"`);

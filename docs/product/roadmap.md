@@ -39,7 +39,7 @@ La roadmap est orientée résultats. Une phase ne commence que lorsque les crit�
 
 ## MVP 0.2 — Catalogue initial
 
-**Statut : cadrage du Lot 8 prêt pour revue sur `mvp-0.2`.**
+**Statut : Lots 8 et 9 terminés sur `mvp-0.2` ; Lot 10 à démarrer.**
 
 **Résultat :** l’utilisateur explore plusieurs personnalités sans rupture d’expérience.
 

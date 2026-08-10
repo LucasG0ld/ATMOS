@@ -53,6 +53,27 @@ describe("VisualControls", () => {
     }
   });
 
+  it("exposes an accessible pending state when audio is not yet available", () => {
+    const createEngine = vi.fn(createMockEngine);
+
+    render(
+      <VisualControls
+        atmosphereName="Deep Forest"
+        createEngine={createEngine}
+        sounds={[]}
+      />,
+    );
+
+    expect(screen.queryByRole("slider")).not.toBeInTheDocument();
+    expect(
+      screen.getByText("Sound layers are being prepared for this atmosphere."),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Audio unavailable for Deep Forest" }),
+    ).toBeDisabled();
+    expect(createEngine).not.toHaveBeenCalled();
+  });
+
   it("updates layers independently", () => {
     renderControls();
     const rain = screen.getByRole("slider", { name: "Rain" });

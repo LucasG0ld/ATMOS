@@ -10,6 +10,9 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 - ADR pour la session audio persistante, les crossfades et le préchargement borné.
 - Lots 8 à 15, budgets 0.2, risques associés et checklist Gate C.
 - Stratégie de branches protégeant la production 0.1 pendant le développement 0.2.
+- Registre ordonné de quatre ambiances et génération statique de leurs routes et métadonnées.
+- Fallbacks CSS de Quiet Coffee Shop, Deep Forest et Fireplace, sans média non licencié.
+- État générique et accessible pour les ambiances dont les couches audio sont encore en préparation.
 
 ## [0.1.0] — 2026-08-10
 

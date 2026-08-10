@@ -71,12 +71,12 @@
 
 ## Statut des actifs
 
-| Ambiance          | Fallback CSS | Visuel licencié | Audio licencié | Mix validé | Intégrable |
-| ----------------- | ------------ | --------------- | -------------- | ---------- | ---------- |
-| Rainy Apartment   | validé       | non requis 0.1  | validé         | validé     | oui        |
-| Quiet Coffee Shop | à produire   | à sourcer       | à sourcer      | non        | non        |
-| Deep Forest       | à produire   | à sourcer       | à sourcer      | non        | non        |
-| Fireplace         | à produire   | à sourcer       | à sourcer      | non        | non        |
+| Ambiance          | Fallback CSS | Visuel licencié | Audio licencié | Mix validé | Intégrable       |
+| ----------------- | ------------ | --------------- | -------------- | ---------- | ---------------- |
+| Rainy Apartment   | validé       | non requis 0.1  | validé         | validé     | oui              |
+| Quiet Coffee Shop | validé Lot 9 | à sourcer       | à sourcer      | non        | données et route |
+| Deep Forest       | validé Lot 9 | à sourcer       | à sourcer      | non        | données et route |
+| Fireplace         | validé Lot 9 | à sourcer       | à sourcer      | non        | données et route |
 
 ## Gate créative
 

@@ -144,7 +144,7 @@ Décider explicitement si l’interface satisfait les principes du brief. Corrig
 
 ## Lot 8 — Cadrage produit et UX 0.2
 
-**Statut : prêt pour revue sur la branche `mvp-0.2`.**
+**Statut : terminé et approuvé le 2026-08-10.**
 
 ### Livrables
 
@@ -162,7 +162,7 @@ Décider explicitement si l’interface satisfait les principes du brief. Corrig
 
 ## Lot 9 — Registre et routes du catalogue
 
-**Statut : en attente du Lot 8.**
+**Statut : terminé le 2026-08-10.**
 
 ### Livrables
 

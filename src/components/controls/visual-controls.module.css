@@ -19,6 +19,11 @@
   gap: clamp(1rem, 2vh, 1.5rem);
 }
 
+.audioPending {
+  max-width: 21rem;
+  color: var(--atmos-muted);
+}
+
 .actions {
   display: flex;
   align-items: center;
@@ -52,8 +57,12 @@
 }
 
 .playButton:disabled {
-  cursor: wait;
+  cursor: not-allowed;
   opacity: 0.68;
+}
+
+.playButton[aria-busy="true"] {
+  cursor: wait;
 }
 
 .playButton:disabled:hover {

@@ -9,6 +9,12 @@ describe("defineAtmosphere", () => {
     expect(rainyApartment.sounds).toHaveLength(3);
   });
 
+  it("accepts an empty sound list while an atmosphere audio is in preparation", () => {
+    expect(
+      defineAtmosphere({ ...rainyApartment, sounds: [] }).sounds,
+    ).toHaveLength(0);
+  });
+
   it("rejects an invalid slug", () => {
     expect(() =>
       defineAtmosphere({ ...rainyApartment, slug: "Rainy Apartment" }),

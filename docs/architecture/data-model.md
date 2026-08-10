@@ -111,6 +111,11 @@ L’ajout d’une ambiance exige uniquement :
 2. son export dans le registre ;
 3. ses médias locaux validés et crédités.
 
+Pendant les Lots 9 à 11, `sounds: []` représente explicitement une ambiance
+dont les actifs audio ne sont pas encore intégrés. Le player affiche alors un
+état indisponible non interactif et n’initialise jamais le moteur. Une entrée
+destinée à la release 0.2 devra contenir deux ou trois couches validées au Lot 12.
+
 Un composant qui branche sur un slug pour choisir contenu, style ou comportement
 viole le critère de sortie 0.2. Un futur besoin d’image mobile distincte pourra
 étendre `AtmosphereVisuals` après preuve par les actifs réels, pas avant.
@@ -121,7 +126,7 @@ viole le critère de sortie 0.2. Un futur besoin d’image mobile distincte pour
 - Noms et descriptions non vides.
 - Couleurs dans un format CSS autorisé.
 - Coordonnées `focalPoint.x` et `focalPoint.y` comprises entre 0 et 100.
-- Au moins une couche sonore lorsque l’audio est activé.
+- Aucune couche autorisée pendant la préparation ; deux ou trois couches requises pour une ambiance activée en 0.2.
 - IDs de couches uniques dans une ambiance.
 - Volumes finis et compris entre 0 et 1.
 - Chemins média locaux absolus depuis `/` ; une origine distante demanderait une décision explicite.

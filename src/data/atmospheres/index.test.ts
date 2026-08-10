@@ -1,10 +1,29 @@
 import { describe, expect, it } from "vitest";
 
-import { atmospheres, getAtmosphereBySlug, rainyApartment } from "./index";
+import {
+  atmospheres,
+  deepForest,
+  fireplace,
+  getAtmosphereBySlug,
+  quietCoffeeShop,
+  rainyApartment,
+} from "./index";
 
 describe("atmosphere catalog", () => {
   it("resolves a known atmosphere from its slug", () => {
     expect(getAtmosphereBySlug("rainy-apartment")).toBe(rainyApartment);
+    expect(getAtmosphereBySlug("quiet-coffee-shop")).toBe(quietCoffeeShop);
+    expect(getAtmosphereBySlug("deep-forest")).toBe(deepForest);
+    expect(getAtmosphereBySlug("fireplace")).toBe(fireplace);
+  });
+
+  it("keeps the approved editorial order", () => {
+    expect(atmospheres.map(({ slug }) => slug)).toEqual([
+      "rainy-apartment",
+      "quiet-coffee-shop",
+      "deep-forest",
+      "fireplace",
+    ]);
   });
 
   it("returns undefined for an unknown slug", () => {

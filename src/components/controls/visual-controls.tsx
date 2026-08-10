@@ -45,9 +45,11 @@ export function VisualControls({
   const [volumes, setVolumes] = useState<Record<string, number>>(() =>
     createInitialVolumes(sounds),
   );
+  const hasSounds = sounds.length > 0;
   const isPlaying = playbackState === "playing";
-  const action =
-    playbackState === "loading"
+  const action = !hasSounds
+    ? "Unavailable"
+    : playbackState === "loading"
       ? "Loading"
       : playbackState === "error"
         ? "Retry"
@@ -88,7 +90,7 @@ export function VisualControls({
   };
 
   const togglePlayback = async () => {
-    if (playbackState === "loading") return;
+    if (!hasSounds || playbackState === "loading") return;
 
     if (playbackState === "playing") {
       engineRef.current?.pause();
@@ -133,15 +135,21 @@ export function VisualControls({
       <fieldset className={styles.fieldset}>
         <legend className={`text-label ${styles.legend}`}>Sound layers</legend>
         <div className={styles.layers}>
-          {sounds.map((sound) => (
-            <AtmosSlider
-              key={sound.id}
-              disabled={unavailableLayers.has(sound.id)}
-              label={sound.name}
-              onValueChange={(value) => updateVolume(sound.id, value)}
-              value={volumes[sound.id] ?? 0}
-            />
-          ))}
+          {hasSounds ? (
+            sounds.map((sound) => (
+              <AtmosSlider
+                key={sound.id}
+                disabled={unavailableLayers.has(sound.id)}
+                label={sound.name}
+                onValueChange={(value) => updateVolume(sound.id, value)}
+                value={volumes[sound.id] ?? 0}
+              />
+            ))
+          ) : (
+            <p className={`text-body ${styles.audioPending}`}>
+              Sound layers are being prepared for this atmosphere.
+            </p>
+          )}
         </div>
       </fieldset>
 
@@ -150,9 +158,13 @@ export function VisualControls({
           <button
             aria-busy={playbackState === "loading"}
             aria-describedby={statusMessage ? statusId : undefined}
-            aria-label={`${action} ${atmosphereName}`}
+            aria-label={
+              hasSounds
+                ? `${action} ${atmosphereName}`
+                : `Audio unavailable for ${atmosphereName}`
+            }
             className={styles.playButton}
-            disabled={playbackState === "loading"}
+            disabled={!hasSounds || playbackState === "loading"}
             data-playing={isPlaying ? "true" : "false"}
             onClick={() => void togglePlayback()}
             type="button"

@@ -1,6 +1,6 @@
 # ADR-0002 — Catalogue, transitions et préchargement 0.2
 
-- Statut : proposé pour validation du Lot 8
+- Statut : accepté le 2026-08-10
 - Date : 2026-08-10
 
 ## Contexte
@@ -76,6 +76,8 @@ plusieurs `AudioContext` concurrents.
 - Les routes hors player ne portent pas le moteur audio.
 - La stratégie reste compatible avec l’export statique GitHub Pages.
 
-## Validation demandée
+## Validation
 
-Le Lot 8 valide cette ADR avant implémentation du moteur de transition au Lot 13.
+ADR approuvée par le responsable du projet le 2026-08-10. Son implémentation
+progressive commence avec le registre du Lot 9 ; le moteur de transition reste
+planifié au Lot 13.

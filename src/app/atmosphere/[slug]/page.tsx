@@ -44,6 +44,10 @@ export default async function AtmospherePage({ params }: AtmospherePageProps) {
     notFound();
   }
 
+  const atmosphereIndex = atmospheres.findIndex(
+    ({ slug: catalogSlug }) => catalogSlug === atmosphere.slug,
+  );
+
   return (
     <AtmosphereScene atmosphere={atmosphere} className={styles.scene}>
       <main className={`safe-area-frame min-h-dvh ${styles.frame}`}>
@@ -66,7 +70,9 @@ export default async function AtmospherePage({ params }: AtmospherePageProps) {
 
           <div className={styles.editorial}>
             <Reveal delay={0.12}>
-              <p className={`text-label ${styles.eyebrow}`}>Atmosphere · 01</p>
+              <p className={`text-label ${styles.eyebrow}`}>
+                Atmosphere · {String(atmosphereIndex + 1).padStart(2, "0")}
+              </p>
               <h1
                 aria-label={atmosphere.name}
                 className={`text-display font-normal ${styles.title}`}

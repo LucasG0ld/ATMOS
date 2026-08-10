@@ -2,8 +2,8 @@
 
 ## Cadrage
 
-- [ ] Exigences 0.2 et matrice des quatre ambiances approuvées.
-- [ ] ADR-0002 acceptée.
+- [x] Exigences 0.2 et matrice des quatre ambiances approuvées.
+- [x] ADR-0002 acceptée.
 - [ ] Sources et licences des nouveaux médias archivées avant commit.
 - [ ] Licence du code source décidée et fichier `LICENSE` ajouté ou absence explicitement assumée.
 - [ ] Aucun périmètre 0.3 introduit implicitement.
@@ -11,10 +11,10 @@
 ## Catalogue et navigation
 
 - [ ] Quatre destinations lisibles sans hover ni média.
-- [ ] Quatre routes directes, métadonnées et 404 validées.
+- [x] Quatre routes directes, métadonnées et 404 validées.
 - [ ] Preview clavier/souris sans audio et tactile sans double tap.
 - [ ] Navigation interne, `aria-current`, `Escape`, focus et historique cohérents.
-- [ ] Une ambiance s’ajoute sans condition spécifique dans les composants.
+- [x] Une ambiance s’ajoute sans condition spécifique dans les composants.
 
 ## Visuels et audio
 
