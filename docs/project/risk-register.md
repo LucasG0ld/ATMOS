@@ -1,0 +1,22 @@
+# Registre des risques
+
+Échelle : probabilité et impact de 1 (faible) à 5 (fort). La priorité est leur produit. Revoir ce registre à chaque jalon.
+
+| ID   | Risque                                              |   P |   I | Signal précoce                                          | Mitigation                                                                 | Propriétaire | Statut          |
+| ---- | --------------------------------------------------- | --: | --: | ------------------------------------------------------- | -------------------------------------------------------------------------- | ------------ | --------------- |
+| R-01 | Actifs audio ou visuels sans licence exploitable    |   3 |   5 | source vague, lien mort, mention « royalty-free » seule | sélectionner tôt, archiver preuve, registre obligatoire                    | projet       | mitigé pour 0.1 |
+| R-02 | Poids audio/image dégrade l’entrée                  |   4 |   4 | LCP lent, transfert initial élevé                       | fallback immédiat, formats modernes, chargement audio après geste, budgets | front-end    | mitigé pour 0.1 |
+| R-03 | Boucles audio audiblement coupées                   |   3 |   4 | clic ou silence à chaque boucle                         | éditer à la source, écoute longue, points de boucle si nécessaire          | audio        | surveillé       |
+| R-04 | Restrictions autoplay ou différences Safari         |   4 |   4 | play sans son, contexte suspendu                        | initialisation après geste, matrice navigateurs, état récupérable          | front-end    | surveillé       |
+| R-05 | Design devient un dashboard ou un mixer             |   3 |   5 | multiplication de panneaux, bordures, labels            | gate visuelle, règles anti-patterns, tests qualitatifs                     | design       | mitigé pour 0.1 |
+| R-06 | Texte illisible selon le recadrage d’image          |   4 |   4 | contraste variable, portrait cassé                      | focal point, overlays locaux, fallback et tests par viewport               | design       | mitigé pour 0.1 |
+| R-07 | Animations et blur saccadent sur mobile             |   3 |   4 | frames perdues, chauffe                                 | opacity/transform, réduction mouvement, mesure appareil médian             | front-end    | surveillé       |
+| R-08 | Fuite de nœuds ou contextes audio                   |   3 |   5 | sons doublés, mémoire croissante                        | moteur propriétaire, nettoyage idempotent, tests Strict Mode               | front-end    | mitigé pour 0.1 |
+| R-09 | Hydratation instable à cause de l’heure locale      |   3 |   3 | warning React, contenu qui saute                        | espace réservé et lecture client contrôlée                                 | front-end    | mitigé pour 0.1 |
+| R-10 | Sur-ingénierie retarde le prototype                 |   4 |   4 | store global et abstractions avant premier écran        | lots courts, YAGNI, ADR pour ajout structurant                             | projet       | mitigé pour 0.1 |
+| R-11 | Persistance locale incompatible après évolution     |   2 |   3 | parse errors, préférences perdues                       | schéma versionné et validation en 0.3                                      | front-end    | surveillé       |
+| R-12 | Pas de canal privé de signalement avant publication |   3 |   3 | SECURITY sans contact                                   | définir canal avant release publique                                       | projet       | ouvert          |
+
+## Règle d’escalade
+
+Un score de 15 ou plus bloque le jalon tant qu’une mitigation et un responsable ne sont pas confirmés. Un risque réalisé devient un défaut ou une issue avec priorité explicite.

@@ -1,0 +1,42 @@
+# Journal des changements
+
+Tous les changements notables du projet sont consignés ici. Le format s’inspire de Keep a Changelog et le projet utilisera le versionnage sémantique à partir de sa première version publiée.
+
+## Non publié
+
+### Ajouté
+
+- Documentation initiale du produit, du design, de l’architecture, de la qualité et de la maintenance.
+- Fondation Next.js avec App Router, React, TypeScript strict et Tailwind CSS.
+- Motion et Lucide comme dépendances produit initiales.
+- ESLint, Prettier, Vitest et Testing Library pour la qualité locale.
+- Workflow CI exécutant formatage, lint, typecheck, tests et build.
+- Page d’attente accessible, page 404 et favicon typographique provisoire.
+- Instrument Sans Variable auto-hébergée avec sa licence OFL 1.1.
+- Tokens visuels, typographiques, responsive, safe areas et mouvement réduit.
+- Modèle d’ambiance validé et définition initiale de Rainy Apartment.
+- Primitive de scène responsive avec fallback atmosphérique CSS original.
+- Tests des invariants, contrastes et propriétés thématiques de la scène.
+- Accueil éditorial avec salutation locale et fallback sûr pour l’hydratation.
+- Destination Rainy Apartment accessible à la souris, au toucher et au clavier.
+- Preview de scène progressive avec variante sans mouvement.
+- Route Rainy Apartment minimale garantissant un parcours sans lien cassé.
+- Route `/atmosphere/[slug]` pilotée par le catalogue, avec métadonnées statiques et 404 stricte.
+- Player visuel Rainy Apartment avec composition responsive et navigation de retour.
+- Horloge locale hydratée sans exposer une heure serveur incorrecte.
+- Entrées progressives avec Motion et respect de la préférence de mouvement réduit.
+- Génération explicite des types de routes avant le typecheck.
+- `AtmosSlider` natif et accessible avec piste personnalisée et valeur contextuelle.
+- Volumes indépendants en état local pour Rain, Window Rain et Distant Thunder.
+- Contrôle play/pause simulé avec transition Motion et nom accessible dynamique.
+- Layout du player étendu aux contrôles sur desktop, tablette et mobile.
+- Nettoyage automatique du DOM entre les tests de composants.
+- Trois boucles audio Rainy Apartment issues du domaine public, compressées et documentées.
+- Préparation audio reproductible avec contrôle d’empreinte des sources, caractéristiques, jointures et budget.
+- Moteur Web Audio multi-couches initialisé uniquement après le premier geste utilisateur.
+- Fondus du master, rampes de volumes, pause/reprise et suspension lorsque l’onglet est masqué.
+- Tolérance aux erreurs par couche, réessai global accessible et nettoyage idempotent sous Strict Mode.
+- Recette Playwright sur Chromium, Firefox, WebKit et profils mobiles, avec audits axe WCAG 2.2 AA.
+- En-têtes CSP, anti-framing, confidentialité, permissions et cache audio pour le build de production.
+- Contrôle automatisé des budgets JS, CSS et fonts ainsi que références visuelles desktop/mobile.
+- Métadonnées sociales minimales, 404 navigateur et matrice de release 0.1.

@@ -1,0 +1,117 @@
+.scene {
+  position: relative;
+  isolation: isolate;
+  min-height: 100dvh;
+  overflow-x: clip;
+  background: var(--atmos-background);
+  color: var(--atmos-foreground);
+}
+
+.background,
+.haze,
+.rain,
+.veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.background {
+  z-index: -4;
+  background: var(--atmos-visual-background);
+  background-position: var(--atmos-focal-x) var(--atmos-focal-y);
+  background-size: cover;
+  transition:
+    transform var(--duration-scene) var(--ease-out),
+    filter var(--duration-scene) var(--ease-out);
+}
+
+.haze {
+  z-index: -3;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(5 10 15 / 76%) 0%,
+      transparent 52%,
+      rgb(8 13 18 / 28%) 100%
+    ),
+    radial-gradient(
+      ellipse at var(--atmos-focal-x) var(--atmos-focal-y),
+      color-mix(in srgb, var(--atmos-accent) 18%, transparent),
+      transparent 48%
+    );
+  transition: opacity var(--duration-scene) var(--ease-out);
+}
+
+.rain {
+  z-index: -2;
+  opacity: 0.1;
+  background-image: repeating-linear-gradient(
+    104deg,
+    transparent 0,
+    transparent 17px,
+    rgb(232 240 244 / 44%) 18px,
+    transparent 19px,
+    transparent 34px
+  );
+  mask-image: linear-gradient(90deg, transparent, black 52%, black);
+}
+
+.veil {
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgb(4 8 12 / 16%) 0%,
+    var(--atmos-overlay) 100%
+  );
+}
+
+.content {
+  position: relative;
+  min-height: inherit;
+}
+
+.scene:has([data-atmosphere-link]:is(:hover, :focus-visible, :active))
+  .background {
+  filter: brightness(1.08) saturate(1.04);
+  transform: scale(1.025);
+}
+
+.scene:has([data-atmosphere-link]:is(:hover, :focus-visible, :active)) .haze {
+  opacity: 0.82;
+}
+
+@media (max-width: 48rem) {
+  .haze {
+    background:
+      linear-gradient(180deg, rgb(5 10 15 / 32%), rgb(5 10 15 / 68%)),
+      radial-gradient(
+        ellipse at var(--atmos-focal-x) var(--atmos-focal-y),
+        color-mix(in srgb, var(--atmos-accent) 14%, transparent),
+        transparent 58%
+      );
+  }
+
+  .rain {
+    opacity: 0.07;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .haze,
+  .veil {
+    background: rgb(5 10 15 / 74%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .background,
+  .haze {
+    transition-duration: 0ms;
+  }
+
+  .scene:has([data-atmosphere-link]:is(:hover, :focus-visible, :active))
+    .background {
+    transform: none;
+  }
+}
