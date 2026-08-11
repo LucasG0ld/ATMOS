@@ -430,7 +430,7 @@ souris, clavier, toucher et responsive est validée sur desktop et mobile.
 
 ## Lot 21 — Stabilisation 0.3
 
-**Statut : planifié.**
+**Statut : candidate technique préparée le 2026-08-11 ; Gate D en attente.**
 
 ### Livrables
 
@@ -442,3 +442,12 @@ souris, clavier, toucher et responsive est validée sur desktop et mobile.
 
 - Gate D approuvée sans défaut critique ou majeur.
 - Tag `v0.3.0` autorisé explicitement.
+
+La candidate `0.3.0` passe une installation verrouillée, 120 tests, la matrice
+Playwright complète en une seule exécution, les audits médias/dépendances, le
+smoke local enrichi et dix audits Lighthouse. Un ancien parcours Firefox a été
+stabilisé en attendant le DOM utile plutôt que l’événement `load` complet. Le
+rollback public 0.2 est validé avec une préférence V1 présente. La recette
+consolidée desktop/mobile, technologies d’assistance, texte agrandi et contraste
+élevé est validée le 2026-08-11 ; le risque Safari macOS résiduel est
+renouvelé. La CI de PR et les contrôles HTTPS post-déploiement restent requis.

@@ -4,12 +4,27 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 
 ## Non publié
 
+## [0.3.0] — 2026-08-11
+
 ### Ajouté
 
 - Cadrage du MVP 0.3 : préférences locales versionnées, favoris, volumes persistants, timer et Focus Mode.
 - ADR-0003 accepté, modèle de stockage V1, budgets 0.3, risques associés et checklist Gate D.
 - Plan de réalisation des Lots 16 à 21 sans implémentation anticipée.
 - Socle de préférences locales V1 avec validation, état mémoire de secours, écritures regroupées et provider client sans effet audio ou réseau.
+- Favoris et volumes propres à chaque ambiance, restaurés localement sans compte ni synchronisation.
+- Dialogue Preferences expliquant le stockage local et permettant sa réinitialisation complète.
+- Timer de session de 15, 30, 45, 60 ou 90 minutes fondé sur une échéance absolue, avec fade-out final de cinq secondes.
+- Lecture en arrière-plan best effort sans suspension volontaire, avec automation Web Audio du timer et récupération explicite après refus système.
+- Focus Mode éphémère conservant heure, titre, timer, Play/Pause, erreurs et sortie accessible.
+- Restauration du focus, sortie `Escape`, safe areas, mouvement réduit et retrait réel des contrôles secondaires en Focus Mode.
+- Parcours automatisés des préférences, du timer, de la lecture de fond et du Focus Mode sur cinq profils navigateur.
+- Smoke de release 0.3 couvrant persistance locale, timer et Focus Mode avant la transition audio existante.
+
+### Modifié
+
+- Stabilisation de la navigation catalogue Firefox en attendant le DOM utile plutôt que le chargement intégral des médias.
+- Politique de visibilité audio remplacée par une continuité best effort documentée dans l’ADR-0004.
 
 ## [0.2.0] — 2026-08-11
 

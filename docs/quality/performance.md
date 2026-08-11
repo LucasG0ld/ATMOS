@@ -311,3 +311,16 @@ l’accueil et 59,6 Kio sur le player, soit +0,8 Kio depuis le Lot 19b. Le CSS d
 player atteint 9,1 Kio (+0,2 Kio) et les fonts restent à 29,4 Kio. Le mode
 n’ajoute aucun package, média, polling ou accès de stockage ; seul un listener
 `keydown` existe pendant son activation et il est nettoyé à la sortie.
+
+### Mesure de candidate — Lot 21
+
+La candidate conserve 11,7 Kio de JavaScript gzip sur l’accueil, 59,6 Kio sur le
+player, 6,8/9,1 Kio de CSS et 29,4 Kio de fonts. Dix transitions utilisent un
+seul `AudioContext`, 12 URL audio uniques et produisent un delta de tas de
++1 398 527 octets, comparable à la candidate 0.2 (+1,34 Mio).
+
+Les dix audits Lighthouse locaux obtiennent 100 en accessibilité, bonnes
+pratiques et SEO. Les performances vont de 97 à 99 sur les players mobiles et
+restent à 100 sur desktop. L’accueil mobile obtient 92 avec un LCP de 3,33 s ;
+Deep Forest obtient 97 avec 2,55 s. Ces deux dépassements locaux existaient déjà
+en 0.2 et doivent être comparés aux mesures HTTPS post-déploiement.

@@ -64,6 +64,8 @@ manuelles ci-dessous.
 - Route Rainy Apartment directe et retour fonctionnent.
 - Image ou fallback, horloge et contrôles sont visibles.
 - Play après geste, trois volumes et pause fonctionnent lorsque l’audio est livré.
+- Un volume, un favori, le démarrage/annulation du timer et l’entrée/sortie de
+  Focus Mode fonctionnent dans le contexte navigateur neuf du smoke.
 - Une page masquée ne déclenche pas de suspension volontaire ; le comportement
   après changement d’application ou verrouillage est consigné par appareil.
 - Un timer arrivé à échéance en arrière-plan ne reprend jamais brièvement le son

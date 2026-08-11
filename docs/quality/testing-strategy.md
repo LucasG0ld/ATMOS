@@ -182,6 +182,14 @@ les cinq profils ; les quatre skips WebKit historiques restent inchangés. Le
 profil 320 px avec mouvement réduit confirme aussi la sortie visible et l’absence
 de débordement horizontal.
 
+Le Lot 21 rejoue la candidate après `npm ci`. Les 120 tests et la matrice de 90
+cas réussissent ; les quatre reports WebKit historiques restent explicites. Un
+timeout Firefox reproductible uniquement sous cinq workers provenait d’une
+attente `load` trop large sur un test de navigation : l’attente
+`DOMContentLoaded`, suffisante pour les assertions DOM, supprime la flake sans
+réduire les contrôles de médias couverts ailleurs. Le smoke 0.3 ajoute favoris,
+volume, timer et Focus Mode au parcours de quatre routes, transition audio et 404.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

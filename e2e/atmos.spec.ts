@@ -570,7 +570,7 @@ test("catalog previews and player navigation keep URLs and audio coherent", asyn
     if (request.url().includes("/audio/")) audioRequests.push(request.url());
   });
 
-  await page.goto("/");
+  await page.goto("/", { waitUntil: "domcontentloaded" });
   const destinations = page.getByRole("navigation", { name: "Atmospheres" });
   await expect(destinations.getByRole("link")).toHaveCount(4);
 

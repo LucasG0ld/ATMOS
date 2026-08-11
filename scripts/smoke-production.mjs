@@ -75,6 +75,34 @@ try {
     waitUntil: "networkidle",
   });
 
+  const rainVolume = page.getByRole("slider", { name: "Rain", exact: true });
+  await rainVolume.fill("42");
+  await expect(rainVolume).toHaveValue("42");
+  await page.getByRole("button", { name: "Add to favorites" }).click();
+  await expect(
+    page.getByRole("button", { name: "Remove from favorites" }),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "Timer" }).click();
+  await page
+    .getByRole("dialog", { name: "Set a timer" })
+    .getByRole("button", { name: "15 minutes" })
+    .click();
+  await expect(page.getByRole("button", { name: /Timer ·/ })).toBeVisible();
+
+  await page.getByRole("button", { name: "Focus", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Exit focus" })).toBeFocused();
+  await expect(page.getByRole("slider")).toHaveCount(0);
+  await page.getByRole("button", { name: "Exit focus" }).click();
+  await expect(
+    page.getByRole("button", { name: "Focus", exact: true }),
+  ).toBeFocused();
+  await page.getByRole("button", { name: /Timer ·/ }).click();
+  await page
+    .getByRole("dialog", { name: "Set a timer" })
+    .getByRole("button", { name: "Cancel timer" })
+    .click();
+
   await page.getByRole("button", { name: "Play Rainy Apartment" }).click();
   await expect(
     page.getByRole("button", { name: "Pause Rainy Apartment" }),
@@ -108,7 +136,7 @@ try {
   ).toBeVisible();
 
   console.log(
-    `Production smoke passed: ${productionUrl.href} (cache disabled, 4 routes, audio transition, custom 404).`,
+    `Production smoke passed: ${productionUrl.href} (cache disabled, 4 routes, local preferences, timer, Focus Mode, audio transition, custom 404).`,
   );
 } finally {
   await context.close();

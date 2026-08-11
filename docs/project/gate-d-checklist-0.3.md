@@ -44,18 +44,18 @@
 - [x] Aucun polling actif sans timer et aucune fuite de listener/timeout.
 - [x] Budgets JS/CSS 0.2 respectés et incrément 0.3 mesuré.
 - [x] Aucun secret, identifiant personnel, historique détaillé ou donnée sensible stocké.
-- [ ] Rollback 0.2 testé avec présence d’une préférence V1 ignorée sans crash.
+- [x] Rollback 0.2 testé avec présence d’une préférence V1 ignorée sans crash.
 
 ## Qualité et release
 
-- [ ] Format, lint, types, tests, build, budgets et audit réussis.
-- [ ] Matrice Chromium, Firefox, WebKit et profils mobiles réussie.
-- [ ] Axe sans violation critique ou sérieuse sur accueil, player et dialogues.
-- [ ] Lecteurs d’écran desktop/mobile, texte agrandi et contraste élevé contrôlés.
-- [ ] Chrome Android et Safari iOS réels validés.
-- [ ] Risque Safari macOS réévalué explicitement.
+- [x] Format, lint, types, tests, build, budgets et audit réussis.
+- [x] Matrice Chromium, Firefox, WebKit et profils mobiles réussie.
+- [x] Axe sans violation critique ou sérieuse sur accueil, player et dialogues.
+- [x] Lecteurs d’écran desktop/mobile, texte agrandi et contraste élevé contrôlés.
+- [x] Chrome Android et Safari iOS réels validés.
+- [x] Risque Safari macOS réévalué explicitement.
 - [ ] Smoke HTTPS et Lighthouse production réussis.
-- [ ] Aucun défaut critique ou majeur ouvert.
+- [x] Aucun défaut critique ou majeur ouvert.
 - [ ] Documentation, changelog, rollback et tag `v0.3.0` approuvés.
 
 ## Décision
