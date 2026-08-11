@@ -219,3 +219,30 @@ de 0,44 à 0,64 s. Sur mobile : Rainy Apartment 98/2,26 s, Quiet Coffee Shop
 et mesure 92/3,33 s lors de cette passe. Cette valeur ouvre un contrôle Gate C
 sur l’URL HTTPS de candidate ; elle ne justifie pas seule une exception, car la
 baseline 0.1 a été mesurée dans un environnement différent.
+
+### Lighthouse en production — Gate C
+
+Lighthouse 13.4.1 a été exécuté le 2026-08-11 sur
+`https://lucasg0ld.github.io/ATMOS/`, après réussite du déploiement GitHub Pages,
+avec cache froid et profils mobile/desktop.
+
+| Route / profil            | Performance | Accessibilité | Bonnes pratiques | SEO | FCP    | LCP    | TBT    | CLS |
+| ------------------------- | ----------: | ------------: | ---------------: | --: | ------ | ------ | ------ | --: |
+| Accueil mobile            |          96 |           100 |              100 | 100 | 0,86 s | 2,21 s | 177 ms |   0 |
+| Accueil desktop           |         100 |           100 |              100 | 100 | 0,23 s | 0,38 s | 0 ms   |   0 |
+| Rainy Apartment mobile    |         100 |           100 |              100 | 100 | 0,78 s | 1,81 s | 34 ms  |   0 |
+| Rainy Apartment desktop   |         100 |           100 |              100 | 100 | 0,32 s | 0,54 s | 0 ms   |   0 |
+| Quiet Coffee Shop mobile  |         100 |           100 |              100 | 100 | 0,77 s | 1,50 s | 58 ms  |   0 |
+| Quiet Coffee Shop desktop |         100 |           100 |              100 | 100 | 0,23 s | 0,30 s | 0 ms   |   0 |
+| Deep Forest mobile        |         100 |           100 |              100 | 100 | 0,78 s | 1,51 s | 38 ms  |   0 |
+| Deep Forest desktop       |         100 |           100 |              100 | 100 | 0,22 s | 0,37 s | 0 ms   |   0 |
+| Fireplace mobile          |          99 |           100 |              100 | 100 | 0,78 s | 1,51 s | 114 ms |   0 |
+| Fireplace desktop         |         100 |           100 |              100 | 100 | 0,22 s | 0,37 s | 0 ms   |   0 |
+
+La première mesure de l’accueil mobile dépasse ponctuellement la baseline 0.1
+de 1,8 s de LCP et 90 ms de TBT. Trois répétitions donnent respectivement des
+scores de 99, 100 et 98, des LCP de 1,96 s, 1,66 s et 1,66 s, et des TBT de
+50 ms, 29 ms et 149 ms. Leur médiane — 99, LCP 1,66 s, TBT 50 ms — ne montre
+aucune régression stable supérieure à 10 %. Rainy Apartment améliore le LCP et
+le TBT mobiles face au player 0.1 ; les trois nouveaux players respectent les
+cibles. Les rapports JSON restent locaux dans `.cache/lighthouse-production`.

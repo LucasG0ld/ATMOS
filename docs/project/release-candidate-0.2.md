@@ -2,9 +2,9 @@
 
 ## État
 
-**Candidate technique préparée le 2026-08-11 sur `mvp-0.2`. Gate C non encore
-approuvée ; aucun merge, déploiement de production ou tag `v0.2.0` n’est
-autorisé par ce document.**
+**Candidate technique préparée le 2026-08-11 sur `mvp-0.2`, fusionnée par Squash
+et déployée sur GitHub Pages. Les vérifications techniques de Gate C sont
+terminées ; l’approbation finale et le tag `v0.2.0` restent requis.**
 
 Le périmètre reste celui accepté pour le MVP 0.2 : quatre ambiances, navigation
 interne, crossfades et préchargement borné. Aucun élément du MVP 0.3 n’a été
@@ -87,14 +87,19 @@ production exigera correction ou exception explicite.
 - [x] Rejouer le parcours 0.2 sur Chrome Android et Safari iOS réels.
 - [x] Contrôler zoom 200 %, texte agrandi, contraste élevé et lecteurs d’écran sur la candidate 0.2.
 - [x] Confirmer qu’aucun défaut critique ou majeur n’est ouvert.
-- [ ] Fusionner uniquement après ces contrôles, puis exécuter le smoke HTTPS et Lighthouse sur les cinq routes de production.
+- [x] Fusionner uniquement après ces contrôles, puis exécuter le smoke HTTPS et Lighthouse sur les cinq routes de production.
 - [ ] Approuver explicitement la Gate C et le tag `v0.2.0`.
 
 La recette manuelle a été confirmée par LucasG0ld le 2026-08-11 : parcours
 fonctionnel sur desktop et appareils mobiles réels, zoom 200 %, texte agrandi,
 contraste élevé et lecteurs d’écran desktop/mobile. Aucun problème n’a été
 signalé. Le contrôle `quality` de la pull request est vert sur le commit
-`e1776c0` ; toute mise à jour ultérieure doit le refaire passer avant fusion.
+`ae4392b` ; le même contrôle a ensuite réussi sur le commit fusionné.
+
+La PR #1 a été fusionnée par Squash sur `main` au commit `f0afbfc`. Les workflows
+`Quality` et `Deploy GitHub Pages` ont réussi. Le smoke HTTPS et les dix audits
+Lighthouse de production sont validés ; les résultats détaillés figurent dans
+le référentiel de performance et la checklist Gate C.
 
 ## Commandes de candidate
 

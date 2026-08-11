@@ -31,7 +31,7 @@
 - [x] Au plus une cible visuelle et une cible audio éligible préchargées.
 - [x] `Save-Data`, connexion lente et annulation testés.
 - [x] Budgets JS, CSS, images, audio et mémoire respectés.
-- [ ] Lighthouse accueil et quatre players comparé à la baseline 0.1.
+- [x] Lighthouse accueil et quatre players comparé à la baseline 0.1.
 
 ## Qualité et release
 
@@ -41,7 +41,7 @@
 - [x] Zoom 200 %, mouvement réduit, contraste élevé et lecteurs d’écran contrôlés.
 - [x] Android Chrome et Safari iOS réels.
 - [x] Écart Safari macOS réévalué et risque résiduel de nouveau accepté par LucasG0ld.
-- [ ] Smoke test HTTPS cache froid sans erreur console ou ressource critique en 404.
+- [x] Smoke test HTTPS cache froid sans erreur console ou ressource critique en 404.
 - [x] Documentation, crédits, changelog et procédure de rollback à jour.
 - [x] `main` protégée par le ruleset actif `Protect main`, PR et contrôle strict `quality` obligatoires.
 - [x] Aucun défaut critique ou majeur ouvert dans le suivi public au 2026-08-11.
@@ -77,3 +77,17 @@ agrandi et contraste élevé, ainsi qu’avec un lecteur d’écran sur desktop 
 mobile. Aucun défaut critique ou majeur n’a été signalé. Le mouvement réduit
 reste également couvert par la matrice automatisée. Le smoke HTTPS et la
 comparaison Lighthouse restent volontairement ouverts jusqu’au déploiement.
+
+### Vérifications de production
+
+Le 2026-08-11, la PR #1 a été fusionnée par Squash sur `main` au commit
+`f0afbfc`. Les workflows `Quality` et `Deploy GitHub Pages` ont réussi. Le smoke
+HTTPS à cache désactivé a validé les quatre routes, Rainy Apartment → Deep
+Forest, six couches audio et la 404 personnalisée, sans erreur console, réseau
+ou ressource critique en 404.
+
+Lighthouse 13.4.1 obtient 100 en accessibilité, bonnes pratiques et SEO sur les
+dix audits. Les players atteignent 99 à 100 en performance mobile et 100 sur
+desktop. L’accueil mobile a été répété trois fois après une première mesure plus
+variable : médiane 99 en performance, LCP 1,66 s et TBT 50 ms. Aucune régression
+stable supérieure à 10 % face à la baseline 0.1 n’est constatée.
