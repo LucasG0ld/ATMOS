@@ -5,7 +5,7 @@
 - [x] Exigences 0.2 et matrice des quatre ambiances approuvées.
 - [x] ADR-0002 acceptée.
 - [x] Sources et licences des nouveaux médias archivées avant commit.
-- [ ] Licence du code source décidée et fichier `LICENSE` ajouté ou absence explicitement assumée.
+- [x] Code propriétaire, absence de licence open source explicitement assumée et copyright documenté.
 - [x] Aucun périmètre 0.3 introduit implicitement.
 
 ## Catalogue et navigation
@@ -39,7 +39,8 @@
 - [x] Chromium, Firefox, WebKit et profils mobiles automatisés.
 - [x] Axe sans violation critique ou sérieuse.
 - [ ] Zoom 200 %, mouvement réduit, contraste élevé et lecteurs d’écran contrôlés.
-- [ ] Android Chrome et Safari iOS réels ; écart Safari macOS réévalué.
+- [ ] Android Chrome et Safari iOS réels.
+- [x] Écart Safari macOS réévalué et risque résiduel de nouveau accepté par LucasG0ld.
 - [ ] Smoke test HTTPS cache froid sans erreur console ou ressource critique en 404.
 - [x] Documentation, crédits, changelog et procédure de rollback à jour.
 - [ ] `main` protégée ou contrôle équivalent confirmé avant la fusion de release.

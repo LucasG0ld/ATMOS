@@ -24,6 +24,8 @@ introduit.
 - [x] Audits audio, images et dépendances sans anomalie bloquante.
 - [x] Export GitHub Pages avec le préfixe `/ATMOS` construit avec succès.
 - [x] Aucune issue ou pull request ouverte selon l’API publique GitHub le 2026-08-11.
+- [x] Code propriétaire `UNLICENSED`, copyright LucasG0ld et licences des médias séparées.
+- [x] Risque résiduel Safari macOS reconduit par LucasG0ld pour la version 0.2.
 
 ## Matrice automatisée
 
@@ -76,12 +78,10 @@ production exigera correction ou exception explicite.
 
 ## Validations requises avant Gate C
 
-- [ ] Décider la licence du code ou assumer explicitement son absence.
 - [ ] Obtenir une CI verte sur la pull request vers `main`.
 - [ ] Protéger `main` ou confirmer un contrôle équivalent ; l’API publique indique `protected: false` le 2026-08-11.
 - [ ] Rejouer le parcours 0.2 sur Chrome Android et Safari iOS réels.
 - [ ] Contrôler zoom 200 %, texte agrandi, contraste élevé et lecteurs d’écran sur la candidate 0.2.
-- [ ] Revalider l’exception Safari macOS ou obtenir une recette externe.
 - [ ] Confirmer qu’aucun défaut critique ou majeur n’est ouvert.
 - [ ] Fusionner uniquement après ces contrôles, puis exécuter le smoke HTTPS et Lighthouse sur les cinq routes de production.
 - [ ] Approuver explicitement la Gate C et le tag `v0.2.0`.

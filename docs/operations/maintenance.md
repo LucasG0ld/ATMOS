@@ -114,4 +114,6 @@ Le code, la documentation et la configuration versionnable vivent dans Git. Le M
 - Preuves de licence : registres versionnés dans `docs/operations/` et
   `ASSET_CREDITS.md` ; emplacement pérenne des originaux externes à confirmer.
 - Analytics : absentes du MVP 0.2 ; aucune conservation de données utilisateur.
+- Code : propriétaire, `UNLICENSED`, copyright LucasG0ld ; actifs tiers sous
+  leurs licences respectives.
 - Exécution : Node.js 24 et npm 11, commandes réelles documentées dans le README.

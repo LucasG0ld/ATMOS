@@ -41,5 +41,5 @@ Le brief n’explicite pas entièrement certains besoins de livraison. Ils sont 
 - Visuels et sons des trois nouvelles ambiances : sourcés, crédités et validés pendant les Lots 11 et 12, avec écoute longue sur desktop et mobile.
 - Session et transitions : implémentation de l’ADR-0002 au Lot 13, avec un contexte, deux bus, annulation, récupération automatisée et recette desktop/mobile validée.
 - Préchargement et performance : implémentation de l’ADR-0002 au Lot 14, avec une cible bornée, politique réseau, cache compressé, annulation et mesures reproductibles.
-- Licence du code source : choix du propriétaire requis avant la release 0.2.
+- Licence du code source : code propriétaire `UNLICENSED`, copyright LucasG0ld et licences des médias conservées séparément.
 - Analytics : absentes par défaut, décision de confidentialité préalable obligatoire.

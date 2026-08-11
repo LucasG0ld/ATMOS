@@ -76,6 +76,7 @@ Le point d’entrée documentaire est [docs/README.md](docs/README.md). Les docu
 - [Architecture technique](docs/architecture/architecture.md)
 - [Plan de réalisation](docs/project/delivery-plan.md)
 - [Définition de terminé](docs/project/definition-of-done.md)
+- [Droits du code](COPYRIGHT.md)
 
 Le brief d’origine reste la source d’intention : [ATMOS — Product & Design Brief.md](ATMOS%20%E2%80%94%20Product%20%26%20Design%20Brief.md).
 
@@ -87,6 +88,13 @@ Le brief d’origine reste la source d’intention : [ATMOS — Product & Design
 4. Une architecture pilotée par les données afin d’ajouter une ambiance sans modifier les composants.
 5. Aucun son ou visuel sans provenance et licence compatibles documentées.
 6. Pas d’authentification, backend, paiement ou synchronisation cloud dans le MVP.
+
+## Droits
+
+Le code et la documentation originale sont publiés pour consultation, sans
+licence open source. Copyright © 2026 LucasG0ld. Tous droits réservés. Les médias,
+polices et dépendances conservent leurs licences propres ; consulter
+[COPYRIGHT.md](COPYRIGHT.md) et [ASSET_CREDITS.md](ASSET_CREDITS.md).
 
 ## Contribution
 

@@ -48,6 +48,7 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [Actifs visuels 0.2](operations/visual-assets-0.2.md) — prompts, droits, transformations et empreintes.
 - [Maintenance et exploitation](operations/maintenance.md).
 - [Registre des actifs](../ASSET_CREDITS.md).
+- [Droits du code](../COPYRIGHT.md).
 - [Politique de sécurité](../SECURITY.md).
 
 ## Règle de mise à jour

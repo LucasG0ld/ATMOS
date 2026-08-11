@@ -272,5 +272,5 @@ release du Lot 15, après déploiement de la candidate.
 
 Les contrôles automatisés, le smoke local de production et la documentation de
 candidate sont terminés. Les appareils réels, technologies d’assistance,
-protection de `main`, licence du code, mesures HTTPS post-déploiement et décision
+protection de `main`, mesures HTTPS post-déploiement et décision
 de tag restent à confirmer par le responsable du projet.
