@@ -2,10 +2,10 @@
 
 ## Cadrage
 
-- [ ] Spécification fonctionnelle et UX 0.3 approuvées.
-- [ ] ADR-0003 acceptée.
-- [ ] Aucun périmètre v1, backend, analytics ou synchronisation introduit.
-- [ ] Schéma, clé, finalité et suppression du stockage documentés.
+- [x] Spécification fonctionnelle et UX 0.3 approuvées.
+- [x] ADR-0003 acceptée.
+- [x] Aucun périmètre v1, backend, analytics ou synchronisation introduit.
+- [x] Schéma, clé, finalité et suppression du stockage documentés.
 
 ## Préférences et favoris
 

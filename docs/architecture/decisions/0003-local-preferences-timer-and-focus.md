@@ -1,6 +1,6 @@
 # ADR-0003 — Préférences locales, timer et Focus Mode 0.3
 
-- Statut : proposé
+- Statut : accepté le 2026-08-11
 - Date : 2026-08-11
 - Décideur : LucasG0ld
 - Remplace : aucune décision
@@ -125,5 +125,5 @@ secondaire. Un nouvel onglet lit toutefois le dernier snapshot au montage.
 
 ## Validation
 
-L’ADR doit être approuvée avec le cadrage du Lot 16 avant toute implémentation du
-stockage, du timer ou de Focus Mode.
+ADR approuvée par LucasG0ld le 2026-08-11 avec le cadrage du Lot 16. Son
+implémentation progressive commence au Lot 17 par le socle de préférences locales.

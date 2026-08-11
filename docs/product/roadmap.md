@@ -54,7 +54,7 @@ ambiance sans code spécifique d’UI et transitions fluides sur mobile médian.
 
 ## MVP 0.3 — Session personnelle locale
 
-**Statut : cadrage du Lot 16 proposé sur `mvp-0.3` ; approbation requise avant implémentation.**
+**Statut : cadrage du Lot 16 et ADR-0003 approuvés le 2026-08-11 ; Lot 17 prêt à démarrer.**
 
 **Résultat :** l’utilisateur peut s’immerger, limiter une session et retrouver ses préférences.
 

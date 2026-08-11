@@ -171,7 +171,7 @@ Ces évolutions doivent prolonger les contrats existants, pas être anticipées 
 
 Le cadrage 0.2 est détaillé dans l’[ADR-0002](decisions/0002-catalogue-transitions-and-preloading.md) : registre ordonné, session persistante limitée au player, un seul contexte audio avec deux bus et préchargement d’une cible maximum.
 
-Le cadrage 0.3 proposé est détaillé dans
+Le cadrage 0.3 accepté est détaillé dans
 l’[ADR-0003](decisions/0003-local-preferences-timer-and-focus.md) : Context de
 préférences sans dépendance tierce, snapshot V1 validé, timer fondé sur une
 échéance absolue et Focus Mode éphémère dans la session du player.

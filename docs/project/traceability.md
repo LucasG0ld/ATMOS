@@ -28,7 +28,7 @@ et l’[ADR-0002](../architecture/decisions/0002-catalogue-transitions-and-prelo
 Pour le MVP 0.3, favoris, volumes, timer, Focus Mode et récupération du stockage
 sont précisés par la [spécification 0.3](../product/mvp-requirements-0.3.md),
 l’[UX de session personnelle](../design/personal-session-ux-0.3.md),
-l’[ADR-0003 proposé](../architecture/decisions/0003-local-preferences-timer-and-focus.md)
+l’[ADR-0003 accepté](../architecture/decisions/0003-local-preferences-timer-and-focus.md)
 et la [Gate D](gate-d-checklist-0.3.md).
 
 ## Éléments ajoutés pour rendre le projet maintenable

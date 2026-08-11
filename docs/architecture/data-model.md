@@ -155,9 +155,9 @@ type PlayerState = {
 
 Éviter plusieurs booléens tels que `isLoading`, `isPlaying` et `hasError` capables de former des combinaisons impossibles.
 
-## Persistance 0.3 proposée
+## Persistance 0.3 acceptée
 
-Le Lot 16 propose une clé stable unique `atmos.preferences`, dont la valeur porte
+Le Lot 16 retient une clé stable unique `atmos.preferences`, dont la valeur porte
 sa propre version :
 
 ```ts

@@ -117,7 +117,7 @@ Une couche cible en échec est désactivée sans bloquer les autres. Un échec t
 ferme le master, conserve l’URL et la scène demandées, annonce l’erreur et expose
 Retry. Quitter `/atmosphere/*` détruit le contexte et tous les bus.
 
-## Fin de timer 0.3 proposée
+## Fin de timer 0.3
 
 Le contrôleur de session, pas le moteur, possède l’échéance du timer. Lorsqu’elle
 est atteinte, il fixe d’abord l’intention utilisateur à Pause afin qu’une reprise

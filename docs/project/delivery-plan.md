@@ -277,7 +277,7 @@ Les mesures HTTPS post-déploiement, la Gate C et la création du tag `v0.2.0` o
 
 ## Lot 16 — Cadrage produit, UX et architecture 0.3
 
-**Statut : cadrage proposé le 2026-08-11 ; approbation requise avant le Lot 17.**
+**Statut : terminé et approuvé le 2026-08-11.**
 
 ### Livrables
 
@@ -296,7 +296,7 @@ Les mesures HTTPS post-déploiement, la Gate C et la création du tag `v0.2.0` o
 
 ## Lot 17 — Socle de préférences locales
 
-**Statut : planifié après approbation du Lot 16.**
+**Statut : prochaine tranche autorisée, non démarrée.**
 
 ### Livrables
 
