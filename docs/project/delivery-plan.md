@@ -459,3 +459,119 @@ quatre routes, préférences, timer, Focus Mode, transition audio et 404. Les di
 audits Lighthouse de production obtiennent 99–100 en performance et 100 en
 accessibilité, bonnes pratiques et SEO. LucasG0ld approuve la Gate D et autorise
 explicitement le tag `v0.3.0` le 2026-08-11.
+
+## Lot 22 — Cadrage produit et UX 1.0
+
+**Statut : cadrage préparé le 2026-08-11 ; validation produit et ADR-0005 en attente.**
+
+### Livrables
+
+- Exigences fonctionnelles et parcours critique de la composition 1.0.
+- Spécification UX du compositeur, de la bibliothèque et de `Your mixes`.
+- ADR-0005 sur le domaine, le stockage V2, la route statique et le moteur borné.
+- Budgets 1.0, nouveaux risques et checklist Gate E.
+- Découpage des Lots 23 à 28 sans implémentation anticipée.
+
+### Validation
+
+- Quatre couches et 20 mixes maximum approuvés.
+- Scène d’origine fixe, médias existants uniquement et stockage local approuvés.
+- Migration, rollback, états dégradés et limites audio compris avant implémentation.
+- Aucun import, compte, cloud, partage ou interface de DAW implicite.
+
+## Lot 23 — Registre sonore et stockage V2
+
+**Statut : planifié après validation du Lot 22.**
+
+### Livrables
+
+- Résolution validée des références globales de couches.
+- Contrats `SavedMixV1` et `StoredPreferencesV2` indépendants de l’UI.
+- Migration pure V1 vers V2, limites, corruption et stockage indisponible.
+- Actions provider pour créer, mettre à jour et supprimer un mix.
+
+### Validation
+
+- Préférences 0.3 préservées bit à bit par la migration.
+- Aucun accès stockage côté serveur et aucune création audio.
+- Reset, quota, version inconnue et rollback couverts.
+
+## Lot 24 — Fondations visuelles du compositeur
+
+**Statut : planifié.**
+
+### Livrables
+
+- Route statique `/compose` et entrée `Create a mix`.
+- Brouillon local, liste de couches et sliders sans moteur étendu.
+- Dialogue `Add a sound`, limites et états responsive.
+
+### Validation
+
+- Parcours complet simulé au clavier, toucher et zoom 200 %.
+- Aucune requête audio avant Play et aucun dashboard visuel.
+- Dialogues et navigation restaurent le focus.
+
+## Lot 25 — Moteur de composition live
+
+**Statut : planifié.**
+
+### Livrables
+
+- Graphe audio arbitraire borné à quatre couches.
+- Ajout, retrait, volume, erreur partielle et nettoyage par référence globale.
+- Intégration Play/Pause, timer, Focus Mode et arrière-plan best effort.
+
+### Validation
+
+- Un contexte unique et quatre voies stables maximum.
+- Aucun clic, son résiduel ou chargement de la bibliothèque complète.
+- Tests de stress sur changements rapides et erreurs partielles.
+
+## Lot 26 — Sauvegarde et gestion des mixes
+
+**Statut : planifié.**
+
+### Livrables
+
+- Nommage, sauvegarde, état dirty et confirmation de perte.
+- `Your mixes`, ouverture, modification, renommage et suppression.
+- États stockage indisponible et limites 20 mixes/128 Kio.
+
+### Validation
+
+- CRUD et rechargement réels sans reprise audio automatique.
+- Noms identiques, IDs stables et données obsolètes couverts.
+- Reset global explicite et accessible.
+
+## Lot 27 — Intégration et performance 1.0
+
+**Statut : planifié.**
+
+### Livrables
+
+- Intégration discrète à l’accueil et aux players.
+- Cache, décodage, transitions et bundles mesurés puis bornés.
+- Parcours consolidés 0.1 à 1.0 et documentation de maintenance.
+
+### Validation
+
+- Dix changements de mix sans fuite ni croissance non bornée.
+- Budgets réseau, mémoire, stockage et JavaScript respectés.
+- Aucune régression catalogue, timer, favoris ou Focus Mode.
+
+## Lot 28 — Stabilisation 1.0
+
+**Statut : planifié.**
+
+### Livrables
+
+- Matrice navigateurs, appareils réels, accessibilité et écoute longue.
+- Candidate, changelog, rollback, smoke, Lighthouse et dossier Gate E.
+- PR protégée vers `main` et préparation du tag `v1.0.0`.
+
+### Validation
+
+- Gate E approuvée sans défaut critique ou majeur.
+- Production HTTPS vérifiée après fusion.
+- Tag `v1.0.0` autorisé explicitement.

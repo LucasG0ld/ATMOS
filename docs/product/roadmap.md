@@ -70,12 +70,18 @@ et volumes sont persistés ; aucune donnée n’est synchronisée ou transmise.
 
 ## Version 1 — Composition
 
+**Statut : cadrage du Lot 22 préparé le 2026-08-11 ; validation produit et ADR-0005 en attente.**
+
 **Résultat :** l’utilisateur crée et sauvegarde localement ses propres mixes.
 
 - Bibliothèque d’ambiances.
 - Création, nommage, modification et suppression de mixes.
 - Sauvegarde locale et migration de schéma.
 - Gestion audio et transitions approfondies.
+
+La première version compose uniquement les couches déjà licenciées, avec une
+scène existante et quatre sons maximum. Elle reste locale, sans import audio,
+compte, cloud, partage ou interface de production musicale.
 
 ## Parking lot
 

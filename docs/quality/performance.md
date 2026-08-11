@@ -346,3 +346,23 @@ accessibilité, bonnes pratiques et SEO.
 
 Tous les LCP mobiles sont inférieurs à 2,21 s et aucune régression stable de plus
 de 10 % n’est observée face à la production 0.2.
+
+## Budgets de cadrage — version 1.0
+
+Les budgets 0.3 restent bloquants sur l’accueil et les players. Le compositeur
+ajoute les limites suivantes, à mesurer depuis un build de production :
+
+| Ressource ou état                                          |                        Budget 1.0 |
+| ---------------------------------------------------------- | --------------------------------: |
+| JavaScript applicatif initial de `/compose` hors framework |                  180 Kio gzip max |
+| CSS de `/compose`                                          |                   70 Kio gzip max |
+| Audio avant Play                                           |                           0 octet |
+| Couches décodées stables                                   |                         4 maximum |
+| Couches pendant une transition                             | 8 maximum, retour à 4 obligatoire |
+| Snapshot `atmos.preferences` V2                            |                   128 Kio maximum |
+| Mixes sauvegardés                                          |                        20 maximum |
+
+La bibliothèque ne précharge aucun des douze sons. Après dix changements de mix,
+le nombre d’`AudioContext`, de listeners et de nœuds actifs doit revenir à sa
+ligne de base ; une croissance mémoire stable supérieure à 10 % face au même
+parcours 0.3 bloque la Gate E sans exception explicite.

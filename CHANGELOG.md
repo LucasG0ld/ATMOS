@@ -4,6 +4,12 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 
 ## Non publié
 
+### Ajouté
+
+- Cadrage de la version 1.0 : composition locale à partir des couches licenciées,
+  bibliothèque bornée, mixes sauvegardés et Gate E.
+- ADR-0005 proposé, modèle de stockage V2, budgets, risques et Lots 22 à 28.
+
 ## [0.3.0] — 2026-08-11
 
 ### Ajouté

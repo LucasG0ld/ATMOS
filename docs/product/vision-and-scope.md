@@ -43,15 +43,21 @@ Le projet doit aussi démontrer une maîtrise front-end, UX, animation et audio 
 - Rendre l’ajout d’une ambiance essentiellement déclaratif.
 - Maintenir une interface rapide et stable sur un appareil mobile courant.
 
-## Non-objectifs du MVP
+## Non-objectifs des versions 0.x
 
 - Streaming musical, playlists ou recommandations algorithmiques.
 - Authentification, profil, backend, base de données ou synchronisation cloud.
 - Paiement, abonnement, publicité ou fonctions sociales.
 - Application mobile native.
-- Création de mixes personnalisés.
 - WebGL, vidéo ou effets lourds sans validation préalable de leur valeur.
 - Internationalisation ; l’interface initiale est en anglais.
+
+## Extension 1.0
+
+La version 1.0 étend le contrôle direct vers des mixes personnalisés composés
+uniquement avec les couches licenciées du catalogue. Cette extension ne change
+pas les exclusions structurelles : aucun compte, backend, cloud, import audio,
+partage ou outil de production musicale.
 
 ## Indicateurs de réussite
 

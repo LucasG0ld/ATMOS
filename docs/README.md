@@ -8,6 +8,7 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [Spécification du MVP](product/mvp-requirements.md) — exigences vérifiables et critères d’acceptation.
 - [Spécification du MVP 0.2](product/mvp-requirements-0.2.md) — catalogue, transitions et préchargement.
 - [Spécification du MVP 0.3](product/mvp-requirements-0.3.md) — préférences locales, timer et Focus Mode.
+- [Spécification de la version 1.0](product/mvp-requirements-1.0.md) — composition locale et mixes sauvegardés.
 - [Matrice des ambiances 0.2](product/atmosphere-matrix-0.2.md) — identités et besoins médias.
 - [Roadmap](product/roadmap.md) — progression 0.1, 0.2, 0.3 et version 1.
 
@@ -17,6 +18,7 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [Système de design](design/design-system.md) — fondations visuelles, tokens, mouvement et contenu.
 - [UX du catalogue 0.2](design/catalogue-ux-0.2.md) — accueil, previews et navigation interne.
 - [UX de la session personnelle 0.3](design/personal-session-ux-0.3.md) — favoris, timer, Focus Mode et préférences.
+- [UX de la composition 1.0](design/composition-ux-1.0.md) — compositeur, bibliothèque et gestion des mixes.
 
 ## Architecture
 
@@ -27,6 +29,7 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [ADR-0002 : catalogue, transitions et préchargement](architecture/decisions/0002-catalogue-transitions-and-preloading.md).
 - [ADR-0003 : préférences locales, timer et Focus Mode](architecture/decisions/0003-local-preferences-timer-and-focus.md) — accepté au Lot 16.
 - [ADR-0004 : lecture en arrière-plan best effort](architecture/decisions/0004-best-effort-background-playback.md) — accepté au Lot 19b.
+- [ADR-0005 : composition locale et mixes sauvegardés](architecture/decisions/0005-local-composition-and-saved-mixes.md) — proposé au Lot 22.
 - [Modèle d’ADR](architecture/decisions/0000-template.md).
 
 ## Projet et qualité
@@ -45,6 +48,7 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [Candidate de release 0.2](project/release-candidate-0.2.md) — résultats automatisés, recette et validation de production.
 - [Release 0.3](project/release-candidate-0.3.md) — résultats locaux et de production, rollback et validation Gate D.
 - [Checklist Gate D — 0.3](project/gate-d-checklist-0.3.md).
+- [Checklist Gate E — 1.0](project/gate-e-checklist-1.0.md).
 
 ## Exploitation et conformité
 
