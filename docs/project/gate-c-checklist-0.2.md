@@ -48,12 +48,13 @@
 
 ## Décision
 
-Gate C n’est validée qu’après consignation des exceptions, acceptation explicite
-des risques résiduels et approbation du tag `v0.2.0` par le responsable du projet.
+**Gate C validée le 2026-08-11 par LucasG0ld, responsable du projet et du
+déploiement. Le risque résiduel Safari macOS est accepté et le tag `v0.2.0` est
+explicitement autorisé.**
 
-Les résultats de la candidate et les contrôles encore ouverts sont consignés
-dans la [fiche de candidate 0.2](release-candidate-0.2.md). Le smoke local ne
-valide pas la ligne HTTPS de production, qui reste volontairement ouverte.
+Les résultats de la candidate, de la recette manuelle et des contrôles de
+production sont consignés dans la
+[fiche de candidate 0.2](release-candidate-0.2.md).
 
 ### Recette manuelle du Lot 12
 

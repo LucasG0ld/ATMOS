@@ -257,7 +257,7 @@ release du Lot 15, après déploiement de la candidate.
 
 ## Lot 15 — Stabilisation 0.2
 
-**Statut : candidate fusionnée, déployée et vérifiée le 2026-08-11 ; décision finale de Gate C et tag en attente.**
+**Statut : terminé le 2026-08-11 ; Gate C validée et tag `v0.2.0` autorisé.**
 
 ### Livrables
 
@@ -272,5 +272,5 @@ release du Lot 15, après déploiement de la candidate.
 
 Les contrôles automatisés, le smoke local de production, la documentation de
 candidate, les appareils réels et les technologies d’assistance sont validés.
-Les mesures HTTPS post-déploiement sont validées. L’approbation finale de Gate C
-et la décision de tag restent à confirmer par le responsable du projet.
+Les mesures HTTPS post-déploiement, la Gate C et la création du tag `v0.2.0` ont
+été approuvées explicitement par le responsable du projet.

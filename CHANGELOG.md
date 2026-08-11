@@ -2,7 +2,7 @@
 
 Tous les changements notables du projet sont consignés ici. Le format s’inspire de Keep a Changelog et le projet utilisera le versionnage sémantique à partir de sa première version publiée.
 
-## Non publié
+## [0.2.0] — 2026-08-11
 
 ### Ajouté
 

@@ -3,8 +3,8 @@
 ## État
 
 **Candidate technique préparée le 2026-08-11 sur `mvp-0.2`, fusionnée par Squash
-et déployée sur GitHub Pages. Les vérifications techniques de Gate C sont
-terminées ; l’approbation finale et le tag `v0.2.0` restent requis.**
+et déployée sur GitHub Pages. Gate C est approuvée et le tag `v0.2.0` est
+autorisé par LucasG0ld le 2026-08-11.**
 
 Le périmètre reste celui accepté pour le MVP 0.2 : quatre ambiances, navigation
 interne, crossfades et préchargement borné. Aucun élément du MVP 0.3 n’a été
@@ -88,7 +88,7 @@ production exigera correction ou exception explicite.
 - [x] Contrôler zoom 200 %, texte agrandi, contraste élevé et lecteurs d’écran sur la candidate 0.2.
 - [x] Confirmer qu’aucun défaut critique ou majeur n’est ouvert.
 - [x] Fusionner uniquement après ces contrôles, puis exécuter le smoke HTTPS et Lighthouse sur les cinq routes de production.
-- [ ] Approuver explicitement la Gate C et le tag `v0.2.0`.
+- [x] Approuver explicitement la Gate C et le tag `v0.2.0`.
 
 La recette manuelle a été confirmée par LucasG0ld le 2026-08-11 : parcours
 fonctionnel sur desktop et appareils mobiles réels, zoom 200 %, texte agrandi,
