@@ -430,7 +430,7 @@ souris, clavier, toucher et responsive est validée sur desktop et mobile.
 
 ## Lot 21 — Stabilisation 0.3
 
-**Statut : candidate technique préparée le 2026-08-11 ; Gate D en attente.**
+**Statut : terminé le 2026-08-11 ; Gate D approuvée et tag `v0.3.0` autorisé.**
 
 ### Livrables
 
@@ -451,3 +451,10 @@ rollback public 0.2 est validé avec une préférence V1 présente. La recette
 consolidée desktop/mobile, technologies d’assistance, texte agrandi et contraste
 élevé est validée le 2026-08-11 ; le risque Safari macOS résiduel est
 renouvelé. La CI de PR et les contrôles HTTPS post-déploiement restent requis.
+
+La PR #3 est fusionnée par Squash sur `main` au commit `71db4e7`. Les workflows
+`quality`, build et déploiement Pages réussissent. Le smoke HTTPS 0.3 valide
+quatre routes, préférences, timer, Focus Mode, transition audio et 404. Les dix
+audits Lighthouse de production obtiennent 99–100 en performance et 100 en
+accessibilité, bonnes pratiques et SEO. LucasG0ld approuve la Gate D et autorise
+explicitement le tag `v0.3.0` le 2026-08-11.

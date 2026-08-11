@@ -54,7 +54,7 @@ ambiance sans code spécifique d’UI et transitions fluides sur mobile médian.
 
 ## MVP 0.3 — Session personnelle locale
 
-**Statut : Lots 16 à 20 terminés et validés ; candidate du Lot 21 préparée et Gate D en attente depuis le 2026-08-11.**
+**Statut : version 0.3 déployée et validée en Gate D le 2026-08-11.**
 
 **Résultat :** l’utilisateur peut s’immerger, limiter une session et retrouver ses préférences.
 
