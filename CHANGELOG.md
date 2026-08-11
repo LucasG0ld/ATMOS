@@ -2,6 +2,40 @@
 
 Tous les changements notables du projet sont consignés ici. Le format s’inspire de Keep a Changelog et le projet utilisera le versionnage sémantique à partir de sa première version publiée.
 
+## Non publié
+
+### Ajouté
+
+- Cadrage du catalogue 0.2 : exigences, matrice des ambiances et UX de navigation.
+- ADR pour la session audio persistante, les crossfades et le préchargement borné.
+- Lots 8 à 15, budgets 0.2, risques associés et checklist Gate C.
+- Stratégie de branches protégeant la production 0.1 pendant le développement 0.2.
+- Registre ordonné de quatre ambiances et génération statique de leurs routes et métadonnées.
+- Fallbacks CSS de Quiet Coffee Shop, Deep Forest et Fireplace, sans média non licencié.
+- État générique et accessible pour de futures ambiances dont les couches audio seraient encore en préparation.
+- Accueil éditorial à quatre destinations avec preview visuelle au focus et après intention de survol.
+- Dialogue natif `Atmospheres` dans le player avec liens réels, ambiance courante, gestion d’`Escape` et restauration du focus.
+- Parcours catalogue, navigation, historique et absence d’audio avant Play couverts sur desktop et mobile.
+- Identités visuelles originales des quatre ambiances, avec exports WebP desktop/mobile.
+- Rendu responsive par `<picture>`, points focaux mobiles et fallback CSS conservé en cas d’échec média.
+- Provenance IA, prompts, conditions, transformations, empreintes et crédits archivés pour les visuels 0.2.
+- Contrôle CI des dimensions et du budget image, références visuelles et contraste des nouveaux thèmes.
+- Neuf couches audio licenciées pour Quiet Coffee Shop, Deep Forest et Fireplace, avec boucles, filtrage et mastering reproductibles.
+- Mixages par défaut alignés à 1,5 LU, validation des jointures, true peaks et budgets du catalogue en CI.
+- Recette d’écoute longue des trois nouvelles ambiances validée sur desktop et mobile.
+- Session audio persistante limitée aux routes du player, avec un seul `AudioContext` et deux bus maximum.
+- Crossfades audio de 1,8 seconde, annulation des cibles obsolètes, reprise après erreur et transition visuelle coordonnée.
+- Recette des crossfades et de la continuité de session validée sur desktop et mobile.
+- Préchargement borné à une cible visuelle et, après Play, une cible audio compressée sans décodage anticipé.
+- Désactivation du préchargement audio avec `Save-Data`, connexion lente ou hors ligne, annulation des cibles obsolètes et réutilisation lors d’une sélection explicite.
+- Mesures reproductibles des bundles, de Lighthouse et de dix transitions ; police latine locale allégée et visuel mobile Deep Forest optimisé.
+- Smoke de release couvrant les quatre routes et une transition audio, avec variante reproductible sur build local.
+- Scénario navigateur de couche audio partielle et dossier de candidate 0.2 séparant validations automatisées et contrôles Gate C externes.
+- Décision de conserver le code propriétaire, manifeste `UNLICENSED` et copyright LucasG0ld distinct des licences des médias.
+- Protection de `main` par ruleset, pull request et contrôle CI stricts, avec fusion par squash uniquement.
+- Limite de décodage MP3 du Firefox Playwright sous Linux rendue explicite, sans réduire la couverture Firefox réelle sous Windows.
+- Recette manuelle de la candidate 0.2 validée sur desktop, Chrome Android et Safari iOS réels, avec zoom 200 %, texte agrandi, contraste élevé et lecteurs d’écran desktop/mobile.
+
 ## [0.1.0] — 2026-08-10
 
 ### Ajouté

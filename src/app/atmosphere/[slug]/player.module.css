@@ -1,7 +1,3 @@
-.scene {
-  animation: sceneIn var(--duration-scene) var(--ease-out) both;
-}
-
 .frame {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
@@ -13,6 +9,12 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-6);
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2rem);
 }
 
 .backLink {
@@ -77,16 +79,6 @@
   padding-bottom: clamp(0.25rem, 1vw, 1rem);
 }
 
-@keyframes sceneIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
 @media (max-width: 72rem) {
   .stage {
     grid-template-columns: minmax(7rem, 0.2fr) minmax(0, 1fr);
@@ -136,10 +128,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scene {
-    animation: none;
-  }
-
   .backLink {
     transition-duration: 0ms;
   }

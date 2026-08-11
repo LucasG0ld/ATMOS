@@ -50,8 +50,29 @@ export function defineAtmosphere<const T extends Atmosphere>(
       atmosphere.visuals.backgroundSrc.startsWith("/"),
     "background source must be an absolute local path",
   );
+  assert(
+    !atmosphere.visuals.mobileBackgroundSrc ||
+      atmosphere.visuals.mobileBackgroundSrc.startsWith("/"),
+    "mobile background source must be an absolute local path",
+  );
+  assert(
+    !atmosphere.visuals.mobileBackgroundSrc ||
+      Boolean(atmosphere.visuals.backgroundSrc),
+    "mobile background source requires a desktop background source",
+  );
 
-  assert(atmosphere.sounds.length > 0, "at least one sound is required");
+  if (atmosphere.visuals.mobileFocalPoint) {
+    const { x: mobileX, y: mobileY } = atmosphere.visuals.mobileFocalPoint;
+    assert(
+      Number.isFinite(mobileX) && mobileX >= 0 && mobileX <= 100,
+      "mobile focal point x must be between 0 and 100",
+    );
+    assert(
+      Number.isFinite(mobileY) && mobileY >= 0 && mobileY <= 100,
+      "mobile focal point y must be between 0 and 100",
+    );
+  }
+
   const soundIds = new Set<string>();
   for (const sound of atmosphere.sounds) {
     assert(slugPattern.test(sound.id), `invalid sound id "${sound.id}"`);

@@ -109,3 +109,113 @@ Mesure de laboratoire Lighthouse 13.4.1 le 2026-08-10 sur
 | Player desktop  |         100 |           100 |              100 | 100 | 0,3 s | 0,4 s | 0 ms   | 0     |
 
 Les résultats satisfont les cibles de la candidate. Ils ne constituent pas des Core Web Vitals terrain ; ceux-ci nécessitent un volume suffisant de visites réelles.
+
+## Budgets du MVP 0.2
+
+La baseline 0.1 reste la référence. Les plafonds existants de page ne sont pas
+multipliés par le nombre d’ambiances : seul le média actif et une cible bornée
+peuvent entrer dans le parcours immédiat.
+
+| Ressource                                  | Cible 0.2                          | Plafond bloquant |
+| ------------------------------------------ | ---------------------------------- | ---------------- |
+| JavaScript accueil initial                 | ≤ 110 Kio gzip hors framework      | 120 Kio          |
+| JavaScript player avant Play               | ≤ 150 Kio gzip hors framework      | 170 Kio          |
+| CSS par route                              | ≤ 65 Kio gzip                      | 75 Kio           |
+| Visuel actif adapté au viewport            | ≤ 500 Kio                          | 700 Kio          |
+| Preview visuelle préchargée                | une cible, ≤ 500 Kio               | 700 Kio          |
+| Audio compressé d’une ambiance             | ≤ 3 Mio                            | 5 Mio            |
+| Audio compressé total des quatre ambiances | ≤ 12 Mio                           | 16 Mio           |
+| Audio préchargé après Play                 | une cible, ≤ 3 Mio                 | 5 Mio            |
+| Buffers PCM décodés                        | actif + cible, estimation ≤ 64 Mio | 80 Mio           |
+
+- Accueil et player ne chargent aucun audio avant Play.
+- `Save-Data` ou connexion classée lente désactivent le préchargement audio.
+- Les images non actives restent hors chemin critique, à l’exception d’une preview.
+- Une régression de plus de 10 % de LCP, TBT ou taille JS par rapport à 0.1 exige correction ou exception documentée.
+- Le test mémoire mesure au minimum dix changements successifs et vérifie le retour au régime actif + cible.
+
+### Mesure des identités visuelles — Lot 11
+
+| Ambiance          | Desktop 1536 × 864 | Mobile 640 × 1024 |     Total |
+| ----------------- | -----------------: | ----------------: | --------: |
+| Rainy Apartment   |           52,8 Kio |          46,8 Kio |  99,6 Kio |
+| Quiet Coffee Shop |           44,3 Kio |          24,6 Kio |  68,9 Kio |
+| Deep Forest       |          220,8 Kio |          89,5 Kio | 310,3 Kio |
+| Fireplace         |           60,3 Kio |          37,3 Kio |  97,6 Kio |
+
+Les huit exports totalisent 576,4 Kio. Une page ne sélectionne qu’une variante
+via `<picture>` ; le fallback CSS reste visible avant ou en cas d’échec. Chaque
+fichier demeure sous la cible de 500 Kio et le contrôle `npm run images:check`
+est exécuté en CI.
+
+### Mesure des actifs audio — Lot 12
+
+| Ambiance          | Couches | Taille totale | Budget par ambiance |
+| ----------------- | ------: | ------------: | ------------------: |
+| Rainy Apartment   |       3 |      1,92 Mio |            3,00 Mio |
+| Quiet Coffee Shop |       3 |      1,93 Mio |            3,00 Mio |
+| Deep Forest       |       3 |      0,99 Mio |            3,00 Mio |
+| Fireplace         |       3 |      0,97 Mio |            3,00 Mio |
+
+Le catalogue totalise 5,81 Mio sur 12 Mio. Aucun fichier n’est demandé avant
+Play. `npm run audio:check` vérifie format, durée, jointure, budget par ambiance,
+true peak et cohérence des quatre mixages par défaut.
+
+### Empreinte de transition — Lot 13
+
+Le player pèse 53,8 Kio de JavaScript applicatif gzip après ajout de la session,
+contre un budget de 140 Kio appliqué par le contrôle actuel. Le moteur conserve
+un seul contexte et au plus deux bus. À partir des durées mono 44,1 kHz, la pire
+paire de buffers PCM du catalogue est estimée à 56,6 Mio pour Rainy Apartment et
+Quiet Coffee Shop, sous la cible provisoire de 64 Mio. Cette estimation est
+complétée ci-dessous par une mesure mémoire navigateur sur dix transitions.
+
+### Préchargement et mesures — Lot 14
+
+Le build de production local respecte les plafonds avec 9,7 Kio de JavaScript
+applicatif gzip sur l’accueil, 54,7 Kio sur le player, 7,3 Kio de CSS par route
+et 29,4 Kio de police WOFF2. La police variable n’embarque plus que le
+sous-ensemble latin. Avant Play, seule une image responsive peut être anticipée ;
+après Play, une seule ambiance audio compressée peut l’être, sans contexte ni
+décodage.
+
+`npm run performance:runtime` a enchaîné dix transitions dans Chromium sur le
+build de production : un `AudioContext`, 33 requêtes audio dont 12 URL uniques,
+et un tas JavaScript passant de 4 847 498 à 6 275 357 octets après collecte, soit
++1 427 859 octets (1,36 Mio). Le test unitaire vérifie en complément qu’un seul
+bus reste vivant après le retrait des bus sortants.
+
+Lighthouse 13.4.1 local, avec throttling mobile simulé, donne les résultats
+suivants. Tous les profils desktop obtiennent 100 en performance, accessibilité,
+bonnes pratiques et SEO, avec un LCP compris entre 0,44 et 0,52 s.
+
+| Route mobile      | Performance | Accessibilité | Bonnes pratiques | SEO | FCP    | LCP    | TBT   | CLS |
+| ----------------- | ----------: | ------------: | ---------------: | --: | ------ | ------ | ----- | --: |
+| Accueil           |          97 |           100 |              100 | 100 | 0,92 s | 2,65 s | 21 ms |   0 |
+| Rainy Apartment   |          99 |           100 |              100 | 100 | 0,90 s | 2,26 s | 46 ms |   0 |
+| Quiet Coffee Shop |          99 |           100 |              100 | 100 | 0,90 s | 2,11 s | 29 ms |   0 |
+| Deep Forest       |          97 |           100 |              100 | 100 | 0,90 s | 2,55 s | 31 ms |   0 |
+| Fireplace         |          99 |           100 |              100 | 100 | 0,90 s | 2,26 s | 33 ms |   0 |
+
+Ces résultats locaux ne sont pas directement comparables à la baseline 0.1
+mesurée sur GitHub Pages : l’accueil et Deep Forest dépassent de 0,15 s et
+0,05 s la cible simulée de 2,5 s. La Gate C conserve donc ouverte la comparaison
+Lighthouse de production, à refaire avec la candidate déployée. Les rapports JSON
+sont régénérables dans `.cache/lighthouse` avec
+`npm run performance:lighthouse` ; ce dossier n’est pas versionné.
+
+### Stabilisation de la candidate — Lot 15
+
+La répétition complète du 2026-08-11 confirme les mêmes tailles de bundles et
+un seul `AudioContext`. Après dix transitions et collecte, le tas varie de
++1 406 456 octets (1,34 Mio). Le smoke du build de production visite les quatre
+routes avec cache désactivé, puis vérifie Rainy Apartment → Deep Forest sans
+requête audio dupliquée.
+
+Lighthouse local reste à 100 pour accessibilité, bonnes pratiques et SEO sur les
+dix audits. Tous les profils desktop atteignent 100 en performance, avec un LCP
+de 0,44 à 0,64 s. Sur mobile : Rainy Apartment 98/2,26 s, Quiet Coffee Shop
+99/2,11 s, Deep Forest 97/2,55 s et Fireplace 99/2,26 s. L’accueil varie davantage
+et mesure 92/3,33 s lors de cette passe. Cette valeur ouvre un contrôle Gate C
+sur l’URL HTTPS de candidate ; elle ne justifie pas seule une exception, car la
+baseline 0.1 a été mesurée dans un environnement différent.

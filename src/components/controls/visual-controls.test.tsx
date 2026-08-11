@@ -10,12 +10,15 @@ import { VisualControls } from "./visual-controls";
 
 function createMockEngine(): AudioEngineController {
   return {
+    cancelPreload: vi.fn(),
     destroy: vi.fn().mockResolvedValue(undefined),
     load: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
     pause: vi.fn(),
     play: vi.fn().mockResolvedValue(undefined),
+    preload: vi.fn().mockResolvedValue(undefined),
     setLayerVolume: vi.fn(),
     setPageHidden: vi.fn().mockResolvedValue(undefined),
+    transition: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
   };
 }
 
@@ -51,6 +54,27 @@ describe("VisualControls", () => {
       expect(slider).toHaveAttribute("step", "1");
       expect(slider).toHaveAccessibleName();
     }
+  });
+
+  it("exposes an accessible pending state when audio is not yet available", () => {
+    const createEngine = vi.fn(createMockEngine);
+
+    render(
+      <VisualControls
+        atmosphereName="Deep Forest"
+        createEngine={createEngine}
+        sounds={[]}
+      />,
+    );
+
+    expect(screen.queryByRole("slider")).not.toBeInTheDocument();
+    expect(
+      screen.getByText("Sound layers are being prepared for this atmosphere."),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Audio unavailable for Deep Forest" }),
+    ).toBeDisabled();
+    expect(createEngine).not.toHaveBeenCalled();
   });
 
   it("updates layers independently", () => {

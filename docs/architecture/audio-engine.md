@@ -4,21 +4,27 @@
 
 Le moteur audio arrive après validation du prototype visuel. Il lit plusieurs boucles, règle leurs volumes, contrôle un gain global et effectue des fondus sans coupure. Il ne gère ni UI, ni navigation, ni persistance.
 
-## Graphe audio cible
+## Graphe audio
 
 ```text
-BufferSource Rain ─────────► Gain Rain ─────────┐
-BufferSource Window Rain ─► Gain Window ───────┼► Master Gain ► destination
-BufferSource Thunder ─────► Gain Thunder ──────┘
+Sources + gains de couches ─► Bus actif ────┐
+                                            ├─► Master Gain ► destination
+Sources + gains de couches ─► Bus entrant ──┘
 ```
 
-Un `AudioContext` partagé par le player suffit. Chaque lecture crée de nouveaux `AudioBufferSourceNode`, car une source arrêtée n’est pas réutilisable. Les `AudioBuffer` décodés peuvent être réutilisés.
+Un `AudioContext` persiste dans le layout des routes player. Chaque bus possède
+ses buffers, sources et gains de couches. Une transition ne dépasse jamais deux
+bus ; chaque `AudioBufferSourceNode` arrêté est détruit, car il n’est pas
+réutilisable.
 
 ## API de domaine indicative
 
 ```ts
 type AudioEngine = {
   load(layers: readonly SoundLayer[]): Promise<void>;
+  preload(layers: readonly SoundLayer[]): Promise<void>;
+  cancelPreload(): void;
+  transition(layers: readonly SoundLayer[]): Promise<void>;
   play(): Promise<void>;
   pause(): void;
   setLayerVolume(layerId: string, volume: number): void;
@@ -29,7 +35,11 @@ type AudioEngine = {
 
 L’implémentation peut évoluer, mais les intentions restent séparées des nœuds Web Audio.
 
-L’implémentation 0.1 vit dans `src/features/audio/audio-engine.ts`. `VisualControls` porte la machine d’états UI `idle → loading → playing ↔ paused`, avec une branche `error → loading` pour le réessai. Le moteur reste indépendant de React et reçoit ses créateurs de contexte et de requête comme dépendances testables.
+L’implémentation vit dans `src/features/audio/audio-engine.ts`. Le provider
+`audio-session.tsx` porte l’intention `idle → loading → playing ↔ paused`, avec
+une branche `error → loading` pour le réessai. Le moteur reste indépendant de
+React et reçoit ses créateurs de contexte et de requête comme dépendances
+testables.
 
 ## Cycle de vie
 
@@ -52,7 +62,15 @@ Ne jamais promettre une lecture automatique à l’arrivée. Le contexte est cr�
 - Vérifier `response.ok` avant lecture du corps.
 - Décoder hors du chemin de rendu React.
 - Signaler l’échec par couche afin de conserver les autres.
-- En 0.2, borner le cache de buffers et ne précharger qu’une ambiance probable après l’essentiel visuel.
+- En 0.2, ne précharger qu’une ambiance probable après l’essentiel visuel.
+
+Depuis le Lot 14, le préchargement conserve au plus une cible sous forme
+compressée (`ArrayBuffer`). Il ne crée pas d’`AudioContext` et ne décode aucun
+buffer. Une nouvelle intention annule les fetchs précédents et remplace ce cache ;
+une sélection explicite de la même cible réutilise les octets déjà reçus avant de
+décoder. `Save-Data`, le mode hors ligne, `slow-2g`/`2g` et un débit annoncé sous
+1,5 Mbit/s désactivent cette anticipation. Le cache HTTP immuable reste le second
+niveau, sans service worker.
 
 Le choix final de format dépend de tests navigateur. Fournir plusieurs sources uniquement si le gain de compatibilité le justifie ; documenter codecs et licences.
 
@@ -86,9 +104,18 @@ Pour le MVP, privilégier la première pendant les pauses courtes et suspendre l
 
 Choix 0.1 : les sources continuent pendant une pause visible et le master converge vers zéro. Lorsque la page devient masquée, le master est fermé et le contexte suspendu, y compris si la lecture était déjà en pause. Au retour, le contexte ne reprend automatiquement que si l’intention utilisateur est toujours `playing`, avec un nouveau fondu d’entrée.
 
-## Changement d’ambiance futur
+## Changement d’ambiance
 
-Deux graphes coexistent temporairement : sortie de l’ancien master vers zéro et entrée du nouveau vers sa cible. Ne pas réutiliser des IDs de couche pour partager implicitement des nœuds. Le visuel et l’audio reçoivent une même intention de transition mais restent découplés pour gérer un chargement audio lent.
+L’ancien bus reste audible pendant le téléchargement et le décodage de la cible.
+Quand le bus entrant est prêt, deux automations linéaires opposées de 1,8 seconde
+sont planifiées, puis le bus sortant est arrêté et déconnecté. Une nouvelle
+sélection annule le fetch obsolète ; si un crossfade a déjà commencé, le bus le
+plus récent est stabilisé en 80 ms avant de préparer la nouvelle cible. Le visuel
+utilise une couche d’opacité de 720 ms, réduite à 80 ms avec mouvement réduit.
+
+Une couche cible en échec est désactivée sans bloquer les autres. Un échec total
+ferme le master, conserve l’URL et la scène demandées, annonce l’erreur et expose
+Retry. Quitter `/atmosphere/*` détruit le contexte et tous les bus.
 
 ## Nettoyage
 

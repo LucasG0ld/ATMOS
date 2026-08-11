@@ -7,6 +7,7 @@ import { AtmosphereScene } from "@/components/atmosphere/atmosphere-scene";
 import { LocalClock } from "@/components/clock/local-clock";
 import { VisualControls } from "@/components/controls/visual-controls";
 import { Reveal } from "@/components/motion/reveal";
+import { AtmosphereMenu } from "@/components/navigation/atmosphere-menu";
 import { Wordmark } from "@/components/shared/wordmark";
 import { atmospheres, getAtmosphereBySlug } from "@/data/atmospheres";
 
@@ -44,19 +45,29 @@ export default async function AtmospherePage({ params }: AtmospherePageProps) {
     notFound();
   }
 
+  const atmosphereIndex = atmospheres.findIndex(
+    ({ slug: catalogSlug }) => catalogSlug === atmosphere.slug,
+  );
+
   return (
-    <AtmosphereScene atmosphere={atmosphere} className={styles.scene}>
+    <AtmosphereScene atmosphere={atmosphere}>
       <main className={`safe-area-frame min-h-dvh ${styles.frame}`}>
         <header className={styles.header}>
           <Wordmark />
-          <Link
-            aria-label="Back to atmospheres"
-            className={`text-label ${styles.backLink}`}
-            href="/"
-          >
-            <ArrowLeft aria-hidden="true" size={16} />
-            <span className={styles.backLabel}>Back</span>
-          </Link>
+          <div className={styles.headerActions}>
+            <AtmosphereMenu
+              atmospheres={atmospheres}
+              currentSlug={atmosphere.slug}
+            />
+            <Link
+              aria-label="Back to atmospheres"
+              className={`text-label ${styles.backLink}`}
+              href="/"
+            >
+              <ArrowLeft aria-hidden="true" size={16} />
+              <span className={styles.backLabel}>Back</span>
+            </Link>
+          </div>
         </header>
 
         <section aria-labelledby="atmosphere-title" className={styles.stage}>
@@ -65,8 +76,10 @@ export default async function AtmospherePage({ params }: AtmospherePageProps) {
           </Reveal>
 
           <div className={styles.editorial}>
-            <Reveal delay={0.12}>
-              <p className={`text-label ${styles.eyebrow}`}>Atmosphere · 01</p>
+            <div>
+              <p className={`text-label ${styles.eyebrow}`}>
+                Atmosphere · {String(atmosphereIndex + 1).padStart(2, "0")}
+              </p>
               <h1
                 aria-label={atmosphere.name}
                 className={`text-display font-normal ${styles.title}`}
@@ -78,18 +91,18 @@ export default async function AtmospherePage({ params }: AtmospherePageProps) {
                   </span>
                 ))}
               </h1>
-            </Reveal>
+            </div>
 
-            <Reveal delay={0.2}>
-              <p className={`text-body ${styles.description}`}>
-                {atmosphere.description}
-              </p>
-            </Reveal>
+            <p className={`text-body ${styles.description}`}>
+              {atmosphere.description}
+            </p>
           </div>
 
           <Reveal className={styles.controlsColumn} delay={0.28}>
             <VisualControls
+              atmosphere={atmosphere}
               atmosphereName={atmosphere.name}
+              key={atmosphere.id}
               sounds={atmosphere.sounds}
             />
           </Reveal>

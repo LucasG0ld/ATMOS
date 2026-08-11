@@ -43,6 +43,17 @@ rester configurée sur **GitHub Actions**.
 7. Effectuer un smoke test depuis un cache vide.
 8. Taguer la version lorsque la stratégie de versionnage est active.
 
+Pour le point 4, construire d’abord avec `npm run build`, puis exécuter
+`npm run budget:check`, `npm run performance:runtime` et
+`npm run performance:lighthouse`. Cette dernière commande audite les cinq routes
+en profils mobile et desktop ; une route et un profil peuvent être ciblés, par
+exemple `npm run performance:lighthouse -- home mobile`. Les rapports temporaires
+sont écrits sous `.cache/`.
+
+`npm run smoke:local` construit et sert automatiquement la candidate sur un port
+isolé, puis exécute le même parcours que le smoke de production. Il ne remplace
+pas le contrôle HTTPS après déploiement.
+
 ## Smoke test production
 
 Exécuter `npm run smoke:production` pour contrôler le parcours public avec un
@@ -58,7 +69,22 @@ manuelles ci-dessous.
 
 ## Rollback
 
-Pour un défaut critique, revenir au déploiement précédemment validé via le fournisseur, puis ouvrir un correctif isolé. Ne pas modifier manuellement des fichiers de production. Les préférences locales futures doivent tolérer un rollback de code ; une migration irréversible exige un plan particulier.
+Le dernier point de retour validé est le tag annoté `v0.1.0`, commit
+`889de88`. Pour un défaut critique après publication de 0.2 :
+
+1. suspendre toute nouvelle fusion ou exécution du workflow Pages ;
+2. relancer `Deploy GitHub Pages` avec la référence `v0.1.0` via
+   `workflow_dispatch`, puis vérifier l’URL officielle avec un cache vide ;
+3. confirmer le retour de l’accueil, de Rainy Apartment, des trois couches audio
+   et de la 404 avec le parcours compatible 0.1 ;
+4. ouvrir un correctif ou un revert revu vers `main` afin que son prochain
+   déploiement ne réintroduise pas 0.2 par inadvertance ;
+5. consigner le défaut, son impact, l’heure du rollback et la décision de
+   republication.
+
+Ne pas modifier manuellement les fichiers servis par Pages et ne pas déplacer le
+tag `v0.1.0`. ATMOS 0.2 ne crée aucune donnée utilisateur ni migration : ce
+rollback de code et d’actifs est réversible.
 
 ## Mises à jour
 
@@ -78,11 +104,17 @@ Le code, la documentation et la configuration versionnable vivent dans Git. Le M
 - Supprimer les chargements et références, puis l’actif uniquement après vérification.
 - Conserver crédits et preuve pour les versions historiques.
 
-## Informations à compléter avant production
+## Décisions opératoires actuelles
 
-- URL de production et propriétaire du domaine.
-- Responsables de déploiement et de sécurité.
-- Canal privé de vulnérabilité.
-- Emplacement des preuves de licence et originaux.
-- Politique éventuelle d’analytics et de conservation.
-- Commandes réelles de projet et version minimale de Node dans le README.
+- Production officielle : `https://lucasg0ld.github.io/ATMOS/`.
+- Propriétaire du dépôt et responsable du déploiement : LucasG0ld.
+- Branche `main` : ruleset `Protect main` actif depuis le 2026-08-11, avec PR,
+  historique linéaire et contrôle strict `quality` obligatoires ; fusion par
+  squash uniquement.
+- Canal de sécurité : signalement privé de vulnérabilité GitHub actif.
+- Preuves de licence : registres versionnés dans `docs/operations/` et
+  `ASSET_CREDITS.md` ; emplacement pérenne des originaux externes à confirmer.
+- Analytics : absentes du MVP 0.2 ; aucune conservation de données utilisateur.
+- Code : propriétaire, `UNLICENSED`, copyright LucasG0ld ; actifs tiers sous
+  leurs licences respectives.
+- Exécution : Node.js 24 et npm 11, commandes réelles documentées dans le README.

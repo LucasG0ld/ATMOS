@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { rainyApartment } from "../../data/atmospheres/rainy-apartment";
+import { deepForest } from "../../data/atmospheres/deep-forest";
+import { fireplace } from "../../data/atmospheres/fireplace";
+import { quietCoffeeShop } from "../../data/atmospheres/quiet-coffee-shop";
 
 import { WebAudioEngine } from "./audio-engine";
 
@@ -128,10 +131,10 @@ describe("WebAudioEngine", () => {
 
     engine.setLayerVolume("rain", 2);
     await engine.load(rainyApartment.sounds);
-    expect(fake.gains[1].gain.value).toBe(1);
+    expect(fake.gains[2].gain.value).toBe(1);
 
     engine.setLayerVolume("rain", -1);
-    expect(fake.gains[1].gain.linearRampToValueAtTime).toHaveBeenLastCalledWith(
+    expect(fake.gains[2].gain.linearRampToValueAtTime).toHaveBeenLastCalledWith(
       0,
       4.05,
     );
@@ -232,5 +235,190 @@ describe("WebAudioEngine", () => {
       expect(source.disconnect).toHaveBeenCalledTimes(1);
     }
     expect(fake.rawContext.close).toHaveBeenCalledTimes(1);
+  });
+
+  it("crossfades two buses in one context and retires the outgoing sources", async () => {
+    vi.useFakeTimers();
+    const fake = createFakeContext();
+    const createContext = vi.fn(() => fake.context);
+    const engine = new WebAudioEngine({
+      createContext,
+      fetch: vi.fn(async () => successfulResponse()) as typeof fetch,
+    });
+
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    await expect(engine.transition(deepForest.sounds)).resolves.toEqual({
+      unavailableLayerIds: [],
+    });
+
+    expect(createContext).toHaveBeenCalledTimes(1);
+    expect(fake.sources).toHaveLength(6);
+    expect(fake.gains[1].gain.linearRampToValueAtTime).toHaveBeenCalledWith(
+      0,
+      5.8,
+    );
+    expect(fake.gains[5].gain.linearRampToValueAtTime).toHaveBeenCalledWith(
+      1,
+      5.8,
+    );
+
+    await vi.advanceTimersByTimeAsync(1_800);
+    expect(
+      fake.sources
+        .slice(0, 3)
+        .every(({ stop }) => stop.mock.calls.length === 1),
+    ).toBe(true);
+    expect(
+      fake.sources.slice(3).every(({ stop }) => stop.mock.calls.length === 0),
+    ).toBe(true);
+    vi.useRealTimers();
+  });
+
+  it("cancels a slow obsolete target and keeps at most two live buses", async () => {
+    vi.useFakeTimers();
+    const fake = createFakeContext();
+    const fetchAudio = vi.fn(
+      async (input: RequestInfo | URL, init?: RequestInit) => {
+        if (String(input).includes("forest")) {
+          return await new Promise<Response>((_, reject) => {
+            init?.signal?.addEventListener("abort", () =>
+              reject(new DOMException("aborted", "AbortError")),
+            );
+          });
+        }
+        return successfulResponse();
+      },
+    );
+    const engine = new WebAudioEngine({
+      createContext: () => fake.context,
+      fetch: fetchAudio as typeof fetch,
+    });
+
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    const obsolete = engine.transition(deepForest.sounds);
+    await Promise.resolve();
+    const latest = engine.transition(fireplace.sounds);
+
+    await expect(obsolete).rejects.toMatchObject({ name: "AbortError" });
+    await expect(latest).resolves.toEqual({ unavailableLayerIds: [] });
+    const liveSources = fake.sources.filter(
+      ({ stop }) => stop.mock.calls.length === 0,
+    );
+    expect(liveSources).toHaveLength(6);
+    vi.useRealTimers();
+  });
+
+  it("crossfades with the remaining target layers after a partial failure", async () => {
+    const fake = createFakeContext();
+    const engine = new WebAudioEngine({
+      createContext: () => fake.context,
+      fetch: vi.fn(async (input: RequestInfo | URL) => {
+        if (String(input).includes("moving-leaves")) {
+          throw new Error("offline");
+        }
+        return successfulResponse();
+      }) as typeof fetch,
+    });
+
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    await expect(engine.transition(deepForest.sounds)).resolves.toEqual({
+      unavailableLayerIds: ["moving-leaves"],
+    });
+    expect(fake.sources).toHaveLength(5);
+  });
+
+  it("preloads compressed audio without a context and reuses it on transition", async () => {
+    const fake = createFakeContext();
+    const createContext = vi.fn(() => fake.context);
+    const fetchAudio = vi.fn(async () => successfulResponse());
+    const preloadOnlyEngine = new WebAudioEngine({
+      createContext,
+      fetch: fetchAudio as typeof fetch,
+    });
+
+    await preloadOnlyEngine.preload(deepForest.sounds);
+    expect(createContext).not.toHaveBeenCalled();
+    expect(fake.rawContext.decodeAudioData).not.toHaveBeenCalled();
+    expect(fetchAudio).toHaveBeenCalledTimes(3);
+    preloadOnlyEngine.cancelPreload();
+    fetchAudio.mockClear();
+
+    const engine = new WebAudioEngine({
+      createContext,
+      fetch: fetchAudio as typeof fetch,
+    });
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    await engine.preload(deepForest.sounds);
+    expect(fake.rawContext.decodeAudioData).toHaveBeenCalledTimes(3);
+    await engine.transition(deepForest.sounds);
+    expect(fetchAudio).toHaveBeenCalledTimes(6);
+    expect(fake.rawContext.decodeAudioData).toHaveBeenCalledTimes(6);
+  });
+
+  it("cancels an obsolete compressed preload before retaining the latest target", async () => {
+    const fake = createFakeContext();
+    const fetchAudio = vi.fn(
+      async (input: RequestInfo | URL, init?: RequestInit) => {
+        if (String(input).includes("forest")) {
+          return await new Promise<Response>((_, reject) => {
+            if (init?.signal?.aborted) {
+              reject(new DOMException("aborted", "AbortError"));
+              return;
+            }
+            init?.signal?.addEventListener("abort", () =>
+              reject(new DOMException("aborted", "AbortError")),
+            );
+          });
+        }
+        return successfulResponse();
+      },
+    );
+    const engine = new WebAudioEngine({
+      createContext: () => fake.context,
+      fetch: fetchAudio as typeof fetch,
+    });
+
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    const obsolete = engine.preload(deepForest.sounds);
+    const latest = engine.preload(fireplace.sounds);
+    await expect(obsolete).rejects.toMatchObject({ name: "AbortError" });
+    await expect(latest).resolves.toBeUndefined();
+
+    const requestsBeforeTransition = fetchAudio.mock.calls.length;
+    await engine.transition(fireplace.sounds);
+    expect(fetchAudio).toHaveBeenCalledTimes(requestsBeforeTransition);
+  });
+
+  it("returns to one live bus after ten consecutive transitions", async () => {
+    vi.useFakeTimers();
+    const fake = createFakeContext();
+    const createContext = vi.fn(() => fake.context);
+    const engine = new WebAudioEngine({
+      createContext,
+      crossfadeSeconds: 0.001,
+      fetch: vi.fn(async () => successfulResponse()) as typeof fetch,
+    });
+    const targets = [deepForest, fireplace, quietCoffeeShop, rainyApartment];
+
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    for (let index = 0; index < 10; index += 1) {
+      await engine.transition(targets[index % targets.length].sounds);
+      await vi.advanceTimersByTimeAsync(1);
+    }
+
+    expect(createContext).toHaveBeenCalledTimes(1);
+    expect(
+      fake.sources.filter(({ stop }) => stop.mock.calls.length === 0),
+    ).toHaveLength(3);
+    expect(
+      fake.sources.filter(({ stop }) => stop.mock.calls.length === 1),
+    ).toHaveLength(30);
+    vi.useRealTimers();
   });
 });

@@ -32,7 +32,38 @@ describe("AtmospherePage", () => {
   });
 
   it("pre-renders every atmosphere in the catalog", () => {
-    expect(generateStaticParams()).toEqual([{ slug: "rainy-apartment" }]);
+    expect(generateStaticParams()).toEqual([
+      { slug: "rainy-apartment" },
+      { slug: "quiet-coffee-shop" },
+      { slug: "deep-forest" },
+      { slug: "fireplace" },
+    ]);
+  });
+
+  it("renders the final mix for a catalog atmosphere", async () => {
+    const page = await AtmospherePage({
+      params: Promise.resolve({ slug: "deep-forest" }),
+    });
+
+    render(page);
+
+    expect(
+      screen.getByRole("heading", { name: "Deep Forest" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Atmosphere · 03")).toBeInTheDocument();
+    expect(screen.getAllByRole("slider")).toHaveLength(3);
+    expect(screen.getByRole("slider", { name: "Forest Air" })).toHaveValue(
+      "58",
+    );
+    expect(screen.getByRole("slider", { name: "Moving Leaves" })).toHaveValue(
+      "30",
+    );
+    expect(screen.getByRole("slider", { name: "Distant Stream" })).toHaveValue(
+      "18",
+    );
+    expect(
+      screen.getByRole("button", { name: "Play Deep Forest" }),
+    ).toBeEnabled();
   });
 
   it("rejects a slug that is not part of the catalog", async () => {
@@ -50,6 +81,16 @@ describe("AtmospherePage", () => {
       }),
     ).resolves.toMatchObject({
       title: "Rainy Apartment",
+    });
+
+    await expect(
+      generateMetadata({
+        params: Promise.resolve({ slug: "quiet-coffee-shop" }),
+      }),
+    ).resolves.toMatchObject({
+      title: "Quiet Coffee Shop",
+      description:
+        "A slow morning held together by warm light and the quiet rhythm of the café.",
     });
   });
 });

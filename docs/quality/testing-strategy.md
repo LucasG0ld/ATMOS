@@ -77,11 +77,54 @@ Les versions exactes sont relevées à chaque release, pas figées ici.
 
 La candidate 0.1 automatise cinq projets Playwright : Chromium desktop, Firefox desktop, WebKit desktop, Chromium mobile émulé et WebKit mobile émulé. Le binaire WebKit Playwright sous Windows ne fournit pas `AudioContext` : il valide donc l’état récupérable sans audio. La lecture réelle reste automatisée sous Chromium et Firefox. Safari iOS réel a été validé à la Gate B. Safari macOS réel n’a pas pu être exécuté faute d’appareil ; sa couverture compensatoire par Safari iOS et WebKit desktop a été acceptée comme risque résiduel pour 0.1.
 
+Le Lot 12 applique la même frontière au catalogue 0.2 : Chromium et Firefox
+décodent réellement les trois nouvelles couches après Play ; WebKit vérifie le
+fallback récupérable et sert séparément les trois MP3 avec le bon type MIME. La
+recette d’écoute longue des trois nouveaux mixes a été validée sur desktop et
+mobile le 2026-08-10. Le navigateur mobile n’ayant pas été consigné, la ligne
+Safari iOS réel de la Gate C reste à contrôler lors de la recette de release.
+
+Le Lot 13 ajoute des tests unitaires du graphe à deux bus, du retrait du bus
+sortant, des couches partielles et de l’annulation d’une cible lente. Les tests
+de session couvrent la continuité React, une cible lente et le Retry. La matrice
+Playwright compte désormais 50 scénarios : 48 validations et les 2 reports
+clavier WebKit existants. Chromium, Firefox et le profil Chromium mobile
+confirment Rainy Apartment → Deep Forest → Fireplace avec un seul `AudioContext` ;
+WebKit conserve sa dégradation récupérable sous Windows.
+
+La recette utilisateur du Lot 13 a validé les crossfades et la continuité de
+session sur desktop et mobile le 2026-08-10, sans problème signalé. Les
+navigateurs exacts n’ont pas été consignés ; cette recette ne remplace donc pas
+les lignes Safari iOS et Android Chrome de la Gate C.
+
+Le Lot 14 porte la suite à 82 tests unitaires/composants. Elle couvre la politique
+`Save-Data`/connexion, le remplacement d’une preview responsive, l’absence de
+décodage anticipé, la réutilisation d’un téléchargement, l’annulation d’une cible
+obsolète et dix transitions avec un seul contexte et un seul bus final. La
+matrice Playwright du Lot 15 compte 60 scénarios. Sous Windows : 56 validations
+et 4 reports WebKit documentés. Sur le runner Linux : 55 validations et 5 reports,
+car Firefox ne décode pas les MP3 dans cet environnement. Un scénario réseau
+confirme zéro audio avant Play, la
+réutilisation de la cible préchargée et le blocage sous `Save-Data`.
+
+Le Lot 15 ajoute la dégradation d’une couche réelle : sous Chromium, Firefox
+Windows et Chromium mobile, le mix continue, le slider concerné devient
+indisponible et les deux autres restent réglables. Les deux profils WebKit ainsi
+que Firefox sur le runner Ubuntu reportent ce scénario faute de décodage MP3 ; le
+fallback récupérable et les tests unitaires restent obligatoires dans ces
+environnements.
+
+La recette finale de la candidate 0.2 a été validée le 2026-08-11 sur desktop,
+Chrome Android réel et Safari iOS réel. Elle couvre aussi le zoom 200 %, le texte
+agrandi, le contraste élevé et les lecteurs d’écran desktop/mobile. Aucun défaut
+critique ou majeur n’a été signalé. Safari macOS réel reste le risque résiduel
+explicitement accepté pour cette release.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.
 
-État 0.1 : la CI exécute également `audio:check`, `budget:check`, puis 30 cas Playwright sur les cinq projets. Deux contrôles d’ordre clavier sont explicitement reportés pour WebKit, dont le réglage Safari par défaut exclut les liens de la tabulation ; 28 validations sont automatisées. axe-core bloque toute violation automatisable critique ou sérieuse avec les tags WCAG 2 A/AA, 2.1 AA et 2.2 AA.
+État 0.2 : la CI exécute également `audio:check`, `budget:check`, puis la matrice Playwright sur cinq projets. Deux contrôles d’ordre clavier sont explicitement reportés pour WebKit, dont le réglage Safari par défaut exclut les liens de la tabulation. axe-core bloque toute violation automatisable critique ou sérieuse avec les tags WCAG 2 A/AA, 2.1 AA et 2.2 AA.
 
 ## Données et isolation
 

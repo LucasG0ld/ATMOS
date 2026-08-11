@@ -35,7 +35,9 @@ src/
 │   ├── layout.tsx
 │   ├── page.tsx
 │   ├── not-found.tsx
-│   └── atmosphere/[slug]/page.tsx
+│   └── atmosphere/
+│       ├── layout.tsx
+│       └── [slug]/page.tsx
 ├── components/
 │   ├── atmosphere/
 │   ├── controls/
@@ -86,7 +88,17 @@ Ne pas créer tous les dossiers à vide. Une frontière apparaît lorsqu’un pr
 
 ### État
 
-Pour le prototype, l’état local et un hook de composition suffisent. Un Context ciblé peut partager l’état du player. Zustand n’est introduit que si les interactions entre changement d’ambiance, timer, Focus Mode et persistance rendent le Context objectivement difficile à maintenir.
+Depuis le Lot 13, un Context ciblé dans `app/atmosphere/layout.tsx` conserve
+l’intention de lecture et l’orchestrateur audio pendant les changements de slug.
+Il est détruit dès que l’utilisateur quitte les routes du player. Zustand n’est
+introduit que si les interactions futures rendent ce Context objectivement
+difficile à maintenir.
+
+Le Lot 14 isole les décisions d’anticipation dans
+`features/preloading/media-preloader.ts`. L’accueil ne prépare qu’un visuel
+responsive. Dans le player, le provider transmet l’intention au moteur, qui ne
+prépare l’audio compressé qu’après une première activation réussie et selon les
+capacités réseau annoncées.
 
 Éviter un store global unique. Distinguer :
 
@@ -118,10 +130,11 @@ Route résout Atmosphere
 Page rend scène + données initiales
         │
         ▼
-Player client reçoit layers/volumes
+Session cliente reçoit ambiance/layers/volumes
         │
         ├── interaction slider ──► état demandé ──► gain layer
-        └── interaction play ────► init/load ─────► master gain
+        ├── interaction play ────► init/load ─────► master gain
+        └── nouveau slug en lecture ─► bus entrant ─► crossfade
 ```
 
 L’UI reflète l’intention confirmée par le moteur. Une erreur moteur doit revenir à un état stable et explicable.
@@ -155,3 +168,5 @@ Le MVP utilise : erreurs console en développement, erreurs de build/test et con
 - v1 : schéma de mix personnalisé et migrations locales.
 
 Ces évolutions doivent prolonger les contrats existants, pas être anticipées par des abstractions vides.
+
+Le cadrage 0.2 est détaillé dans l’[ADR-0002](decisions/0002-catalogue-transitions-and-preloading.md) : registre ordonné, session persistante limitée au player, un seul contexte audio avec deux bus et préchargement d’une cible maximum.

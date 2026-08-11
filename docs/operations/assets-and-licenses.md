@@ -4,6 +4,11 @@
 
 Aucun média ou fichier de police ne peut entrer en production sans provenance, licence exacte et preuve. Une mention « free », « royalty-free » ou un résultat de recherche n’est pas une autorisation suffisante.
 
+Le code source et la documentation originale sont propriétaires et déclarés
+`UNLICENSED` dans le manifeste npm. La mention [COPYRIGHT.md](../../COPYRIGHT.md)
+conserve tous les droits à LucasG0ld. Elle ne s’applique pas aux actifs tiers,
+qui restent régis par le présent registre et leurs licences respectives.
+
 ## Sources acceptables
 
 - Création originale avec droits détenus.
@@ -38,6 +43,7 @@ Refuser les extractions YouTube, Spotify, réseaux sociaux, œuvres dont l’aut
 - Conserver cadrage original et point focal utile.
 - Supprimer les métadonnées inutiles lors de l’export web.
 - Ne pas agrandir artificiellement une source insuffisante.
+- Déclarer explicitement toute génération par IA, archiver prompt, outil, date, empreintes et conditions applicables ; ne jamais la présenter comme une création photographique humaine.
 
 ## Fonts et icônes
 

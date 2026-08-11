@@ -31,6 +31,12 @@ async function capture(browser, name, options) {
   for (const route of [
     { path: "/", suffix: "home" },
     { path: "/atmosphere/rainy-apartment", suffix: "player" },
+    {
+      path: "/atmosphere/quiet-coffee-shop",
+      suffix: "quiet-coffee-shop",
+    },
+    { path: "/atmosphere/deep-forest", suffix: "deep-forest" },
+    { path: "/atmosphere/fireplace", suffix: "fireplace" },
   ]) {
     await page.goto(`${baseURL}${route.path}`);
     await page.waitForTimeout(800);

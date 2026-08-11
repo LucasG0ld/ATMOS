@@ -8,12 +8,14 @@ import {
   createAudioEngine,
   type AudioEngineController,
 } from "../../features/audio/audio-engine";
-import type { SoundLayer } from "../../types/atmosphere";
+import { useAudioSession } from "../../features/audio/audio-session";
+import type { Atmosphere, SoundLayer } from "../../types/atmosphere";
 
 import { AtmosSlider } from "./atmos-slider";
 import styles from "./visual-controls.module.css";
 
 type VisualControlsProps = {
+  atmosphere?: Atmosphere;
   atmosphereName: string;
   createEngine?: () => AudioEngineController;
   sounds: readonly SoundLayer[];
@@ -30,10 +32,12 @@ function createInitialVolumes(
 }
 
 export function VisualControls({
+  atmosphere,
   atmosphereName,
   createEngine = createAudioEngine,
   sounds,
 }: VisualControlsProps) {
+  const session = useAudioSession(atmosphere);
   const engineRef = useRef<AudioEngineController | null>(null);
   const operationRef = useRef(0);
   const statusId = useId();
@@ -45,19 +49,25 @@ export function VisualControls({
   const [volumes, setVolumes] = useState<Record<string, number>>(() =>
     createInitialVolumes(sounds),
   );
-  const isPlaying = playbackState === "playing";
-  const action =
-    playbackState === "loading"
+  const currentPlaybackState = session?.playbackState ?? playbackState;
+  const currentStatusMessage = session?.statusMessage ?? statusMessage;
+  const currentUnavailableLayers =
+    session?.unavailableLayerIds ?? unavailableLayers;
+  const hasSounds = sounds.length > 0;
+  const isPlaying = currentPlaybackState === "playing";
+  const action = !hasSounds
+    ? "Unavailable"
+    : currentPlaybackState === "loading"
       ? "Loading"
-      : playbackState === "error"
+      : currentPlaybackState === "error"
         ? "Retry"
         : isPlaying
           ? "Pause"
           : "Play";
   const ActionIcon =
-    playbackState === "loading"
+    currentPlaybackState === "loading"
       ? LoaderCircle
-      : playbackState === "error"
+      : currentPlaybackState === "error"
         ? RotateCcw
         : isPlaying
           ? Pause
@@ -84,13 +94,22 @@ export function VisualControls({
       ...currentVolumes,
       [soundId]: value,
     }));
-    engineRef.current?.setLayerVolume(soundId, value / 100);
+    if (session) {
+      session.setLayerVolume(soundId, value / 100);
+    } else {
+      engineRef.current?.setLayerVolume(soundId, value / 100);
+    }
   };
 
   const togglePlayback = async () => {
-    if (playbackState === "loading") return;
+    if (!hasSounds || currentPlaybackState === "loading") return;
 
-    if (playbackState === "playing") {
+    if (session && atmosphere) {
+      await session.togglePlayback(atmosphere, volumes);
+      return;
+    }
+
+    if (currentPlaybackState === "playing") {
       engineRef.current?.pause();
       setPlaybackState("paused");
       return;
@@ -133,26 +152,36 @@ export function VisualControls({
       <fieldset className={styles.fieldset}>
         <legend className={`text-label ${styles.legend}`}>Sound layers</legend>
         <div className={styles.layers}>
-          {sounds.map((sound) => (
-            <AtmosSlider
-              key={sound.id}
-              disabled={unavailableLayers.has(sound.id)}
-              label={sound.name}
-              onValueChange={(value) => updateVolume(sound.id, value)}
-              value={volumes[sound.id] ?? 0}
-            />
-          ))}
+          {hasSounds ? (
+            sounds.map((sound) => (
+              <AtmosSlider
+                key={sound.id}
+                disabled={currentUnavailableLayers.has(sound.id)}
+                label={sound.name}
+                onValueChange={(value) => updateVolume(sound.id, value)}
+                value={volumes[sound.id] ?? 0}
+              />
+            ))
+          ) : (
+            <p className={`text-body ${styles.audioPending}`}>
+              Sound layers are being prepared for this atmosphere.
+            </p>
+          )}
         </div>
       </fieldset>
 
       <div className={styles.actions}>
         <MotionConfig reducedMotion="user">
           <button
-            aria-busy={playbackState === "loading"}
-            aria-describedby={statusMessage ? statusId : undefined}
-            aria-label={`${action} ${atmosphereName}`}
+            aria-busy={currentPlaybackState === "loading"}
+            aria-describedby={currentStatusMessage ? statusId : undefined}
+            aria-label={
+              hasSounds
+                ? `${action} ${atmosphereName}`
+                : `Audio unavailable for ${atmosphereName}`
+            }
             className={styles.playButton}
-            disabled={playbackState === "loading"}
+            disabled={!hasSounds || currentPlaybackState === "loading"}
             data-playing={isPlaying ? "true" : "false"}
             onClick={() => void togglePlayback()}
             type="button"
@@ -164,7 +193,7 @@ export function VisualControls({
                   aria-hidden="true"
                   exit={{ opacity: 0, scale: 0.92 }}
                   initial={{ opacity: 0, scale: 0.92 }}
-                  className={`${styles.buttonIcon} ${playbackState === "loading" ? styles.loadingIcon : ""}`}
+                  className={`${styles.buttonIcon} ${currentPlaybackState === "loading" ? styles.loadingIcon : ""}`}
                   key={action}
                   transition={{ duration: 0.16 }}
                 >
@@ -179,13 +208,13 @@ export function VisualControls({
         <span className={`text-label ${styles.mode}`}>Audio</span>
       </div>
 
-      {statusMessage ? (
+      {currentStatusMessage ? (
         <p
           className={`text-label ${styles.status}`}
           id={statusId}
-          role={playbackState === "error" ? "alert" : "status"}
+          role={currentPlaybackState === "error" ? "alert" : "status"}
         >
-          {statusMessage}
+          {currentStatusMessage}
         </p>
       ) : null}
     </div>

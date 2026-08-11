@@ -8,9 +8,9 @@ Le projet démarre par un prototype visuel complet de **Rainy Apartment**. Le mo
 
 ## État du projet
 
-- Phase actuelle : Lots 0 à 7 et Gate B terminés.
-- Code applicatif : ATMOS 0.1 Rainy Apartment visuelle et sonore publiée.
-- Prochaine étape : cadrage du MVP 0.2 — catalogue initial.
+- Phase actuelle : MVP 0.1 publié ; candidate technique du MVP 0.2 préparée sur `mvp-0.2`.
+- Code applicatif : catalogue à quatre destinations, navigation accessible, identités visuelles responsive, mixages à trois couches, session audio persistante et préchargement borné.
+- Prochaine étape : validations externes du Lot 15, Gate C, puis autorisation explicite de release.
 - Langue de l’interface : anglais.
 - Langue de la documentation : français.
 
@@ -55,9 +55,13 @@ npm run lint        # exécute ESLint
 npm run typecheck   # vérifie TypeScript sans émission
 npm run test        # exécute les tests une fois
 npm run audio:check # contrôle formats, durées, jointures et budget audio
+npm run images:check # contrôle dimensions et budgets des visuels responsive
 npm run build       # crée le build de production
 npm run budget:check # contrôle les budgets JS, CSS et fonts après build
+npm run performance:runtime # mesure dix transitions et la mémoire du player local
+npm run performance:lighthouse # audite les cinq routes en mobile et desktop
 npm run test:e2e    # exécute la recette sur cinq profils navigateur/mobile
+npm run smoke:local # contrôle le parcours de release sur un build local
 npm run smoke:production # contrôle le parcours critique sur l’URL publique, cache désactivé
 ```
 
@@ -72,6 +76,7 @@ Le point d’entrée documentaire est [docs/README.md](docs/README.md). Les docu
 - [Architecture technique](docs/architecture/architecture.md)
 - [Plan de réalisation](docs/project/delivery-plan.md)
 - [Définition de terminé](docs/project/definition-of-done.md)
+- [Droits du code](COPYRIGHT.md)
 
 Le brief d’origine reste la source d’intention : [ATMOS — Product & Design Brief.md](ATMOS%20%E2%80%94%20Product%20%26%20Design%20Brief.md).
 
@@ -83,6 +88,13 @@ Le brief d’origine reste la source d’intention : [ATMOS — Product & Design
 4. Une architecture pilotée par les données afin d’ajouter une ambiance sans modifier les composants.
 5. Aucun son ou visuel sans provenance et licence compatibles documentées.
 6. Pas d’authentification, backend, paiement ou synchronisation cloud dans le MVP.
+
+## Droits
+
+Le code et la documentation originale sont publiés pour consultation, sans
+licence open source. Copyright © 2026 LucasG0ld. Tous droits réservés. Les médias,
+polices et dépendances conservent leurs licences propres ; consulter
+[COPYRIGHT.md](COPYRIGHT.md) et [ASSET_CREDITS.md](ASSET_CREDITS.md).
 
 ## Contribution
 

@@ -14,6 +14,8 @@ type AtmosphereCustomProperties = {
   "--atmos-focus": string;
   "--atmos-focal-x": string;
   "--atmos-focal-y": string;
+  "--atmos-mobile-focal-x": string;
+  "--atmos-mobile-focal-y": string;
   "--atmos-visual-background": string;
 };
 
@@ -38,9 +40,9 @@ function getSceneStyle(
     "--atmos-focus": theme.focus,
     "--atmos-focal-x": `${visuals.focalPoint.x}%`,
     "--atmos-focal-y": `${visuals.focalPoint.y}%`,
-    "--atmos-visual-background": visuals.backgroundSrc
-      ? `url("${visuals.backgroundSrc}"), ${visuals.fallbackBackground}`
-      : visuals.fallbackBackground,
+    "--atmos-mobile-focal-x": `${visuals.mobileFocalPoint?.x ?? visuals.focalPoint.x}%`,
+    "--atmos-mobile-focal-y": `${visuals.mobileFocalPoint?.y ?? visuals.focalPoint.y}%`,
+    "--atmos-visual-background": visuals.fallbackBackground,
   };
 }
 
@@ -60,8 +62,32 @@ export function AtmosphereScene({
       style={getSceneStyle(atmosphere)}
     >
       <div aria-hidden="true" className={styles.background} />
+      {atmosphere.visuals.backgroundSrc ? (
+        <picture className={styles.picture}>
+          {atmosphere.visuals.mobileBackgroundSrc ? (
+            <source
+              media="(max-width: 48rem)"
+              srcSet={atmosphere.visuals.mobileBackgroundSrc}
+            />
+          ) : null}
+          <img
+            aria-hidden="true"
+            alt={atmosphere.visuals.backgroundAlt}
+            className={styles.visual}
+            data-atmosphere-visual=""
+            decoding="async"
+            fetchPriority="high"
+            height={864}
+            loading="eager"
+            src={atmosphere.visuals.backgroundSrc}
+            width={1536}
+          />
+        </picture>
+      ) : null}
       <div aria-hidden="true" className={styles.haze} />
-      <div aria-hidden="true" className={styles.rain} />
+      {atmosphere.visuals.texture === "rain" ? (
+        <div aria-hidden="true" className={styles.rain} />
+      ) : null}
       <div aria-hidden="true" className={styles.veil} />
       <div className={styles.content}>{children}</div>
     </div>
