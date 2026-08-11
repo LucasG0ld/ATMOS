@@ -38,8 +38,8 @@
 - [x] Format, lint, types, tests, audio, images, build, budgets et audit réussis.
 - [x] Chromium, Firefox, WebKit et profils mobiles automatisés.
 - [x] Axe sans violation critique ou sérieuse.
-- [ ] Zoom 200 %, mouvement réduit, contraste élevé et lecteurs d’écran contrôlés.
-- [ ] Android Chrome et Safari iOS réels.
+- [x] Zoom 200 %, mouvement réduit, contraste élevé et lecteurs d’écran contrôlés.
+- [x] Android Chrome et Safari iOS réels.
 - [x] Écart Safari macOS réévalué et risque résiduel de nouveau accepté par LucasG0ld.
 - [ ] Smoke test HTTPS cache froid sans erreur console ou ressource critique en 404.
 - [x] Documentation, crédits, changelog et procédure de rollback à jour.
@@ -68,3 +68,12 @@ les changements rapides d’ambiance, les crossfades, Pause/Play après transiti
 et l’arrêt du son en quittant le player. Aucun problème n’a été signalé. Les
 navigateurs exacts n’ayant pas été consignés, les contrôles Safari iOS et Android
 Chrome de la recette de release restent distincts.
+
+### Recette manuelle de la candidate 0.2
+
+Le 2026-08-11, LucasG0ld a validé la candidate 0.2 sur desktop, Chrome Android
+réel et Safari iOS réel. Le parcours est fonctionnel à 200 % de zoom, avec texte
+agrandi et contraste élevé, ainsi qu’avec un lecteur d’écran sur desktop et
+mobile. Aucun défaut critique ou majeur n’a été signalé. Le mouvement réduit
+reste également couvert par la matrice automatisée. Le smoke HTTPS et la
+comparaison Lighthouse restent volontairement ouverts jusqu’au déploiement.

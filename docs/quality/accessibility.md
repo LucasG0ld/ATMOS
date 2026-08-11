@@ -74,3 +74,10 @@ Un background purement décoratif utilise un alt vide ou du CSS. Une image infor
 4. Mesurer les contrastes dans les recadrages extrêmes.
 5. Tester mouvement réduit, zoom 200 %, texte agrandi et mode contraste élevé lorsque disponible.
 6. Exécuter un audit automatique et résoudre toute violation critique ou sérieuse.
+
+## Recette ATMOS 0.2
+
+Le 2026-08-11, la candidate 0.2 a été validée avec lecteurs d’écran desktop et
+mobile, zoom navigateur 200 %, texte agrandi et contraste élevé. Les parcours
+desktop, Chrome Android réel et Safari iOS réel sont fonctionnels sans problème
+signalé. Le mouvement réduit et axe restent couverts par la matrice automatisée.

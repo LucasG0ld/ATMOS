@@ -257,7 +257,7 @@ release du Lot 15, après déploiement de la candidate.
 
 ## Lot 15 — Stabilisation 0.2
 
-**Statut : candidate technique préparée le 2026-08-11 ; Gate C externe en attente.**
+**Statut : candidate technique et recette manuelle validées le 2026-08-11 ; vérifications de production et décision de release en attente.**
 
 ### Livrables
 
@@ -270,7 +270,7 @@ release du Lot 15, après déploiement de la candidate.
 - Gate C approuvée sans défaut critique ou majeur.
 - Tag `v0.2.0` autorisé explicitement.
 
-Les contrôles automatisés, le smoke local de production et la documentation de
-candidate sont terminés. Les appareils réels, technologies d’assistance,
-mesures HTTPS post-déploiement et décision de tag restent à confirmer par le
-responsable du projet.
+Les contrôles automatisés, le smoke local de production, la documentation de
+candidate, les appareils réels et les technologies d’assistance sont validés.
+Les mesures HTTPS post-déploiement, l’approbation finale de Gate C et la décision
+de tag restent à confirmer par le responsable du projet.

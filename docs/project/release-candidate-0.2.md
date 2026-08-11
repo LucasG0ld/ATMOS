@@ -23,7 +23,7 @@ introduit.
 - [x] Smoke du build de production local, cache désactivé : quatre routes, Rainy Apartment → Deep Forest, six couches uniques et 404, sans erreur console ou réseau.
 - [x] Audits audio, images et dépendances sans anomalie bloquante.
 - [x] Export GitHub Pages avec le préfixe `/ATMOS` construit avec succès.
-- [x] Aucune issue ou pull request ouverte selon l’API publique GitHub le 2026-08-11.
+- [x] Aucun défaut critique ou majeur ouvert au 2026-08-11 ; la pull request de release est la seule pull request active.
 - [x] Code propriétaire `UNLICENSED`, copyright LucasG0ld et licences des médias séparées.
 - [x] Risque résiduel Safari macOS reconduit par LucasG0ld pour la version 0.2.
 - [x] Ruleset `Protect main` actif : PR, historique linéaire, conversations résolues et contrôle strict `quality`, sans bypass.
@@ -83,12 +83,18 @@ production exigera correction ou exception explicite.
 
 ## Validations requises avant Gate C
 
-- [ ] Obtenir une CI verte sur la pull request vers `main`.
-- [ ] Rejouer le parcours 0.2 sur Chrome Android et Safari iOS réels.
-- [ ] Contrôler zoom 200 %, texte agrandi, contraste élevé et lecteurs d’écran sur la candidate 0.2.
-- [ ] Confirmer qu’aucun défaut critique ou majeur n’est ouvert.
+- [x] Obtenir une CI verte sur la pull request vers `main`.
+- [x] Rejouer le parcours 0.2 sur Chrome Android et Safari iOS réels.
+- [x] Contrôler zoom 200 %, texte agrandi, contraste élevé et lecteurs d’écran sur la candidate 0.2.
+- [x] Confirmer qu’aucun défaut critique ou majeur n’est ouvert.
 - [ ] Fusionner uniquement après ces contrôles, puis exécuter le smoke HTTPS et Lighthouse sur les cinq routes de production.
 - [ ] Approuver explicitement la Gate C et le tag `v0.2.0`.
+
+La recette manuelle a été confirmée par LucasG0ld le 2026-08-11 : parcours
+fonctionnel sur desktop et appareils mobiles réels, zoom 200 %, texte agrandi,
+contraste élevé et lecteurs d’écran desktop/mobile. Aucun problème n’a été
+signalé. Le contrôle `quality` de la pull request est vert sur le commit
+`e1776c0` ; toute mise à jour ultérieure doit le refaire passer avant fusion.
 
 ## Commandes de candidate
 

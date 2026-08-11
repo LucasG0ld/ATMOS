@@ -34,6 +34,7 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 - Décision de conserver le code propriétaire, manifeste `UNLICENSED` et copyright LucasG0ld distinct des licences des médias.
 - Protection de `main` par ruleset, pull request et contrôle CI stricts, avec fusion par squash uniquement.
 - Limite de décodage MP3 du Firefox Playwright sous Linux rendue explicite, sans réduire la couverture Firefox réelle sous Windows.
+- Recette manuelle de la candidate 0.2 validée sur desktop, Chrome Android et Safari iOS réels, avec zoom 200 %, texte agrandi, contraste élevé et lecteurs d’écran desktop/mobile.
 
 ## [0.1.0] — 2026-08-10
 

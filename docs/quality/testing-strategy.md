@@ -114,6 +114,12 @@ que Firefox sur le runner Ubuntu reportent ce scénario faute de décodage MP3 ;
 fallback récupérable et les tests unitaires restent obligatoires dans ces
 environnements.
 
+La recette finale de la candidate 0.2 a été validée le 2026-08-11 sur desktop,
+Chrome Android réel et Safari iOS réel. Elle couvre aussi le zoom 200 %, le texte
+agrandi, le contraste élevé et les lecteurs d’écran desktop/mobile. Aucun défaut
+critique ou majeur n’a été signalé. Safari macOS réel reste le risque résiduel
+explicitement accepté pour cette release.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.
