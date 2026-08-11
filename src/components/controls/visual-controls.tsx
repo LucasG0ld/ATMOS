@@ -13,6 +13,7 @@ import { useOptionalPreferences } from "../../features/preferences/preferences-p
 import type { Atmosphere, SoundLayer } from "../../types/atmosphere";
 
 import { AtmosSlider } from "./atmos-slider";
+import { SessionTimerControl } from "./session-timer-control";
 import styles from "./visual-controls.module.css";
 
 type VisualControlsProps = {
@@ -201,24 +202,29 @@ export function VisualControls({
         </div>
       </fieldset>
 
-      {atmosphere && preferences ? (
+      {(atmosphere && preferences) || session ? (
         <div className={styles.personalActions}>
-          <button
-            aria-label={`${isFavorite ? "Remove from" : "Add to"} favorites`}
-            aria-pressed={isFavorite}
-            className={styles.favoriteButton}
-            disabled={!preferences.isHydrated}
-            onClick={() => preferences.setFavorite(atmosphere.id, !isFavorite)}
-            type="button"
-          >
-            <Heart
-              aria-hidden="true"
-              fill={isFavorite ? "currentColor" : "none"}
-              size={15}
-              strokeWidth={1.5}
-            />
-            <span>{isFavorite ? "Saved" : "Favorite"}</span>
-          </button>
+          {atmosphere && preferences ? (
+            <button
+              aria-label={`${isFavorite ? "Remove from" : "Add to"} favorites`}
+              aria-pressed={isFavorite}
+              className={styles.favoriteButton}
+              disabled={!preferences.isHydrated}
+              onClick={() =>
+                preferences.setFavorite(atmosphere.id, !isFavorite)
+              }
+              type="button"
+            >
+              <Heart
+                aria-hidden="true"
+                fill={isFavorite ? "currentColor" : "none"}
+                size={15}
+                strokeWidth={1.5}
+              />
+              <span>{isFavorite ? "Saved" : "Favorite"}</span>
+            </button>
+          ) : null}
+          {session ? <SessionTimerControl /> : null}
         </div>
       ) : null}
 
@@ -264,7 +270,13 @@ export function VisualControls({
         <p
           className={`text-label ${styles.status}`}
           id={statusId}
-          role={currentPlaybackState === "error" ? "alert" : "status"}
+          role={
+            currentPlaybackState === "error"
+              ? "alert"
+              : currentPlaybackState === "ending"
+                ? undefined
+                : "status"
+          }
         >
           {currentStatusMessage}
         </p>

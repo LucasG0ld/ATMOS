@@ -65,6 +65,12 @@ Le timer mesure le temps mural depuis sa confirmation. Pause ne suspend pas
 l’échéance. Cette règle doit être expliquée par le texte court `Ends in…`, sans
 documentation permanente dans le player.
 
+Une lecture déjà démarrée continue lorsque la plateforme autorise Web Audio en
+arrière-plan. Ce comportement reste best effort : si le système suspend le
+contexte, le retour tente une reprise avant échéance. En cas de refus, le player
+affiche `Background playback was paused by your device. Press Play to resume.` et
+revient à Pause. Après échéance, aucune reprise automatique n’est autorisée.
+
 ## Focus Mode
 
 Focus Mode est une composition explicite, pas un écran séparé :
@@ -112,6 +118,7 @@ au timer actif, ni à Play/Pause, ni à Focus Mode.
 | Couche retirée              | valeur ignorée, autres préférences conservées                         |
 | Timer throttlé              | calcul depuis l’échéance absolue au réveil, jamais depuis un compteur |
 | Fin pendant onglet masqué   | intention Pause confirmée avant toute reprise audio                   |
+| Reprise refusée par l’OS    | Pause, explication non bloquante et nouveau geste Play                |
 
 ## Contenu anglais
 

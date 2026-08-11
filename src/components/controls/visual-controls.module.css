@@ -26,6 +26,9 @@
 
 .personalActions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-6);
   margin-top: clamp(1.5rem, 3vh, 2rem);
 }
 

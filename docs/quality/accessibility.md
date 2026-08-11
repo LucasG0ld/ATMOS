@@ -51,7 +51,7 @@ Aucun contenu ne clignote. Les médias animés futurs nécessitent pause/arrêt 
 
 - Aucun son automatique à l’ouverture.
 - Play/pause toujours disponible et explicite.
-- Le timer futur ne doit pas produire un signal sonore obligatoire ; le fade-out est privilégié.
+- Le timer ne produit aucun signal sonore obligatoire ; il termine la session par un fade-out.
 - L’application ne dépend jamais du son seul pour signaler une erreur ou un état.
 - Les volumes peuvent être réglés au clavier et leur valeur est annoncée.
 
@@ -91,3 +91,14 @@ signalé. Le mouvement réduit et axe restent couverts par la matrice automatis�
 - `Escape` quitte Focus Mode sans intercepter les raccourcis d’une technologie d’assistance hors du contexte de page.
 - La réinitialisation des préférences annonce une confirmation unique et ne vole pas le focus.
 - Une erreur de stockage n’empêche jamais l’usage en mémoire du player.
+
+Le Lot 19 implémente le dialogue Timer avec cinq boutons textuels, fermeture
+native et retour du focus au déclencheur. L’état `Timer · mm:ss` reste du texte
+ordinaire ; une région live invisible et polie ne change qu’au démarrage,
+remplacement, annulation ou terme. Le dialogue et le parcours clavier passent
+axe-core sur les cinq profils Playwright.
+
+Le Lot 19b conserve une dégradation compréhensible lorsque la plateforme refuse
+de reprendre un contexte suspendu : la commande revient à Play et un message
+annonçable indique qu’un nouveau geste est requis. Aucun changement de visibilité
+ne déplace le focus ou ne crée une annonce répétitive.

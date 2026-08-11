@@ -11,6 +11,7 @@ export type AudioLoadResult = {
 };
 
 export type AudioEngineController = {
+  cancelTimerFade(): void;
   load(layers: readonly SoundLayer[]): Promise<AudioLoadResult>;
   preload(layers: readonly SoundLayer[]): Promise<void>;
   cancelPreload(): void;
@@ -20,6 +21,8 @@ export type AudioEngineController = {
   setLayerVolume(layerId: string, volume: number): void;
   setPageHidden(hidden: boolean): Promise<void>;
   destroy(): Promise<void>;
+  fadeOutForTimer(durationSeconds: number): number;
+  scheduleTimerFade(delaySeconds: number, durationSeconds: number): boolean;
 };
 
 type AudioEngineDependencies = {
@@ -91,6 +94,7 @@ export class WebAudioEngine implements AudioEngineController {
   private retiringBus?: AudioBus;
   private retiringTimer?: ReturnType<typeof setTimeout>;
   private transitionAbortController?: AbortController;
+  private timerFadeEndsAt?: number;
 
   constructor(private readonly dependencies: AudioEngineDependencies) {}
 
@@ -206,6 +210,7 @@ export class WebAudioEngine implements AudioEngineController {
       this.context.currentTime,
       MASTER_RAMP_SECONDS,
     );
+    this.timerFadeEndsAt = undefined;
     this.playing = true;
   }
 
@@ -218,7 +223,98 @@ export class WebAudioEngine implements AudioEngineController {
       this.context.currentTime,
       MASTER_RAMP_SECONDS,
     );
+    this.timerFadeEndsAt = undefined;
     this.playing = false;
+  }
+
+  cancelTimerFade(): void {
+    if (
+      !this.context ||
+      !this.masterGain ||
+      this.timerFadeEndsAt === undefined
+    ) {
+      return;
+    }
+    rampGain(
+      this.masterGain.gain,
+      1,
+      this.context.currentTime,
+      MASTER_RAMP_SECONDS,
+    );
+    this.timerFadeEndsAt = undefined;
+  }
+
+  fadeOutForTimer(durationSeconds: number): number {
+    if (
+      !this.context ||
+      !this.masterGain ||
+      !this.playing ||
+      this.context.state !== "running"
+    ) {
+      this.playing = false;
+      this.timerFadeEndsAt = undefined;
+      return 0;
+    }
+
+    if (this.timerFadeEndsAt !== undefined) {
+      const remainingMs = Math.max(
+        0,
+        (this.timerFadeEndsAt - this.context.currentTime) * 1_000,
+      );
+      this.timerFadeEndsAt = undefined;
+      this.playing = false;
+      return remainingMs;
+    }
+
+    if (this.masterGain.gain.value <= 0) {
+      this.playing = false;
+      return 0;
+    }
+
+    const normalizedDuration = Math.max(0, durationSeconds);
+    rampGain(
+      this.masterGain.gain,
+      0,
+      this.context.currentTime,
+      normalizedDuration,
+    );
+    this.playing = false;
+    return normalizedDuration * 1_000;
+  }
+
+  scheduleTimerFade(delaySeconds: number, durationSeconds: number): boolean {
+    if (
+      !this.context ||
+      !this.masterGain ||
+      !this.playing ||
+      this.context.state !== "running"
+    ) {
+      return false;
+    }
+
+    const currentTime = this.context.currentTime;
+    const fadeStartsAt = currentTime + Math.max(0, delaySeconds);
+    const fadeEndsAt = fadeStartsAt + Math.max(0, durationSeconds);
+    const reachesFullVolumeAt = Math.min(
+      fadeStartsAt,
+      currentTime + MASTER_RAMP_SECONDS,
+    );
+    if (typeof this.masterGain.gain.cancelAndHoldAtTime === "function") {
+      this.masterGain.gain.cancelAndHoldAtTime(currentTime);
+    } else {
+      this.masterGain.gain.cancelScheduledValues(currentTime);
+      this.masterGain.gain.setValueAtTime(
+        this.masterGain.gain.value,
+        currentTime,
+      );
+    }
+    this.masterGain.gain.linearRampToValueAtTime(1, reachesFullVolumeAt);
+    if (fadeStartsAt > reachesFullVolumeAt) {
+      this.masterGain.gain.setValueAtTime(1, fadeStartsAt);
+    }
+    this.masterGain.gain.linearRampToValueAtTime(0, fadeEndsAt);
+    this.timerFadeEndsAt = fadeEndsAt;
+    return true;
   }
 
   setLayerVolume(layerId: string, volume: number): void {
@@ -242,13 +338,7 @@ export class WebAudioEngine implements AudioEngineController {
   async setPageHidden(hidden: boolean): Promise<void> {
     if (!this.context || !this.masterGain) return;
 
-    if (hidden) {
-      const currentTime = this.context.currentTime;
-      this.masterGain.gain.cancelScheduledValues(currentTime);
-      this.masterGain.gain.setValueAtTime(0, currentTime);
-      if (this.context.state === "running") await this.context.suspend();
-      return;
-    }
+    if (hidden || this.context.state !== "suspended") return;
 
     if (!this.playing) return;
     this.masterGain.gain.setValueAtTime(0, this.context.currentTime);
@@ -259,6 +349,7 @@ export class WebAudioEngine implements AudioEngineController {
       this.context.currentTime,
       MASTER_RAMP_SECONDS,
     );
+    this.timerFadeEndsAt = undefined;
   }
 
   destroy(): Promise<void> {
@@ -527,6 +618,7 @@ export class WebAudioEngine implements AudioEngineController {
 
     this.masterGain?.disconnect();
     this.masterGain = undefined;
+    this.timerFadeEndsAt = undefined;
     this.playing = false;
     this.loadPromise = undefined;
 

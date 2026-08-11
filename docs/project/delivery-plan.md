@@ -347,7 +347,7 @@ et du reset a été validée sur desktop et mobile par le responsable du projet.
 
 ## Lot 19 — Timer de session
 
-**Statut : planifié.**
+**Statut : terminé et validé le 2026-08-11.**
 
 ### Livrables
 
@@ -360,6 +360,49 @@ et du reset a été validée sur desktop et mobile par le responsable du projet.
 - Lecture, pause, navigation, arrière-plan et délai fortement retardé testés.
 - Une seule échéance et aucune création audio avant Play.
 - Aucun son transitoire au retour d’un onglet après échéance.
+
+Le timer vit dans le provider de session des routes player et conserve un unique
+timestamp absolu `endsAt`. Il survit donc aux changements d’ambiance, mais son
+timeout et son état sont détruits à la sortie ou au rechargement. Le réveil est
+réévalué sur `visibilitychange` et `pageshow`. Le moteur expose seulement une
+intention de fade master : cinq secondes si le contexte joue réellement, ou une
+Pause immédiate lorsque le son est absent, suspendu ou déjà fermé.
+
+Le dialogue natif propose exactement les cinq durées approuvées, le remplacement
+et l’annulation. Le compte à rebours visuel est séparé des annonces polies. La
+couverture atteint 112 tests unitaires/composants et 80 cas Playwright sur cinq
+profils. Une horloge navigateur simulée confirme une échéance fortement retardée
+sans création d’`AudioContext`. La recette humaine du fade et des contrôles
+desktop/mobile a confirmé les durées, la navigation, l’annulation et la fin de
+session. La coupure volontaire en arrière-plan observée pendant cette recette a
+motivé le Lot 19b.
+
+## Lot 19b — Lecture en arrière-plan best effort
+
+**Statut : terminé et validé le 2026-08-11.**
+
+### Livrables
+
+- Lecture maintenue sur page masquée lorsque la plateforme l’autorise.
+- Fade du timer programmé à l’avance dans Web Audio puis réarmé après Play.
+- Dégradation vers Pause si une suspension système ne peut pas être reprise.
+- ADR-0004 et limites de la promesse produit documentées.
+
+### Validation
+
+- Aucun appel volontaire à `AudioContext.suspend()` au masquage.
+- Timer remplacé, annulé, pausé ou expiré sans automation master résiduelle.
+- Échéance évaluée avant reprise et aucun son transitoire après expiration.
+- Recette desktop, Android et iOS distinguant onglet, application et verrouillage.
+
+Le moteur conserve l’heure audio de fin du fade. Si JavaScript se réveille en
+retard, la session attend seulement la portion encore active ; si le fade est
+déjà terminé, Pause est confirmée immédiatement. Les plateformes qui refusent la
+reprise restent utilisables avec un nouveau geste Play explicite. La validation
+automatisée atteint 117 tests unitaires/composants et 85 cas Playwright sur cinq
+profils : 81 réussissent et les quatre skips WebKit connus restent inchangés.
+La recette réelle confirme la lecture de fond best effort et la récupération de
+session sur desktop et mobile.
 
 ## Lot 20 — Focus Mode
 

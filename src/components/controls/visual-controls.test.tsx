@@ -16,13 +16,16 @@ import { VisualControls } from "./visual-controls";
 function createMockEngine(): AudioEngineController {
   return {
     cancelPreload: vi.fn(),
+    cancelTimerFade: vi.fn(),
     destroy: vi.fn().mockResolvedValue(undefined),
+    fadeOutForTimer: vi.fn().mockReturnValue(5_000),
     load: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
     pause: vi.fn(),
     play: vi.fn().mockResolvedValue(undefined),
     preload: vi.fn().mockResolvedValue(undefined),
     setLayerVolume: vi.fn(),
     setPageHidden: vi.fn().mockResolvedValue(undefined),
+    scheduleTimerFade: vi.fn().mockReturnValue(true),
     transition: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
   };
 }

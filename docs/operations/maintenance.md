@@ -64,8 +64,22 @@ manuelles ci-dessous.
 - Route Rainy Apartment directe et retour fonctionnent.
 - Image ou fallback, horloge et contrôles sont visibles.
 - Play après geste, trois volumes et pause fonctionnent lorsque l’audio est livré.
+- Une page masquée ne déclenche pas de suspension volontaire ; le comportement
+  après changement d’application ou verrouillage est consigné par appareil.
+- Un timer arrivé à échéance en arrière-plan ne reprend jamais brièvement le son
+  au retour ; un refus système de reprise laisse une Pause explicitement relançable.
 - Aucune ressource critique en 404, erreur console ou requête vers une origine inconnue.
 - Métadonnées, favicon, 404 et headers répondent comme prévu.
+
+### Recette de lecture en arrière-plan
+
+Sur desktop, Android réel et iOS réel, démarrer une ambiance puis contrôler
+séparément : changement d’onglet, changement d’application pendant 30 à 60
+secondes et verrouillage pendant 30 secondes. Noter si le son continue, si l’OS
+le suspend et si un Play explicite récupère la session. Enfin, lancer le timer le
+plus court, masquer ATMOS avant son terme et confirmer au retour que la session
+est en Pause sans reprise transitoire. La continuité après verrouillage reste une
+capacité best effort de la plateforme, pas une garantie produit.
 
 ## Rollback
 

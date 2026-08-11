@@ -188,3 +188,9 @@ dupliquer le registre. Le player dérive ses gains du snapshot après hydratatio
 lors du reset. Le catalogue ne fait qu’annoter les favoris et conserve son ordre.
 Le dialogue `Preferences` est une vue du même état et ne possède aucun stockage
 parallèle.
+
+Depuis le Lot 19, `AudioSessionProvider` possède également le timer éphémère. Un
+seul timeout métier vise un `endsAt` absolu et les réveils de page recalculent
+l’échéance depuis `Date.now()`. Le rendu du compte à rebours possède son propre
+rafraîchissement borné uniquement pendant un timer actif. Le moteur ne connaît ni
+l’horloge ni React : il sait seulement automatiser ou refuser un fade de fin.

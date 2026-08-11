@@ -287,3 +287,19 @@ l’accueil et 57,1 Kio sur le player, soit respectivement +0,8 Kio et +1,2 Kio
 depuis le Lot 17. Le CSS atteint 8,4 Kio (+1,1 Kio) et les fonts restent à
 29,4 Kio. Ces incréments restent sous les cibles 0.3 et aucun média, package ou
 scheduler supplémentaire n’est introduit.
+
+### Mesure du timer — Lot 19
+
+Le build de production mesure 11,7 Kio de JavaScript applicatif gzip sur
+l’accueil et 58,6 Kio sur le player. Le timer ajoute donc 1,5 Kio au player et
+rien à l’accueil depuis le Lot 18. Le CSS atteint 8,9 Kio (+0,5 Kio) et les fonts
+restent à 29,4 Kio. Il n’existe aucun polling en l’absence de timer ; pendant une
+session, un timeout métier vise l’échéance et un rafraîchissement visuel borné
+met à jour le texte sans annonce live.
+
+### Mesure de la lecture de fond — Lot 19b
+
+Le build de production mesure 11,7 Kio de JavaScript applicatif gzip sur
+l’accueil et 58,8 Kio sur le player, soit +0,2 Kio sur le player depuis le Lot 19. Le CSS reste à 8,9 Kio et les fonts à 29,4 Kio. L’automation anticipée
+n’ajoute ni polling, ni média, ni package ; elle réutilise le `GainNode` master
+et est annulée lors d’un remplacement, d’une annulation ou d’une Pause.

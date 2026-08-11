@@ -202,6 +202,177 @@ test("favorites and volumes persist locally and reset to catalogue defaults", as
   expect(runtimeErrors).toEqual([]);
 });
 
+test("session timer starts, replaces, survives navigation and cancels locally", async ({
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) audioRequests.push(request.url());
+  });
+  await page.goto("/atmosphere/rainy-apartment");
+
+  const timerTrigger = page.getByRole("button", { name: "Timer" });
+  await timerTrigger.click();
+  const dialog = page.getByRole("dialog", { name: "Set a timer" });
+  await expect(dialog).toBeVisible();
+  for (const duration of [15, 30, 45, 60, 90]) {
+    await expect(
+      dialog.getByRole("button", { name: `${duration} minutes` }),
+    ).toBeVisible();
+  }
+  await expectNoSeriousAccessibilityViolation(page);
+
+  await dialog.getByRole("button", { name: "15 minutes" }).click();
+  await expect(
+    page.getByRole("button", { name: /Timer · 1[45]:/ }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: /Timer ·/ })).toBeFocused();
+  expect(audioRequests).toEqual([]);
+
+  await page.getByRole("button", { name: /Timer ·/ }).click();
+  await expect(dialog.getByText(/Ends in 1[45]:/)).toBeVisible();
+  await dialog.getByRole("button", { name: "30 minutes" }).click();
+  await expect(
+    page.getByRole("button", { name: /Timer · (29|30):/ }),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "Atmospheres" }).click();
+  await page
+    .getByRole("dialog", { name: "Atmospheres" })
+    .getByRole("link", { name: /Deep Forest/ })
+    .click();
+  await expect(page).toHaveURL(/\/atmosphere\/deep-forest$/);
+  await expect(
+    page.getByRole("button", { name: /Timer · (29|30):/ }),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: /Timer ·/ }).click();
+  await dialog.getByRole("button", { name: "Cancel timer" }).click();
+  await expect(page.getByRole("button", { name: "Timer" })).toBeVisible();
+  expect(audioRequests).toEqual([]);
+
+  await page.getByRole("button", { name: "Timer" }).click();
+  await dialog.getByRole("button", { name: "15 minutes" }).click();
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Timer" })).toBeVisible();
+  expect(audioRequests).toEqual([]);
+  expect(runtimeErrors).toEqual([]);
+});
+
+test("an overdue wall-clock timer finishes without creating audio", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const browserWindow = window as Window & {
+      __atmosAudioContextCount?: number;
+    };
+    const OriginalAudioContext = window.AudioContext;
+    browserWindow.__atmosAudioContextCount = 0;
+    if (!OriginalAudioContext) return;
+    window.AudioContext = new Proxy(OriginalAudioContext, {
+      construct(target, argumentsList) {
+        browserWindow.__atmosAudioContextCount =
+          (browserWindow.__atmosAudioContextCount ?? 0) + 1;
+        return Reflect.construct(target, argumentsList);
+      },
+    });
+  });
+  await page.clock.install({ time: new Date("2026-08-11T12:00:00Z") });
+  await page.goto("/atmosphere/rainy-apartment");
+
+  await page.getByRole("button", { name: "Timer" }).click();
+  await page
+    .getByRole("dialog", { name: "Set a timer" })
+    .getByRole("button", { name: "15 minutes" })
+    .click();
+  await page.clock.fastForward("15:00");
+
+  await expect(page.locator('p[role="status"]')).toHaveText("Timer finished.");
+  await expect(page.getByRole("button", { name: "Timer" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Play Rainy Apartment" }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () =>
+        (window as Window & { __atmosAudioContextCount?: number })
+          .__atmosAudioContextCount,
+    ),
+  ).toBe(0);
+});
+
+test("background playback is not voluntarily suspended", async ({
+  browserName,
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const browserWindow = window as Window & {
+      __atmosSuspendCount?: number;
+    };
+    const OriginalAudioContext = window.AudioContext;
+    browserWindow.__atmosSuspendCount = 0;
+    if (!OriginalAudioContext) return;
+    window.AudioContext = new Proxy(OriginalAudioContext, {
+      construct(target, argumentsList) {
+        const context = Reflect.construct(
+          target,
+          argumentsList,
+        ) as AudioContext;
+        const suspend = context.suspend.bind(context);
+        Object.defineProperty(context, "suspend", {
+          configurable: true,
+          value: () => {
+            browserWindow.__atmosSuspendCount =
+              (browserWindow.__atmosSuspendCount ?? 0) + 1;
+            return suspend();
+          },
+        });
+        return context;
+      },
+    });
+  });
+  await page.goto("/atmosphere/rainy-apartment");
+  await page.getByRole("button", { name: "Play Rainy Apartment" }).click();
+  const playbackOutcome = page.getByRole("button", {
+    name: /^(Pause|Retry) Rainy Apartment$/,
+  });
+  await expect(playbackOutcome).toBeVisible({ timeout: 15_000 });
+  if ((await playbackOutcome.getAttribute("aria-label"))?.startsWith("Retry")) {
+    expect(usesExpectedAudioFallback(browserName)).toBe(true);
+    return;
+  }
+
+  await page.evaluate(() => {
+    Object.defineProperty(document, "hidden", {
+      configurable: true,
+      value: true,
+    });
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  await expect(
+    page.getByRole("button", { name: "Pause Rainy Apartment" }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () =>
+        (window as Window & { __atmosSuspendCount?: number })
+          .__atmosSuspendCount,
+    ),
+  ).toBe(0);
+
+  await page.evaluate(() => {
+    Object.defineProperty(document, "hidden", {
+      configurable: true,
+      value: false,
+    });
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  await expect(
+    page.getByRole("button", { name: "Pause Rainy Apartment" }),
+  ).toBeVisible();
+});
+
 test("audio failure is announced and retryable", async ({ page }) => {
   await page.route("**/audio/*.mp3", (route) =>
     route.fulfill({ status: 503, body: "Unavailable" }),
@@ -330,6 +501,8 @@ test("keyboard order follows the visual reading order", async ({
       name: "Add to favorites",
     }),
   ).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Timer" })).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("button", { name: "Play Rainy Apartment" }),

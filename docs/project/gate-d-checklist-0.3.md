@@ -18,13 +18,15 @@
 
 ## Timer
 
-- [ ] Durées 15, 30, 45, 60 et 90 minutes disponibles.
-- [ ] Démarrage, remplacement et annulation sans timer concurrent.
-- [ ] Échéance correcte en lecture, en pause, après changement d’ambiance et onglet masqué.
-- [ ] Fade-out de cinq secondes puis état Pause, sans reprise sonore transitoire.
-- [ ] Play pendant le fade annule proprement la fin du timer et reprend normalement.
-- [ ] Rechargement et sortie du player annulent le timer sans effet résiduel.
-- [ ] Aucun contexte audio créé si le timer se termine avant le premier Play.
+- [x] Durées 15, 30, 45, 60 et 90 minutes disponibles.
+- [x] Démarrage, remplacement et annulation sans timer concurrent.
+- [x] Échéance correcte en lecture, en pause, après changement d’ambiance et onglet masqué.
+- [x] Fade-out de cinq secondes puis état Pause, sans reprise sonore transitoire.
+- [x] Play pendant le fade annule proprement la fin du timer et reprend normalement.
+- [x] Rechargement et sortie du player annulent le timer sans effet résiduel.
+- [x] Aucun contexte audio créé si le timer se termine avant le premier Play.
+- [x] Lecture en arrière-plan best effort validée sur desktop, Android et iOS réels.
+- [x] Suspension imposée ou reprise refusée revient à Pause sans faux état de lecture.
 
 ## Focus Mode
 

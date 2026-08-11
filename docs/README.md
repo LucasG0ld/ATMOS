@@ -26,6 +26,7 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [ADR-0001 : décisions fondatrices](architecture/decisions/0001-foundational-architecture.md).
 - [ADR-0002 : catalogue, transitions et préchargement](architecture/decisions/0002-catalogue-transitions-and-preloading.md).
 - [ADR-0003 : préférences locales, timer et Focus Mode](architecture/decisions/0003-local-preferences-timer-and-focus.md) — accepté au Lot 16.
+- [ADR-0004 : lecture en arrière-plan best effort](architecture/decisions/0004-best-effort-background-playback.md) — accepté au Lot 19b.
 - [Modèle d’ADR](architecture/decisions/0000-template.md).
 
 ## Projet et qualité

@@ -4,6 +4,8 @@
 - Date : 2026-08-11
 - Décideur : LucasG0ld
 - Remplace : aucune décision
+- Complété par : [ADR-0004](0004-best-effort-background-playback.md) pour la
+  politique de visibilité et la programmation audio du timer
 
 ## Contexte
 

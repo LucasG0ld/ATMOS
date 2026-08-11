@@ -24,9 +24,14 @@ import {
   type AudioLoadResult,
 } from "./audio-engine";
 import styles from "./audio-session.module.css";
+import {
+  isSessionTimerDuration,
+  type SessionTimerDuration,
+  type SessionTimerState,
+} from "./session-timer";
 
 export type SessionPlaybackState =
-  "idle" | "loading" | "playing" | "paused" | "error";
+  "idle" | "loading" | "playing" | "paused" | "ending" | "error";
 
 type AudioSessionSnapshot = {
   playbackState: SessionPlaybackState;
@@ -35,9 +40,13 @@ type AudioSessionSnapshot = {
 };
 
 type AudioSessionController = AudioSessionSnapshot & {
+  cancelTimer(): void;
   preloadAtmosphere(atmosphere: Atmosphere): void;
   selectAtmosphere(atmosphere: Atmosphere): void;
   setLayerVolume(layerId: string, volume: number): void;
+  setTimer(durationMinutes: SessionTimerDuration): void;
+  timer: SessionTimerState;
+  timerAnnouncement: string;
   togglePlayback(
     atmosphere: Atmosphere,
     volumes: Readonly<Record<string, number>>,
@@ -47,9 +56,11 @@ type AudioSessionController = AudioSessionSnapshot & {
 type AudioSessionProviderProps = {
   children: ReactNode;
   createEngine?: () => AudioEngineController;
+  timerFadeMs?: number;
 };
 
 const EMPTY_LAYERS = new Set<string>();
+const IDLE_TIMER: SessionTimerState = { endsAt: null, phase: "idle" };
 const AudioSessionContext = createContext<AudioSessionController | null>(null);
 
 function partialLayerMessage(result: AudioLoadResult): string {
@@ -98,6 +109,7 @@ function TransitionLayer({ atmosphere }: { atmosphere: Atmosphere }) {
 export function AudioSessionProvider({
   children,
   createEngine = createAudioEngine,
+  timerFadeMs = 5_000,
 }: AudioSessionProviderProps) {
   const activeAtmosphereIdRef = useRef<string | undefined>(undefined);
   const currentAtmosphereRef = useRef<Atmosphere | undefined>(undefined);
@@ -109,6 +121,14 @@ export function AudioSessionProvider({
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined,
   );
+  const timerDeadlineRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+  const timerFinishRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+  const expireTimerRef = useRef<() => void>(() => undefined);
+  const timerStateRef = useRef<SessionTimerState>(IDLE_TIMER);
   const visualPreloaderRef = useRef<BoundedVisualPreloader | undefined>(
     undefined,
   );
@@ -120,6 +140,119 @@ export function AudioSessionProvider({
     statusMessage: "",
     unavailableLayerIds: EMPTY_LAYERS,
   });
+  const [timer, setTimerState] = useState<SessionTimerState>(IDLE_TIMER);
+  const [timerAnnouncement, setTimerAnnouncement] = useState("");
+
+  const updateTimer = useCallback((nextTimer: SessionTimerState) => {
+    timerStateRef.current = nextTimer;
+    setTimerState(nextTimer);
+  }, []);
+
+  const clearTimerTimeouts = useCallback(() => {
+    if (timerDeadlineRef.current !== undefined) {
+      clearTimeout(timerDeadlineRef.current);
+    }
+    if (timerFinishRef.current !== undefined) {
+      clearTimeout(timerFinishRef.current);
+    }
+    timerDeadlineRef.current = undefined;
+    timerFinishRef.current = undefined;
+  }, []);
+
+  const finishTimer = useCallback(() => {
+    timerFinishRef.current = undefined;
+    updateTimer(IDLE_TIMER);
+    setSnapshot((current) => ({
+      ...current,
+      playbackState: "paused",
+      statusMessage: "Timer finished.",
+    }));
+  }, [updateTimer]);
+
+  const armTimerFade = useCallback(
+    (endsAt?: number) => {
+      const effectiveEndsAt =
+        endsAt ??
+        (timerStateRef.current.phase === "active"
+          ? timerStateRef.current.endsAt
+          : undefined);
+      if (!effectiveEndsAt || !intentPlayingRef.current) return;
+      engineRef.current?.scheduleTimerFade(
+        Math.max(0, effectiveEndsAt - Date.now()) / 1_000,
+        timerFadeMs / 1_000,
+      );
+    },
+    [timerFadeMs],
+  );
+
+  const expireTimer = useCallback(() => {
+    const currentTimer = timerStateRef.current;
+    if (currentTimer.phase !== "active") {
+      return;
+    }
+    const remainingMs = currentTimer.endsAt - Date.now();
+    if (remainingMs > 0) {
+      timerDeadlineRef.current = setTimeout(
+        () => expireTimerRef.current(),
+        remainingMs,
+      );
+      return;
+    }
+
+    timerDeadlineRef.current = undefined;
+    operationRef.current += 1;
+    intentPlayingRef.current = false;
+    const remainingFadeMs =
+      engineRef.current?.fadeOutForTimer(timerFadeMs / 1_000) ?? 0;
+    if (remainingFadeMs <= 0) {
+      finishTimer();
+      return;
+    }
+
+    updateTimer({ phase: "ending", endsAt: currentTimer.endsAt });
+    setSnapshot((current) => ({
+      ...current,
+      playbackState: "ending",
+      statusMessage: "Ending session…",
+    }));
+    timerFinishRef.current = setTimeout(finishTimer, remainingFadeMs);
+  }, [finishTimer, timerFadeMs, updateTimer]);
+
+  useEffect(() => {
+    expireTimerRef.current = expireTimer;
+  }, [expireTimer]);
+
+  const setTimer = useCallback(
+    (durationMinutes: SessionTimerDuration) => {
+      if (
+        !isSessionTimerDuration(durationMinutes) ||
+        timerStateRef.current.phase === "ending"
+      ) {
+        return;
+      }
+      const replacesTimer = timerStateRef.current.phase === "active";
+      clearTimerTimeouts();
+      const endsAt = Date.now() + durationMinutes * 60_000;
+      updateTimer({ phase: "active", endsAt });
+      armTimerFade(endsAt);
+      setTimerAnnouncement(
+        `${replacesTimer ? "Timer replaced with" : "Timer set for"} ${durationMinutes} minutes.`,
+      );
+      timerDeadlineRef.current = setTimeout(
+        expireTimer,
+        durationMinutes * 60_000,
+      );
+    },
+    [armTimerFade, clearTimerTimeouts, expireTimer, updateTimer],
+  );
+
+  const cancelTimer = useCallback(() => {
+    if (timerStateRef.current.phase !== "active") return;
+    clearTimerTimeouts();
+    engineRef.current?.cancelTimerFade();
+    updateTimer(IDLE_TIMER);
+    setTimerAnnouncement("Timer canceled.");
+  }, [clearTimerTimeouts, updateTimer]);
 
   const applyResult = useCallback((result: AudioLoadResult) => {
     unavailableLayerIdsRef.current = result.unavailableLayerIds;
@@ -142,6 +275,18 @@ export function AudioSessionProvider({
         "Audio could not be loaded for this atmosphere. Check your connection and retry.",
       unavailableLayerIds: EMPTY_LAYERS,
     });
+  }, []);
+
+  const reportBackgroundPlaybackFailure = useCallback(() => {
+    if (!intentPlayingRef.current) return;
+    intentPlayingRef.current = false;
+    engineRef.current?.pause();
+    setSnapshot((current) => ({
+      ...current,
+      playbackState: "paused",
+      statusMessage:
+        "Background playback was paused by your device. Press Play to resume.",
+    }));
   }, []);
 
   const selectAtmosphere = useCallback(
@@ -232,6 +377,12 @@ export function AudioSessionProvider({
         return;
       }
 
+      if (timerStateRef.current.phase === "ending") {
+        clearTimerTimeouts();
+        updateTimer(IDLE_TIMER);
+        setTimerAnnouncement("Timer canceled.");
+      }
+
       const operation = ++operationRef.current;
       setSnapshot({
         playbackState: "loading",
@@ -253,18 +404,27 @@ export function AudioSessionProvider({
               }
             : await engine.transition(atmosphere.sounds)
           : await engine.load(atmosphere.sounds);
+        if (operation !== operationRef.current) return;
         await engine.play();
         if (operation !== operationRef.current) return;
 
         activeAtmosphereIdRef.current = atmosphere.id;
         hasActivatedAudioRef.current = true;
         intentPlayingRef.current = true;
+        armTimerFade();
         applyResult(result);
       } catch (error) {
         reportFailure(operation, error);
       }
     },
-    [applyResult, createEngine, reportFailure],
+    [
+      applyResult,
+      armTimerFade,
+      clearTimerTimeouts,
+      createEngine,
+      reportFailure,
+      updateTimer,
+    ],
   );
 
   const setLayerVolume = useCallback((layerId: string, volume: number) => {
@@ -272,30 +432,52 @@ export function AudioSessionProvider({
   }, []);
 
   useEffect(() => {
-    const handleVisibilityChange = () => {
+    const restoreVisiblePlayback = () => {
+      expireTimer();
       void engineRef.current
-        ?.setPageHidden(document.hidden)
-        .catch(() => undefined);
+        ?.setPageHidden(false)
+        .then(() => armTimerFade())
+        .catch(reportBackgroundPlaybackFailure);
     };
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        restoreVisiblePlayback();
+        return;
+      }
+      void engineRef.current?.setPageHidden(true).catch(() => undefined);
+    };
+    const handlePageShow = () => restoreVisiblePlayback();
     document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pageshow", handlePageShow);
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pageshow", handlePageShow);
       operationRef.current += 1;
+      clearTimerTimeouts();
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
       visualPreloaderRef.current?.cancel();
       const engine = engineRef.current;
       engineRef.current = undefined;
       if (engine) void engine.destroy().catch(() => undefined);
     };
-  }, []);
+  }, [
+    armTimerFade,
+    clearTimerTimeouts,
+    expireTimer,
+    reportBackgroundPlaybackFailure,
+  ]);
 
   return (
     <AudioSessionContext.Provider
       value={{
         ...snapshot,
+        cancelTimer,
         preloadAtmosphere,
         selectAtmosphere,
         setLayerVolume,
+        setTimer,
+        timer,
+        timerAnnouncement,
         togglePlayback,
       }}
     >

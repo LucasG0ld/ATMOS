@@ -18,6 +18,7 @@ fait sur `mvp-0.3` et ne rejoint `main` qu’après validation de la Gate D.
 - Timer de 15, 30, 45, 60 ou 90 minutes avec remplacement et annulation.
 - Échéance du timer robuste aux onglets masqués et au throttling des timers.
 - Fade-out final de cinq secondes, puis état audio réellement en pause.
+- Lecture en arrière-plan best effort lorsque le navigateur et l’OS l’autorisent.
 - Focus Mode explicite conservant contexte, Play/Pause, timer et sortie visible.
 - Recette clavier, lecteurs d’écran, mobile réel, arrière-plan et stockage dégradé.
 
@@ -28,6 +29,7 @@ fait sur `mvp-0.3` et ne rejoint `main` qu’après validation de la Gate D.
 - Reprise automatique du son ou d’un timer après rechargement/fermeture.
 - Synchronisation en direct entre plusieurs onglets.
 - Durée libre, alarmes sonores, planification ou répétition du timer.
+- Garantie de lecture après verrouillage d’écran ou suspension imposée par l’OS.
 - Tri automatique du catalogue par favoris, filtre, route `/saved` ou bibliothèque.
 - Persistance de l’ambiance courante, de Play/Pause, de Focus Mode ou des erreurs.
 - Mixes personnalisés, master volume persistant et fonctions prévues pour la v1.
@@ -65,9 +67,12 @@ fait sur `mvp-0.3` et ne rejoint `main` qu’après validation de la Gate D.
 - Une action `Timer` propose exactement 15, 30, 45, 60 et 90 minutes.
 - Choisir une durée démarre immédiatement une échéance de temps réel.
 - Le timer continue pendant Pause, changement d’ambiance et onglet masqué.
+- ATMOS ne suspend pas volontairement une lecture lors du masquage de l’onglet.
 - Une nouvelle durée remplace l’échéance ; `Cancel timer` l’annule sans modifier l’audio.
 - À l’échéance, le master effectue un fade-out de cinq secondes puis passe en pause.
 - Si l’échéance passe en arrière-plan, le retour ne doit jamais rouvrir brièvement le son.
+- Le fade est armé dans Web Audio avant l’échéance lorsque le contexte joue, afin de ne pas dépendre uniquement d’un timeout ralenti.
+- Si la plateforme suspend le contexte, une reprise avant échéance est tentée ; un refus revient à Pause et exige un nouveau Play.
 - Si l’audio est déjà silencieux ou suspendu, la session passe directement en pause sans attendre une automation inaudible.
 - Une action Play explicite pendant le fade annule la fin de timer et reprend avec le fondu normal.
 - Le timer n’est pas persisté : un rechargement ou la sortie du player l’annule.

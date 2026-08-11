@@ -128,6 +128,7 @@ Le Lot 16 ajoute les axes suivants sans réduire la matrice 0.2 :
 - hydratation : HTML serveur stable, préférence appliquée après montage et aucun audio/réseau déclenché ;
 - favoris/volumes : navigation entre quatre ambiances, rechargement et retour aux défauts ;
 - timer avec fausse horloge : cinq durées, remplacement, annulation, pause, navigation, `visibilitychange`, délai fortement retardé et fade final ;
+- lecture de fond : aucune suspension volontaire, automation Web Audio réarmée et refus de reprise ramené à Pause ;
 - Focus Mode : ordre clavier, éléments masqués, `Escape`, restauration du focus, erreur audio et fin du timer ;
 - E2E : stockage injecté avant chargement, rechargement réel, onglet masqué et absence de reprise sonore.
 
@@ -156,6 +157,22 @@ politique de tabulation Safari.
 
 La recette manuelle du Lot 18 confirme également les favoris, les volumes
 distincts, leur restauration et le reset sur desktop et mobile.
+
+Le Lot 19 porte la suite à 112 tests unitaires/composants et la matrice Playwright
+à 80 cas. Les tests à horloge simulée couvrent les cinq durées, échéance absolue,
+remplacement, annulation, Pause, navigation, réveil de visibilité, fade de cinq
+secondes, priorité de Play et expiration sans contexte. Deux parcours navigateur
+passent sur les cinq profils : dialogue/navigation/rechargement sans requête
+audio, puis avance murale de quinze minutes en un saut sans création
+d’`AudioContext`. Le compte à rebours n’est jamais placé dans une région live.
+
+Le Lot 19b ajoute les cas d’automation anticipée, d’annulation/réarmement, de
+portion de fade restante, de suspension imposée par la plateforme et de refus de
+reprise. Le parcours navigateur vérifie sur les cinq profils qu’un masquage de
+page ne provoque aucun appel volontaire à `AudioContext.suspend()`. Les résultats
+automatisés portent la suite à 117 tests unitaires/composants et la matrice à 85
+cas Playwright : 81 passent et les quatre skips WebKit connus restent inchangés.
+Ils ne remplacent pas la recette sur desktop, Android et iOS réels.
 
 ## CI attendue
 

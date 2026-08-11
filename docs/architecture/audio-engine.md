@@ -87,7 +87,7 @@ Les actifs doivent être préparés pour une boucle imperceptible : coupe aux pa
 - Annuler ou stabiliser l’automation précédente avant une nouvelle cible.
 - Rampe d’un slider : environ 20–80 ms pour éviter les clics sans sensation de retard.
 - Play/pause : environ 250–500 ms, à régler à l’écoute.
-- Fin de timer future : fade-out plus long, puis arrêt/suspension confirmée.
+- Fin de timer 0.3 : fade-out master de cinq secondes, puis Pause confirmée par la session.
 
 La perception du volume n’est pas linéaire. Le MVP peut commencer par une courbe simple documentée ; tester une conversion exponentielle si les faibles valeurs manquent de précision.
 
@@ -100,9 +100,14 @@ Deux options seront comparées :
 1. garder les sources en cours et réduire le master à zéro, simple mais consommant des ressources ;
 2. mémoriser l’offset, arrêter les sources et les recréer à la reprise, plus complexe.
 
-Pour le MVP, privilégier la première pendant les pauses courtes et suspendre le contexte lorsque l’onglet ou la session l’exige, après vérification Safari/Chromium/Firefox. Documenter le comportement retenu dans un ADR si des compromis apparaissent.
-
-Choix 0.1 : les sources continuent pendant une pause visible et le master converge vers zéro. Lorsque la page devient masquée, le master est fermé et le contexte suspendu, y compris si la lecture était déjà en pause. Au retour, le contexte ne reprend automatiquement que si l’intention utilisateur est toujours `playing`, avec un nouveau fondu d’entrée.
+Le choix 0.1 conservait les sources pendant une pause visible, mais fermait le
+master et suspendait le contexte lorsque la page devenait masquée. Depuis le
+Lot 19b, [ADR-0004](decisions/0004-best-effort-background-playback.md) remplace
+cette politique de visibilité : ATMOS ne suspend plus volontairement le contexte
+sur `document.hidden`. La lecture continue lorsque la plateforme l’autorise. Au
+retour, une reprise n’est tentée que si l’intention utilisateur est toujours
+`playing` ; son refus ramène la session dans un état Pause récupérable par un
+nouveau geste Play.
 
 ## Changement d’ambiance
 
@@ -119,17 +124,23 @@ Retry. Quitter `/atmosphere/*` détruit le contexte et tous les bus.
 
 ## Fin de timer 0.3
 
-Le contrôleur de session, pas le moteur, possède l’échéance du timer. Lorsqu’elle
-est atteinte, il fixe d’abord l’intention utilisateur à Pause afin qu’une reprise
-de visibilité ne rouvre pas le master. Il demande ensuite au moteur un fade-out
-fonctionnel de cinq secondes, puis confirme l’état Pause.
+Le contrôleur de session, pas le moteur, possède l’échéance murale du timer. Dès
+qu’un timer est démarré ou qu’une lecture reprend, il demande au moteur de
+programmer le fade de cinq secondes à l’avance avec `scheduleTimerFade()`. Cette
+automation repose sur l’horloge du contexte audio et reste donc fiable lorsque
+les timeouts JavaScript sont ralentis en arrière-plan.
 
-Une échéance sans `AudioContext` se termine sans en créer. Remplacer ou annuler
-un timer ne planifie aucune automation audio. Si le contexte est suspendu ou le
-master déjà silencieux, la session confirme Pause sans attendre un fade
-inaudible. Une action Play explicite pendant le fade l’annule et reprend avec la
-rampe normale. Le moteur n’expose pas de compteur et reste indépendant de
-`Date.now()`, de React et de `localStorage`.
+À l’échéance, la session fixe d’abord l’intention utilisateur à Pause afin
+qu’une reprise de visibilité ne rouvre pas le master. `fadeOutForTimer(5)` renvoie
+alors uniquement la portion d’automation encore audible ; si le fade est déjà
+terminé, le contexte est absent ou suspendu, ou le master est silencieux, Pause
+est confirmée immédiatement. Remplacer le timer réarme l’automation ; annuler,
+mettre en pause ou rejouer annule l’automation résiduelle. Une action Play
+explicite reprend avec la rampe normale puis réarme le timer encore actif.
+
+Le moteur mémorise seulement l’heure audio de fin du fade. Il ne possède ni le
+compteur, ni l’échéance murale et reste indépendant de `Date.now()`, de React et
+de `localStorage`.
 
 ## Nettoyage
 
