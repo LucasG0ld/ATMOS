@@ -1,6 +1,13 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
+function usesExpectedAudioFallback(browserName: string) {
+  return (
+    browserName === "webkit" ||
+    (browserName === "firefox" && process.platform === "linux")
+  );
+}
+
 function monitorRuntimeErrors(page: Page) {
   const errors: string[] = [];
   page.on("console", (message) => {
@@ -97,8 +104,8 @@ test("one unavailable layer keeps the remaining mix playable", async ({
   page,
 }) => {
   test.skip(
-    browserName === "webkit",
-    "Playwright WebKit on Windows does not expose AudioContext.",
+    usesExpectedAudioFallback(browserName),
+    "This Playwright browser cannot decode the MP3 layers on the current host.",
   );
   await page.route("**/audio/moving-leaves.mp3", (route) =>
     route.fulfill({ status: 503, body: "Unavailable" }),
@@ -284,7 +291,7 @@ test("a new catalog mix stays deferred and loads its three layers after Play", a
   await expect(playbackOutcome).toBeVisible({ timeout: 15_000 });
 
   if ((await playbackOutcome.getAttribute("aria-label"))?.startsWith("Retry")) {
-    expect(browserName).toBe("webkit");
+    expect(usesExpectedAudioFallback(browserName)).toBe(true);
     await expect(page.locator('p[role="alert"]')).toContainText(
       "Audio could not be loaded",
     );
@@ -347,7 +354,7 @@ test("a playing session survives atmosphere navigation with one audio context", 
   });
   await expect(initialOutcome).toBeVisible({ timeout: 15_000 });
   if ((await initialOutcome.getAttribute("aria-label"))?.startsWith("Retry")) {
-    expect(browserName).toBe("webkit");
+    expect(usesExpectedAudioFallback(browserName)).toBe(true);
     return;
   }
 
@@ -405,7 +412,7 @@ test("audio preload starts only after Play, is reused, and respects Save-Data", 
   });
   await expect(initialOutcome).toBeVisible({ timeout: 15_000 });
   if ((await initialOutcome.getAttribute("aria-label"))?.startsWith("Retry")) {
-    expect(browserName).toBe("webkit");
+    expect(usesExpectedAudioFallback(browserName)).toBe(true);
     return;
   }
   await expect.poll(() => audioRequests.length).toBe(3);

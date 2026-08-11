@@ -14,7 +14,7 @@ introduit.
 
 - [x] Formatage, ESLint, TypeScript strict et build Next.js.
 - [x] 82 tests unitaires et composants.
-- [x] 60 cas Playwright sur cinq profils : 56 validations et 4 reports WebKit documentés.
+- [x] 60 cas Playwright sur cinq profils : local Windows, 56 validations et 4 reports WebKit ; CI Linux, 55 validations et 5 reports WebKit/Firefox documentés.
 - [x] Zéro violation axe critique ou sérieuse sur accueil et player.
 - [x] Quatre routes directes, navigation, historique, 404 et métadonnées.
 - [x] Zéro audio avant Play, préchargement borné et `Save-Data`.
@@ -34,15 +34,18 @@ introduit.
 | Profil           | Navigation, responsive et axe | Audio réel      | Limite connue                                |
 | ---------------- | ----------------------------- | --------------- | -------------------------------------------- |
 | Chromium desktop | validé                        | validé          | navigateur automatisé                        |
-| Firefox desktop  | validé                        | validé          | navigateur automatisé                        |
+| Firefox desktop  | validé                        | validé Windows  | fallback MP3 validé sur le runner Linux      |
 | WebKit desktop   | validé                        | fallback validé | pas d’`AudioContext` dans le binaire Windows |
 | Chromium mobile  | validé à 393 px et 320 px     | validé          | appareil émulé                               |
 | WebKit mobile    | validé à 390 px et 320 px     | fallback validé | appareil émulé, pas un Safari iOS réel       |
 
-Les quatre reports sont les deux contrôles d’ordre clavier WebKit liés au réglage
-Safari de tabulation et les deux scénarios de couche partielle qui exigent un
-`AudioContext`. Les comportements compensatoires restent couverts par WebKit et
-les tests unitaires du moteur.
+Les quatre reports locaux sont les deux contrôles d’ordre clavier WebKit liés au
+réglage Safari de tabulation et les deux scénarios de couche partielle qui exigent
+un `AudioContext`. Sur le runner Ubuntu, Firefox expose Web Audio mais ne décode
+pas les MP3 : le scénario de couche partielle ajoute un cinquième report et les
+autres parcours audio valident le fallback récupérable. La lecture Firefox réelle
+reste couverte sous Windows ; le moteur reste couvert indépendamment par ses tests
+unitaires.
 
 ## Budgets de candidate
 

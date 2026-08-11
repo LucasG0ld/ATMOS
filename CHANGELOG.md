@@ -33,6 +33,7 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 - Scénario navigateur de couche audio partielle et dossier de candidate 0.2 séparant validations automatisées et contrôles Gate C externes.
 - Décision de conserver le code propriétaire, manifeste `UNLICENSED` et copyright LucasG0ld distinct des licences des médias.
 - Protection de `main` par ruleset, pull request et contrôle CI stricts, avec fusion par squash uniquement.
+- Limite de décodage MP3 du Firefox Playwright sous Linux rendue explicite, sans réduire la couverture Firefox réelle sous Windows.
 
 ## [0.1.0] — 2026-08-10
 

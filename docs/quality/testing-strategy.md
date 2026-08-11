@@ -101,15 +101,18 @@ Le Lot 14 porte la suite à 82 tests unitaires/composants. Elle couvre la politi
 `Save-Data`/connexion, le remplacement d’une preview responsive, l’absence de
 décodage anticipé, la réutilisation d’un téléchargement, l’annulation d’une cible
 obsolète et dix transitions avec un seul contexte et un seul bus final. La
-matrice Playwright du Lot 15 compte 60 scénarios : 56 validations et 4 reports
-WebKit documentés. Un scénario réseau confirme zéro audio avant Play, la
+matrice Playwright du Lot 15 compte 60 scénarios. Sous Windows : 56 validations
+et 4 reports WebKit documentés. Sur le runner Linux : 55 validations et 5 reports,
+car Firefox ne décode pas les MP3 dans cet environnement. Un scénario réseau
+confirme zéro audio avant Play, la
 réutilisation de la cible préchargée et le blocage sous `Save-Data`.
 
-Le Lot 15 ajoute la dégradation d’une couche réelle : sous Chromium, Firefox et
-Chromium mobile, le mix continue, le slider concerné devient indisponible et les
-deux autres restent réglables. Les deux profils WebKit reportent ce scénario car
-leur binaire Windows n’expose pas d’`AudioContext`, déjà traité par le fallback
-récupérable et les tests unitaires.
+Le Lot 15 ajoute la dégradation d’une couche réelle : sous Chromium, Firefox
+Windows et Chromium mobile, le mix continue, le slider concerné devient
+indisponible et les deux autres restent réglables. Les deux profils WebKit ainsi
+que Firefox sur le runner Ubuntu reportent ce scénario faute de décodage MP3 ; le
+fallback récupérable et les tests unitaires restent obligatoires dans ces
+environnements.
 
 ## CI attendue
 
