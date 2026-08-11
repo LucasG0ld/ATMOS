@@ -43,7 +43,7 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [Fiche de recette manuelle Gate B](project/gate-b-manual-test.md).
 - [Checklist Gate C — 0.2](project/gate-c-checklist-0.2.md).
 - [Candidate de release 0.2](project/release-candidate-0.2.md) — résultats automatisés, recette et validation de production.
-- [Candidate de release 0.3](project/release-candidate-0.3.md) — résultats locaux, rollback et contrôles Gate D restants.
+- [Release 0.3](project/release-candidate-0.3.md) — résultats locaux et de production, rollback et validation Gate D.
 - [Checklist Gate D — 0.3](project/gate-d-checklist-0.3.md).
 
 ## Exploitation et conformité
