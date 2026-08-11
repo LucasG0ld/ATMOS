@@ -279,3 +279,11 @@ Le snapshot est limité à 32 Kio avant `setItem`. Les mutations du provider son
 regroupées sur 250 ms et un seul snapshot en attente est conservé. Le démontage
 annule le timeout puis effectue au plus un flush synchrone ; sans mutation, aucun
 timer, listener, accès réseau ou contexte audio n’est créé.
+
+### Mesure des favoris et volumes — Lot 18
+
+Le build de production mesure 11,7 Kio de JavaScript applicatif gzip sur
+l’accueil et 57,1 Kio sur le player, soit respectivement +0,8 Kio et +1,2 Kio
+depuis le Lot 17. Le CSS atteint 8,4 Kio (+1,1 Kio) et les fonts restent à
+29,4 Kio. Ces incréments restent sous les cibles 0.3 et aucun média, package ou
+scheduler supplémentaire n’est introduit.

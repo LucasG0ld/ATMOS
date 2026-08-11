@@ -1,14 +1,15 @@
 "use client";
 
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
-import { LoaderCircle, Pause, Play, RotateCcw } from "lucide-react";
-import { useEffect, useId, useRef, useState } from "react";
+import { Heart, LoaderCircle, Pause, Play, RotateCcw } from "lucide-react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 import {
   createAudioEngine,
   type AudioEngineController,
 } from "../../features/audio/audio-engine";
 import { useAudioSession } from "../../features/audio/audio-session";
+import { useOptionalPreferences } from "../../features/preferences/preferences-provider";
 import type { Atmosphere, SoundLayer } from "../../types/atmosphere";
 
 import { AtmosSlider } from "./atmos-slider";
@@ -38,6 +39,7 @@ export function VisualControls({
   sounds,
 }: VisualControlsProps) {
   const session = useAudioSession(atmosphere);
+  const preferences = useOptionalPreferences();
   const engineRef = useRef<AudioEngineController | null>(null);
   const operationRef = useRef(0);
   const statusId = useId();
@@ -46,15 +48,28 @@ export function VisualControls({
   const [unavailableLayers, setUnavailableLayers] = useState<Set<string>>(
     () => new Set(),
   );
-  const [volumes, setVolumes] = useState<Record<string, number>>(() =>
+  const [localVolumes, setLocalVolumes] = useState<Record<string, number>>(() =>
     createInitialVolumes(sounds),
   );
+  const volumes = useMemo(() => {
+    if (!atmosphere || !preferences?.isHydrated) return localVolumes;
+    const storedVolumes = preferences.layerVolumes[atmosphere.id];
+    return Object.fromEntries(
+      sounds.map((sound) => [
+        sound.id,
+        Math.round((storedVolumes?.[sound.id] ?? sound.defaultVolume) * 100),
+      ]),
+    );
+  }, [atmosphere, localVolumes, preferences, sounds]);
   const currentPlaybackState = session?.playbackState ?? playbackState;
   const currentStatusMessage = session?.statusMessage ?? statusMessage;
   const currentUnavailableLayers =
     session?.unavailableLayerIds ?? unavailableLayers;
   const hasSounds = sounds.length > 0;
   const isPlaying = currentPlaybackState === "playing";
+  const isFavorite = Boolean(
+    atmosphere && preferences?.favoriteAtmosphereIds.includes(atmosphere.id),
+  );
   const action = !hasSounds
     ? "Unavailable"
     : currentPlaybackState === "loading"
@@ -89,11 +104,24 @@ export function VisualControls({
     };
   }, []);
 
+  useEffect(() => {
+    if (!atmosphere || !preferences?.isHydrated) return;
+
+    for (const sound of sounds) {
+      const volume = (volumes[sound.id] ?? 0) / 100;
+      if (session) session.setLayerVolume(sound.id, volume);
+      else engineRef.current?.setLayerVolume(sound.id, volume);
+    }
+  }, [atmosphere, preferences?.isHydrated, session, sounds, volumes]);
+
   const updateVolume = (soundId: string, value: number) => {
-    setVolumes((currentVolumes) => ({
+    setLocalVolumes((currentVolumes) => ({
       ...currentVolumes,
       [soundId]: value,
     }));
+    if (atmosphere && preferences?.isHydrated) {
+      preferences.setLayerVolume(atmosphere.id, soundId, value / 100);
+    }
     if (session) {
       session.setLayerVolume(soundId, value / 100);
     } else {
@@ -156,7 +184,10 @@ export function VisualControls({
             sounds.map((sound) => (
               <AtmosSlider
                 key={sound.id}
-                disabled={currentUnavailableLayers.has(sound.id)}
+                disabled={
+                  currentUnavailableLayers.has(sound.id) ||
+                  Boolean(preferences && !preferences.isHydrated)
+                }
                 label={sound.name}
                 onValueChange={(value) => updateVolume(sound.id, value)}
                 value={volumes[sound.id] ?? 0}
@@ -169,6 +200,27 @@ export function VisualControls({
           )}
         </div>
       </fieldset>
+
+      {atmosphere && preferences ? (
+        <div className={styles.personalActions}>
+          <button
+            aria-label={`${isFavorite ? "Remove from" : "Add to"} favorites`}
+            aria-pressed={isFavorite}
+            className={styles.favoriteButton}
+            disabled={!preferences.isHydrated}
+            onClick={() => preferences.setFavorite(atmosphere.id, !isFavorite)}
+            type="button"
+          >
+            <Heart
+              aria-hidden="true"
+              fill={isFavorite ? "currentColor" : "none"}
+              size={15}
+              strokeWidth={1.5}
+            />
+            <span>{isFavorite ? "Saved" : "Favorite"}</span>
+          </button>
+        </div>
+      ) : null}
 
       <div className={styles.actions}>
         <MotionConfig reducedMotion="user">

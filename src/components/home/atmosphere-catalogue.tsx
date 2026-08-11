@@ -9,7 +9,9 @@ import {
   type BoundedVisualPreloader,
 } from "../../features/preloading/media-preloader";
 import type { Atmosphere } from "../../types/atmosphere";
+import { useOptionalPreferences } from "../../features/preferences/preferences-provider";
 import { AtmosphereScene } from "../atmosphere/atmosphere-scene";
+import { PreferencesDialog } from "../preferences/preferences-dialog";
 import { Wordmark } from "../shared/wordmark";
 import { TimeGreeting } from "./time-greeting";
 
@@ -20,6 +22,7 @@ type AtmosphereCatalogueProps = {
 };
 
 export function AtmosphereCatalogue({ atmospheres }: AtmosphereCatalogueProps) {
+  const preferences = useOptionalPreferences();
   const [previewSlug, setPreviewSlug] = useState(atmospheres[0]?.slug ?? "");
   const [navigating, setNavigating] = useState(false);
   const previewTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -72,11 +75,14 @@ export function AtmosphereCatalogue({ atmospheres }: AtmosphereCatalogueProps) {
       >
         <header className={styles.header}>
           <Wordmark />
-          <p className={`text-label ${styles.context}`}>
-            Four places
-            <br />
-            one quiet moment
-          </p>
+          <div className={styles.headerMeta}>
+            <PreferencesDialog />
+            <p className={`text-label ${styles.context}`}>
+              Four places
+              <br />
+              one quiet moment
+            </p>
+          </div>
         </header>
 
         <section aria-labelledby="home-title" className={styles.hero}>
@@ -95,6 +101,10 @@ export function AtmosphereCatalogue({ atmospheres }: AtmosphereCatalogueProps) {
           <ol className={styles.destinationList}>
             {atmospheres.map((atmosphere, index) => {
               const isPreviewActive = atmosphere.slug === previewSlug;
+              const isFavorite = Boolean(
+                preferences?.isHydrated &&
+                preferences.favoriteAtmosphereIds.includes(atmosphere.id),
+              );
 
               return (
                 <li key={atmosphere.id}>
@@ -117,7 +127,15 @@ export function AtmosphereCatalogue({ atmospheres }: AtmosphereCatalogueProps) {
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <span>
-                      <span className={styles.name}>{atmosphere.name}</span>
+                      <span className={styles.nameRow}>
+                        <span className={styles.name}>{atmosphere.name}</span>
+                        <span
+                          className={`text-label ${styles.savedMarker}`}
+                          data-saved={isFavorite ? "true" : "false"}
+                        >
+                          Saved
+                        </span>
+                      </span>
                       <span className={`text-body ${styles.description}`}>
                         {atmosphere.description}
                       </span>

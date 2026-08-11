@@ -180,5 +180,11 @@ Depuis le Lot 17, `features/preferences/preferences-storage.ts` isole parsing,
 validation, écriture et suppression. `PreferencesProvider`, monté dans le layout
 racine, reçoit seulement les IDs d’ambiances et de couches nécessaires à la
 validation. Il hydrate après montage, conserve un état mémoire si le stockage
-échoue et n’importe ni moteur audio ni média. Aucun contrôle visible ne consomme
-encore ce Context avant le Lot 18.
+échoue et n’importe ni moteur audio ni média.
+
+Depuis le Lot 18, les contrôles et le catalogue consomment ce Context sans
+dupliquer le registre. Le player dérive ses gains du snapshot après hydratation,
+écrit les changements via le provider et réapplique les défauts au moteur actif
+lors du reset. Le catalogue ne fait qu’annoter les favoris et conserve son ordre.
+Le dialogue `Preferences` est une vue du même état et ne possède aucun stockage
+parallèle.

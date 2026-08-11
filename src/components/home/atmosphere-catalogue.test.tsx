@@ -3,6 +3,8 @@ import { act } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { atmospheres } from "../../data/atmospheres";
+import { PreferencesProvider } from "../../features/preferences/preferences-provider";
+import type { PreferencesStorageAdapter } from "../../features/preferences/preferences-storage";
 
 import { AtmosphereCatalogue } from "./atmosphere-catalogue";
 
@@ -46,5 +48,42 @@ describe("AtmosphereCatalogue", () => {
     expect(document.querySelector('[data-atmosphere="fireplace"]')).toBe(
       document.querySelector("[data-atmosphere]"),
     );
+  });
+
+  it("marks favorites without changing catalogue order", () => {
+    const adapter: PreferencesStorageAdapter = {
+      read: vi.fn().mockReturnValue({
+        preferences: {
+          favoriteAtmosphereIds: ["deep-forest"],
+          layerVolumes: {},
+        },
+        storageAvailable: true,
+      }),
+      reset: vi.fn().mockReturnValue(true),
+      write: vi.fn().mockReturnValue(true),
+    };
+    render(
+      <PreferencesProvider catalogue={[]} storageAdapter={adapter}>
+        <AtmosphereCatalogue atmospheres={atmospheres} />
+      </PreferencesProvider>,
+    );
+
+    const links = screen
+      .getByRole("navigation", { name: "Atmospheres" })
+      .getElementsByTagName("a");
+    expect(Array.from(links, (link) => link.getAttribute("href"))).toEqual([
+      "/atmosphere/rainy-apartment",
+      "/atmosphere/quiet-coffee-shop",
+      "/atmosphere/deep-forest",
+      "/atmosphere/fireplace",
+    ]);
+    expect(
+      screen.getByRole("link", { name: /Deep Forest.*Saved/i }),
+    ).toBeVisible();
+    expect(
+      screen
+        .getAllByText("Saved")
+        .filter((marker) => marker.dataset.saved === "true"),
+    ).toHaveLength(1);
   });
 });

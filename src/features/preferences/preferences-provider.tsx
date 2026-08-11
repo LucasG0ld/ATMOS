@@ -209,3 +209,7 @@ export function usePreferences(): PreferencesController {
   }
   return preferences;
 }
+
+export function useOptionalPreferences(): PreferencesController | null {
+  return useContext(PreferencesContext);
+}

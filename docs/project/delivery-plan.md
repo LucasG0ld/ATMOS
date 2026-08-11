@@ -318,7 +318,7 @@ contrôle public n’est encore branché.
 
 ## Lot 18 — Favoris et volumes persistants
 
-**Statut : prochaine tranche, non démarrée.**
+**Statut : terminé et validé le 2026-08-11.**
 
 ### Livrables
 
@@ -331,6 +331,19 @@ contrôle public n’est encore branché.
 - Ordre éditorial inchangé et aucun dashboard ajouté.
 - Navigation/rechargement conservent les valeurs valides.
 - Reset restaure données, UI et gains sans redémarrer l’audio.
+
+Le player expose un toggle favori secondaire avec `aria-pressed`. L’accueil
+réserve un marqueur textuel `Saved` sans modifier l’ordre éditorial. Les volumes
+du snapshot deviennent la source du player après hydratation et chaque mutation
+reste appliquée immédiatement au moteur actif. Le dialogue `Preferences`,
+disponible sur l’accueil et les players, explique le stockage local, signale la
+dégradation mémoire et supprime la clé complète lors du reset.
+
+La couverture automatisée atteint 103 tests unitaires/composants et 70 cas
+Playwright sur cinq profils. Le parcours dédié vérifie écriture coalescée,
+rechargement réel, marqueur d’accueil, dialogue accessible, suppression de la
+clé et retour au volume catalogue. La recette des favoris, des volumes restaurés
+et du reset a été validée sur desktop et mobile par le responsable du projet.
 
 ## Lot 19 — Timer de session
 

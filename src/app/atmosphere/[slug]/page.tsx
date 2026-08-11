@@ -8,6 +8,7 @@ import { LocalClock } from "@/components/clock/local-clock";
 import { VisualControls } from "@/components/controls/visual-controls";
 import { Reveal } from "@/components/motion/reveal";
 import { AtmosphereMenu } from "@/components/navigation/atmosphere-menu";
+import { PreferencesDialog } from "@/components/preferences/preferences-dialog";
 import { Wordmark } from "@/components/shared/wordmark";
 import { atmospheres, getAtmosphereBySlug } from "@/data/atmospheres";
 
@@ -59,6 +60,7 @@ export default async function AtmospherePage({ params }: AtmospherePageProps) {
               atmospheres={atmospheres}
               currentSlug={atmosphere.slug}
             />
+            <PreferencesDialog />
             <Link
               aria-label="Back to atmospheres"
               className={`text-label ${styles.backLink}`}

@@ -24,6 +24,34 @@
   color: var(--atmos-muted);
 }
 
+.personalActions {
+  display: flex;
+  margin-top: clamp(1.5rem, 3vh, 2rem);
+}
+
+.favoriteButton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0;
+  gap: var(--space-3);
+  color: var(--atmos-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  transition: color var(--duration-control) var(--ease-out);
+}
+
+.favoriteButton:is(:hover, :focus-visible),
+.favoriteButton[aria-pressed="true"] {
+  color: var(--atmos-foreground);
+}
+
+.favoriteButton:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
 .actions {
   display: flex;
   align-items: center;
@@ -119,6 +147,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .playButton {
+    transition-duration: 0ms;
+  }
+
+  .favoriteButton {
     transition-duration: 0ms;
   }
 

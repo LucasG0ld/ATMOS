@@ -136,6 +136,72 @@ test("invalid local preferences stay isolated from the existing experience", asy
   expect(runtimeErrors).toEqual([]);
 });
 
+test("favorites and volumes persist locally and reset to catalogue defaults", async ({
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  await page.goto("/atmosphere/rainy-apartment");
+
+  const rain = page.getByRole("slider", { name: "Rain", exact: true });
+  await rain.fill("72");
+  const addFavorite = page.getByRole("button", {
+    name: "Add to favorites",
+  });
+  await addFavorite.click();
+  await expect(
+    page.getByRole("button", {
+      name: "Remove from favorites",
+    }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect
+    .poll(() =>
+      page.evaluate((storageKey) => {
+        const value = localStorage.getItem(storageKey);
+        if (!value) return false;
+        const snapshot = JSON.parse(value);
+        return (
+          snapshot.layerVolumes["rainy-apartment"]?.rain === 0.72 &&
+          snapshot.favoriteAtmosphereIds.includes("rainy-apartment")
+        );
+      }, PREFERENCES_STORAGE_KEY),
+    )
+    .toBe(true);
+
+  await page.reload();
+  await expect(rain).toHaveValue("72");
+  await expect(
+    page.getByRole("button", {
+      name: "Remove from favorites",
+    }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("link", { name: "Back to atmospheres" }).click();
+  const rainyLink = page.locator('[data-atmosphere-link="rainy-apartment"]');
+  await expect(rainyLink).toBeVisible();
+  await expect(rainyLink.getByText("Saved")).toBeVisible();
+
+  const preferencesTrigger = page.getByRole("button", { name: "Preferences" });
+  await preferencesTrigger.click();
+  const dialog = page.getByRole("dialog", { name: "Preferences" });
+  await expect(dialog).toBeVisible();
+  await expectNoSeriousAccessibilityViolation(page);
+  await dialog.getByRole("button", { name: "Reset saved preferences" }).click();
+  await expect(dialog.getByText("Saved preferences reset.")).toBeVisible();
+  await expect(dialog.getByText("Nothing saved yet")).toBeVisible();
+  expect(
+    await page.evaluate(
+      (storageKey) => localStorage.getItem(storageKey),
+      PREFERENCES_STORAGE_KEY,
+    ),
+  ).toBeNull();
+
+  await dialog.getByRole("button", { name: "Close preferences" }).click();
+  await expect(preferencesTrigger).toBeFocused();
+  await expect(rainyLink.getByText("Saved")).toBeHidden();
+  await rainyLink.click();
+  await expect(rain).toHaveValue("65");
+  expect(runtimeErrors).toEqual([]);
+});
+
 test("audio failure is announced and retryable", async ({ page }) => {
   await page.route("**/audio/*.mp3", (route) =>
     route.fulfill({ status: 503, body: "Unavailable" }),
@@ -220,6 +286,8 @@ test("keyboard order follows the visual reading order", async ({
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "ATMOS — Home" })).toBeFocused();
   await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Preferences" })).toBeFocused();
+  await page.keyboard.press("Tab");
   await expect(
     page.getByRole("link", { name: /Rainy Apartment/ }),
   ).toBeFocused();
@@ -245,6 +313,8 @@ test("keyboard order follows the visual reading order", async ({
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Atmospheres" })).toBeFocused();
   await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Preferences" })).toBeFocused();
+  await page.keyboard.press("Tab");
   await expect(
     page.getByRole("link", { name: "Back to atmospheres" }),
   ).toBeFocused();
@@ -254,6 +324,12 @@ test("keyboard order follows the visual reading order", async ({
     await expect(page.getByRole("slider", { name, exact: true })).toBeFocused();
   }
 
+  await page.keyboard.press("Tab");
+  await expect(
+    page.getByRole("button", {
+      name: "Add to favorites",
+    }),
+  ).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("button", { name: "Play Rainy Apartment" }),

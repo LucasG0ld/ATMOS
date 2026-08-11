@@ -9,10 +9,10 @@
 
 ## Préférences et favoris
 
-- [ ] Favoris ajoutés/retirés depuis le player et visibles sur l’accueil sans réordonner le catalogue.
-- [ ] Volumes restaurés séparément pour les quatre ambiances.
-- [ ] Défauts du registre appliqués si préférence absente ou invalide.
-- [ ] Reset supprime la clé et remet UI et moteur actif aux défauts.
+- [x] Favoris ajoutés/retirés depuis le player et visibles sur l’accueil sans réordonner le catalogue.
+- [x] Volumes restaurés séparément pour les quatre ambiances.
+- [x] Défauts du registre appliqués si préférence absente ou invalide.
+- [x] Reset supprime la clé et remet UI et moteur actif aux défauts.
 - [x] JSON corrompu, version inconnue, IDs obsolètes et écriture refusée récupérables.
 - [x] Aucune requête réseau, donnée personnelle ou initialisation audio causée par la persistance.
 

@@ -145,6 +145,18 @@ nouveau scénario de stockage invalide réussit sur les cinq profils, conserve l
 valeur inconnue sans réécriture et confirme les volumes par défaut sans requête
 audio.
 
+Le Lot 18 porte la suite à 103 tests unitaires/composants et la matrice Playwright
+à 70 cas. Les nouveaux contrôles couvrent la restauration d’un volume, son
+application au moteur, le retour immédiat au défaut pendant une session active,
+le toggle `aria-pressed`, le marqueur `Saved`, l’ordre inchangé et le dialogue
+avec reset, retour du focus et dégradation mémoire. Le parcours E2E dédié passe
+sur les cinq profils avec un vrai rechargement et vérifie aussi la suppression de
+la clé. Quatre skips WebKit connus restent limités au décodage audio et à la
+politique de tabulation Safari.
+
+La recette manuelle du Lot 18 confirme également les favoris, les volumes
+distincts, leur restauration et le reset sur desktop et mobile.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.
