@@ -39,7 +39,7 @@ La roadmap est orientée résultats. Une phase ne commence que lorsque les crit�
 
 ## MVP 0.2 — Catalogue initial
 
-**Statut : candidate technique des Lots 8 à 15 préparée sur `mvp-0.2` ; Gate C externe en attente.**
+**Statut : version 0.2 validée en Gate C le 2026-08-11.**
 
 **Résultat :** l’utilisateur explore plusieurs personnalités sans rupture d’expérience.
 
@@ -49,7 +49,8 @@ La roadmap est orientée résultats. Une phase ne commence que lorsque les crit�
 - Crossfades visuels et audio entre ambiances.
 - Préchargement mesuré et limité.
 
-**Sortie :** ajout d’une ambiance sans code spécifique d’UI ; transitions fluides sur mobile médian.
+**Sortie :** production GitHub Pages validée sur quatre ambiances ; ajout d’une
+ambiance sans code spécifique d’UI et transitions fluides sur mobile médian.
 
 ## MVP 0.3 — Session personnelle locale
 
