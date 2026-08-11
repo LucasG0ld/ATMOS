@@ -2,9 +2,11 @@
 
 ## État
 
-**Candidate technique préparée le 2026-08-11 sur `mvp-0.3`. Gate D, fusion,
-déploiement et tag `v0.3.0` restent soumis aux validations finales et à
-l’autorisation explicite de LucasG0ld.**
+**Candidate fusionnée par Squash et déployée le 2026-08-11. Gate D approuvée et
+tag `v0.3.0` autorisé explicitement par LucasG0ld.**
+
+La PR #3 est fusionnée sur `main` au commit `71db4e7`. Les contrôles `quality`,
+build et déploiement GitHub Pages sont verts sur ce commit.
 
 Le périmètre est celui approuvé au Lot 16 : préférences locales versionnées,
 favoris, volumes persistants, timer, lecture en arrière-plan best effort et
@@ -78,6 +80,23 @@ comme en 0.2. Cette simulation est stable par rapport à la précédente candida
 et doit être comparée aux résultats HTTPS après déploiement ; une régression de
 plus de 10 % nécessitera correction ou exception explicite.
 
+## Lighthouse et smoke de production
+
+Le smoke HTTPS avec cache désactivé valide l’URL officielle, quatre routes,
+préférences locales, timer, Focus Mode, transition Rainy Apartment vers Deep
+Forest, audio et 404. Lighthouse 13.4.1 obtient 100 en accessibilité, bonnes
+pratiques et SEO sur les dix audits de production.
+
+| Route             | Performance mobile | LCP mobile | Performance desktop | LCP desktop |
+| ----------------- | -----------------: | ---------: | ------------------: | ----------: |
+| Accueil           |                 99 |     2,21 s |                 100 |      0,34 s |
+| Rainy Apartment   |                100 |     1,82 s |                 100 |      0,55 s |
+| Quiet Coffee Shop |                100 |     1,51 s |                 100 |      0,30 s |
+| Deep Forest       |                100 |     1,50 s |                 100 |      0,38 s |
+| Fireplace         |                100 |     1,52 s |                 100 |      0,38 s |
+
+Aucune régression supérieure à 10 % n’est observée face à la production 0.2.
+
 ## Rollback validé
 
 Le 2026-08-11, la production officielle 0.2 a réussi le smoke cache froid :
@@ -98,13 +117,13 @@ retour et la procédure est décrite dans le guide de maintenance.
 
 ## Contrôles requis avant Gate D
 
-- [ ] Obtenir une CI verte sur la pull request `mvp-0.3` vers `main`.
+- [x] Obtenir une CI verte sur la pull request `mvp-0.3` vers `main`.
 - [x] Rejouer la candidate consolidée sur Chrome Android et Safari iOS réels.
 - [x] Vérifier lecteurs d’écran desktop/mobile, texte agrandi et contraste élevé sur les fonctions 0.3.
 - [x] Réévaluer explicitement le risque Safari macOS réel.
 - [x] Confirmer qu’aucun défaut critique ou majeur n’est ouvert.
-- [ ] Fusionner uniquement après ces contrôles, puis exécuter smoke HTTPS et Lighthouse sur les cinq routes de production.
-- [ ] Approuver explicitement la Gate D et autoriser le tag `v0.3.0`.
+- [x] Fusionner uniquement après ces contrôles, puis exécuter smoke HTTPS et Lighthouse sur les cinq routes de production.
+- [x] Approuver explicitement la Gate D et autoriser le tag `v0.3.0`.
 
 ## Commandes de candidate
 

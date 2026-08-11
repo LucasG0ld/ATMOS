@@ -324,3 +324,25 @@ pratiques et SEO. Les performances vont de 97 à 99 sur les players mobiles et
 restent à 100 sur desktop. L’accueil mobile obtient 92 avec un LCP de 3,33 s ;
 Deep Forest obtient 97 avec 2,55 s. Ces deux dépassements locaux existaient déjà
 en 0.2 et doivent être comparés aux mesures HTTPS post-déploiement.
+
+### Mesure de production — MVP 0.3
+
+Après fusion de la PR #3 et déploiement GitHub Pages, le smoke HTTPS 0.3 passe
+avec cache désactivé. Les dix audits Lighthouse 13.4.1 obtiennent 100 en
+accessibilité, bonnes pratiques et SEO.
+
+| Route / profil            | Performance | LCP    | TBT   | CLS |
+| ------------------------- | ----------: | ------ | ----- | --: |
+| Accueil mobile            |          99 | 2,21 s | 62 ms |   0 |
+| Accueil desktop           |         100 | 0,34 s | 0 ms  |   0 |
+| Rainy Apartment mobile    |         100 | 1,82 s | 28 ms |   0 |
+| Rainy Apartment desktop   |         100 | 0,55 s | 0 ms  |   0 |
+| Quiet Coffee Shop mobile  |         100 | 1,51 s | 35 ms |   0 |
+| Quiet Coffee Shop desktop |         100 | 0,30 s | 0 ms  |   0 |
+| Deep Forest mobile        |         100 | 1,50 s | 66 ms |   0 |
+| Deep Forest desktop       |         100 | 0,38 s | 0 ms  |   0 |
+| Fireplace mobile          |         100 | 1,52 s | 29 ms |   0 |
+| Fireplace desktop         |         100 | 0,38 s | 0 ms  |   0 |
+
+Tous les LCP mobiles sont inférieurs à 2,21 s et aucune régression stable de plus
+de 10 % n’est observée face à la production 0.2.

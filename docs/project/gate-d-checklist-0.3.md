@@ -54,12 +54,12 @@
 - [x] Lecteurs d’écran desktop/mobile, texte agrandi et contraste élevé contrôlés.
 - [x] Chrome Android et Safari iOS réels validés.
 - [x] Risque Safari macOS réévalué explicitement.
-- [ ] Smoke HTTPS et Lighthouse production réussis.
+- [x] Smoke HTTPS et Lighthouse production réussis.
 - [x] Aucun défaut critique ou majeur ouvert.
-- [ ] Documentation, changelog, rollback et tag `v0.3.0` approuvés.
+- [x] Documentation, changelog, rollback et tag `v0.3.0` approuvés.
 
 ## Décision
 
-Gate D n’est validée qu’après recette manuelle, vérifications de production,
-acceptation explicite des risques résiduels et autorisation du tag `v0.3.0` par
-le responsable du projet.
+**Gate D approuvée par LucasG0ld le 2026-08-11.** La recette manuelle, les
+vérifications de production, l’acceptation des risques résiduels et
+l’autorisation du tag `v0.3.0` sont confirmées.
