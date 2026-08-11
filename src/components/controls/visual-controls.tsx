@@ -1,7 +1,14 @@
 "use client";
 
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
-import { Heart, LoaderCircle, Pause, Play, RotateCcw } from "lucide-react";
+import {
+  Focus,
+  Heart,
+  LoaderCircle,
+  Pause,
+  Play,
+  RotateCcw,
+} from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 import {
@@ -10,6 +17,7 @@ import {
 } from "../../features/audio/audio-engine";
 import { useAudioSession } from "../../features/audio/audio-session";
 import { useOptionalPreferences } from "../../features/preferences/preferences-provider";
+import { useOptionalFocusMode } from "../../features/focus/focus-mode";
 import type { Atmosphere, SoundLayer } from "../../types/atmosphere";
 
 import { AtmosSlider } from "./atmos-slider";
@@ -41,6 +49,8 @@ export function VisualControls({
 }: VisualControlsProps) {
   const session = useAudioSession(atmosphere);
   const preferences = useOptionalPreferences();
+  const focusMode = useOptionalFocusMode();
+  const focusTriggerRef = useRef<HTMLButtonElement>(null);
   const engineRef = useRef<AudioEngineController | null>(null);
   const operationRef = useRef(0);
   const statusId = useId();
@@ -177,34 +187,41 @@ export function VisualControls({
   };
 
   return (
-    <div className={styles.controls}>
-      <fieldset className={styles.fieldset}>
-        <legend className={`text-label ${styles.legend}`}>Sound layers</legend>
-        <div className={styles.layers}>
-          {hasSounds ? (
-            sounds.map((sound) => (
-              <AtmosSlider
-                key={sound.id}
-                disabled={
-                  currentUnavailableLayers.has(sound.id) ||
-                  Boolean(preferences && !preferences.isHydrated)
-                }
-                label={sound.name}
-                onValueChange={(value) => updateVolume(sound.id, value)}
-                value={volumes[sound.id] ?? 0}
-              />
-            ))
-          ) : (
-            <p className={`text-body ${styles.audioPending}`}>
-              Sound layers are being prepared for this atmosphere.
-            </p>
-          )}
-        </div>
-      </fieldset>
+    <div
+      className={styles.controls}
+      data-focus-controls={focusMode?.isFocusMode ? "true" : "false"}
+    >
+      {!focusMode?.isFocusMode ? (
+        <fieldset className={styles.fieldset}>
+          <legend className={`text-label ${styles.legend}`}>
+            Sound layers
+          </legend>
+          <div className={styles.layers}>
+            {hasSounds ? (
+              sounds.map((sound) => (
+                <AtmosSlider
+                  key={sound.id}
+                  disabled={
+                    currentUnavailableLayers.has(sound.id) ||
+                    Boolean(preferences && !preferences.isHydrated)
+                  }
+                  label={sound.name}
+                  onValueChange={(value) => updateVolume(sound.id, value)}
+                  value={volumes[sound.id] ?? 0}
+                />
+              ))
+            ) : (
+              <p className={`text-body ${styles.audioPending}`}>
+                Sound layers are being prepared for this atmosphere.
+              </p>
+            )}
+          </div>
+        </fieldset>
+      ) : null}
 
       {(atmosphere && preferences) || session ? (
         <div className={styles.personalActions}>
-          {atmosphere && preferences ? (
+          {atmosphere && preferences && !focusMode?.isFocusMode ? (
             <button
               aria-label={`${isFavorite ? "Remove from" : "Add to"} favorites`}
               aria-pressed={isFavorite}
@@ -225,6 +242,22 @@ export function VisualControls({
             </button>
           ) : null}
           {session ? <SessionTimerControl /> : null}
+          {focusMode && !focusMode.isFocusMode ? (
+            <button
+              className={`text-label ${styles.focusButton}`}
+              data-focus-trigger=""
+              onClick={() => {
+                if (focusTriggerRef.current) {
+                  focusMode.enterFocus(focusTriggerRef.current);
+                }
+              }}
+              ref={focusTriggerRef}
+              type="button"
+            >
+              <Focus aria-hidden="true" size={15} strokeWidth={1.5} />
+              <span>Focus</span>
+            </button>
+          ) : null}
         </div>
       ) : null}
 
@@ -239,6 +272,7 @@ export function VisualControls({
                 : `Audio unavailable for ${atmosphereName}`
             }
             className={styles.playButton}
+            data-focus-playback=""
             disabled={!hasSounds || currentPlaybackState === "loading"}
             data-playing={isPlaying ? "true" : "false"}
             onClick={() => void togglePlayback()}
@@ -263,7 +297,9 @@ export function VisualControls({
           </button>
         </MotionConfig>
 
-        <span className={`text-label ${styles.mode}`}>Audio</span>
+        {!focusMode?.isFocusMode ? (
+          <span className={`text-label ${styles.mode}`}>Audio</span>
+        ) : null}
       </div>
 
       {currentStatusMessage ? (

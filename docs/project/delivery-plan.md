@@ -406,7 +406,7 @@ session sur desktop et mobile.
 
 ## Lot 20 — Focus Mode
 
-**Statut : planifié.**
+**Statut : terminé et validé le 2026-08-11.**
 
 ### Livrables
 
@@ -419,6 +419,14 @@ session sur desktop et mobile.
 - Aucun contrôle masqué encore focusable.
 - Parcours souris, clavier, toucher et lecteurs d’écran.
 - Changement d’ambiance et fin du timer sans issue cachée.
+
+Le mode est un état éphémère du layout player, indépendant de Web Audio et du
+stockage. L’entrée retire les zones secondaires du rendu et place le focus sur
+la sortie textuelle. Le bouton ou `Escape` restaure le déclencheur courant, avec
+Play/Pause comme repli si aucun déclencheur n’est disponible. La validation automatisée
+atteint 120 tests unitaires/composants et 90 cas Playwright sur cinq profils ; 86
+passent et les quatre skips WebKit historiques restent inchangés. La recette
+souris, clavier, toucher et responsive est validée sur desktop et mobile.
 
 ## Lot 21 — Stabilisation 0.3
 

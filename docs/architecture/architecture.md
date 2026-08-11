@@ -176,6 +176,13 @@ l’[ADR-0003](decisions/0003-local-preferences-timer-and-focus.md) : Context de
 préférences sans dépendance tierce, snapshot V1 validé, timer fondé sur une
 échéance absolue et Focus Mode éphémère dans la session du player.
 
+Depuis le Lot 20, `FocusModeProvider` est monté dans le layout `/atmosphere` à
+côté du provider audio. Il conserve uniquement l’état actif et la cible de retour
+du focus : aucune donnée n’est persistée et aucune API audio ou Fullscreen n’est
+appelée. `FocusModeSurface` expose la sortie dans la safe area, tandis que les
+zones secondaires ne sont plus rendues pendant le mode. Le provider survit aux
+changements de slug et disparaît à la sortie du layout player.
+
 Depuis le Lot 17, `features/preferences/preferences-storage.ts` isole parsing,
 validation, écriture et suppression. `PreferencesProvider`, monté dans le layout
 racine, reçoit seulement les IDs d’ambiances et de couches nécessaires à la

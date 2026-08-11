@@ -102,3 +102,10 @@ Le Lot 19b conserve une dégradation compréhensible lorsque la plateforme refus
 de reprendre un contexte suspendu : la commande revient à Play et un message
 annonçable indique qu’un nouveau geste est requis. Aucun changement de visibilité
 ne déplace le focus ou ne crée une annonce répétitive.
+
+Le Lot 20 retire réellement navigation, description, favoris et sliders pendant
+Focus Mode. La sortie textuelle reste dans la safe area et reçoit le focus à
+l’entrée. La sortie par bouton ou `Escape` restaure le nouveau déclencheur Focus,
+ou Play/Pause si aucun déclencheur n’est disponible. Le timer, sa fin, les erreurs
+récupérables et leur action restent dans l’arbre accessible. L’animation d’entrée
+est supprimée avec `prefers-reduced-motion`.

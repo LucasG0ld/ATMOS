@@ -32,7 +32,8 @@
   margin-top: clamp(1.5rem, 3vh, 2rem);
 }
 
-.favoriteButton {
+.favoriteButton,
+.focusButton {
   display: inline-flex;
   align-items: center;
   min-height: 2.75rem;
@@ -46,6 +47,7 @@
 }
 
 .favoriteButton:is(:hover, :focus-visible),
+.focusButton:is(:hover, :focus-visible),
 .favoriteButton[aria-pressed="true"] {
   color: var(--atmos-foreground);
 }
@@ -53,6 +55,10 @@
 .favoriteButton:disabled {
   cursor: wait;
   opacity: 0.62;
+}
+
+.controls[data-focus-controls="true"] .personalActions {
+  margin-top: 0;
 }
 
 .actions {
@@ -153,7 +159,8 @@
     transition-duration: 0ms;
   }
 
-  .favoriteButton {
+  .favoriteButton,
+  .focusButton {
     transition-duration: 0ms;
   }
 

@@ -174,6 +174,14 @@ automatisés portent la suite à 117 tests unitaires/composants et la matrice à
 cas Playwright : 81 passent et les quatre skips WebKit connus restent inchangés.
 Ils ne remplacent pas la recette sur desktop, Android et iOS réels.
 
+Le Lot 20 porte la suite à 120 tests unitaires/composants et la matrice à 90 cas
+Playwright. Les tests couvrent entrée et sortie, retrait des contrôles
+secondaires, focus initial, restauration, `Escape`, changement d’ambiance,
+erreur audio et timer arrivé à échéance. Le parcours Focus Mode et axe passe sur
+les cinq profils ; les quatre skips WebKit historiques restent inchangés. Le
+profil 320 px avec mouvement réduit confirme aussi la sortie visible et l’absence
+de débordement horizontal.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

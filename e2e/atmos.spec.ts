@@ -302,6 +302,55 @@ test("an overdue wall-clock timer finishes without creating audio", async ({
   ).toBe(0);
 });
 
+test("Focus Mode keeps essentials, expires the timer and restores focus", async ({
+  page,
+}) => {
+  await page.clock.install({ time: new Date("2026-08-11T12:00:00Z") });
+  await page.goto("/atmosphere/rainy-apartment");
+
+  await page.getByRole("button", { name: "Timer" }).click();
+  await page
+    .getByRole("dialog", { name: "Set a timer" })
+    .getByRole("button", { name: "15 minutes" })
+    .click();
+  await page.getByRole("button", { name: "Focus", exact: true }).click();
+
+  await expect(page.getByRole("button", { name: "Exit focus" })).toBeFocused();
+  await expect(
+    page.getByRole("heading", { name: "Rainy Apartment" }),
+  ).toBeVisible();
+  await expect(page.locator("time[data-ready='true']")).toBeVisible();
+  await expect(page.getByRole("button", { name: /Timer ·/ })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Play Rainy Apartment" }),
+  ).toBeVisible();
+  await expect(page.getByRole("slider")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Atmospheres" })).toHaveCount(
+    0,
+  );
+  await expect(page.getByRole("button", { name: "Preferences" })).toHaveCount(
+    0,
+  );
+  await expect(page.getByRole("button", { name: /favorites/ })).toHaveCount(0);
+  await expectNoSeriousAccessibilityViolation(page);
+
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: /Timer ·/ })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(
+    page.getByRole("button", { name: "Play Rainy Apartment" }),
+  ).toBeFocused();
+
+  await page.clock.fastForward("15:00");
+  await expect(page.locator('p[role="status"]')).toHaveText("Timer finished.");
+  await expect(page.getByRole("button", { name: "Timer" })).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("button", { name: "Focus" })).toBeFocused();
+  await expect(page.getByRole("slider")).toHaveCount(3);
+  await expect(page.getByRole("button", { name: "Atmospheres" })).toBeVisible();
+});
+
 test("background playback is not voluntarily suspended", async ({
   browserName,
   page,
@@ -503,6 +552,10 @@ test("keyboard order follows the visual reading order", async ({
   ).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Timer" })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(
+    page.getByRole("button", { name: "Focus", exact: true }),
+  ).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("button", { name: "Play Rainy Apartment" }),
@@ -849,6 +902,8 @@ test("catalog and player remain usable at narrow width with reduced motion", asy
     page.getByRole("heading", { name: "Rainy Apartment" }),
   ).toBeVisible();
   await expect(page.getByRole("button", { name: /Play/ })).toBeVisible();
+  await page.getByRole("button", { name: "Focus", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Exit focus" })).toBeVisible();
   const hasHorizontalOverflow = await page.evaluate(
     () =>
       document.documentElement.scrollWidth >

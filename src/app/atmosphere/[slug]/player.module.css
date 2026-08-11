@@ -79,6 +79,14 @@
   padding-bottom: clamp(0.25rem, 1vw, 1rem);
 }
 
+:global([data-focus-mode="true"]) .frame {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+:global([data-focus-mode="true"]) .stage {
+  align-self: center;
+}
+
 @media (max-width: 72rem) {
   .stage {
     grid-template-columns: minmax(7rem, 0.2fr) minmax(0, 1fr);

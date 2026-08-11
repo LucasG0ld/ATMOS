@@ -5,6 +5,11 @@ import { describe, expect, it, vi } from "vitest";
 
 import { rainyApartment } from "../../data/atmospheres/rainy-apartment";
 import type { AudioEngineController } from "../../features/audio/audio-engine";
+import { AudioSessionProvider } from "../../features/audio/audio-session";
+import {
+  FocusModeProvider,
+  FocusModeSurface,
+} from "../../features/focus/focus-mode";
 import {
   PreferencesProvider,
   usePreferences,
@@ -330,5 +335,65 @@ describe("VisualControls", () => {
     expect(createEngine).toHaveBeenCalledTimes(1);
     unmount();
     expect(engine.destroy).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps playback, timer and recoverable errors available in Focus Mode", async () => {
+    const user = userEvent.setup();
+    const engine = createMockEngine();
+    vi.mocked(engine.load).mockRejectedValue(new Error("offline"));
+
+    render(
+      <PreferencesProvider
+        catalogue={[
+          {
+            atmosphereId: rainyApartment.id,
+            soundLayerIds: rainyApartment.sounds.map(({ id }) => id),
+          },
+        ]}
+        storageAdapter={{
+          read: vi.fn().mockReturnValue({
+            preferences: { favoriteAtmosphereIds: [], layerVolumes: {} },
+            storageAvailable: true,
+          }),
+          reset: vi.fn().mockReturnValue(true),
+          write: vi.fn().mockReturnValue(true),
+        }}
+      >
+        <FocusModeProvider>
+          <AudioSessionProvider createEngine={() => engine}>
+            <FocusModeSurface>
+              <VisualControls
+                atmosphere={rainyApartment}
+                atmosphereName={rainyApartment.name}
+                sounds={rainyApartment.sounds}
+              />
+            </FocusModeSurface>
+          </AudioSessionProvider>
+        </FocusModeProvider>
+      </PreferencesProvider>,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Focus" }));
+
+    expect(screen.queryByRole("slider")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /favorites/ }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Timer" })).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Play Rainy Apartment" }),
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: "Exit focus" })).toHaveFocus();
+
+    await user.click(
+      screen.getByRole("button", { name: "Play Rainy Apartment" }),
+    );
+
+    expect(
+      await screen.findByRole("button", { name: "Retry Rainy Apartment" }),
+    ).toBeVisible();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Audio could not be loaded",
+    );
   });
 });

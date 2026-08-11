@@ -303,3 +303,11 @@ Le build de production mesure 11,7 Kio de JavaScript applicatif gzip sur
 l’accueil et 58,8 Kio sur le player, soit +0,2 Kio sur le player depuis le Lot 19. Le CSS reste à 8,9 Kio et les fonts à 29,4 Kio. L’automation anticipée
 n’ajoute ni polling, ni média, ni package ; elle réutilise le `GainNode` master
 et est annulée lors d’un remplacement, d’une annulation ou d’une Pause.
+
+### Mesure du Focus Mode — Lot 20
+
+Le build de production mesure 11,7 Kio de JavaScript applicatif gzip sur
+l’accueil et 59,6 Kio sur le player, soit +0,8 Kio depuis le Lot 19b. Le CSS du
+player atteint 9,1 Kio (+0,2 Kio) et les fonts restent à 29,4 Kio. Le mode
+n’ajoute aucun package, média, polling ou accès de stockage ; seul un listener
+`keydown` existe pendant son activation et il est nettoyé à la sortie.

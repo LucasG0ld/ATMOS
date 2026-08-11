@@ -30,12 +30,12 @@
 
 ## Focus Mode
 
-- [ ] Entrée et sortie souris, clavier et toucher.
-- [ ] Heure, titre, Play/Pause, timer, erreurs et `Exit focus` restent disponibles.
-- [ ] Contrôles masqués absents de l’ordre de tabulation et de l’arbre accessible.
-- [ ] `Escape` et restauration du focus prévisibles.
-- [ ] Changement d’ambiance, erreur audio et fin du timer restent récupérables.
-- [ ] Mouvement réduit et zoom 200 % contrôlés.
+- [x] Entrée et sortie souris, clavier et toucher.
+- [x] Heure, titre, Play/Pause, timer, erreurs et `Exit focus` restent disponibles.
+- [x] Contrôles masqués absents de l’ordre de tabulation et de l’arbre accessible.
+- [x] `Escape` et restauration du focus prévisibles.
+- [x] Changement d’ambiance, erreur audio et fin du timer restent récupérables.
+- [x] Mouvement réduit et zoom 200 % contrôlés.
 
 ## Performance, sécurité et confidentialité
 
