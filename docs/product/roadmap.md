@@ -54,12 +54,17 @@ ambiance sans code spécifique d’UI et transitions fluides sur mobile médian.
 
 ## MVP 0.3 — Session personnelle locale
 
+**Statut : Lots 16 à 20 terminés et validés ; candidate du Lot 21 préparée et Gate D en attente depuis le 2026-08-11.**
+
 **Résultat :** l’utilisateur peut s’immerger, limiter une session et retrouver ses préférences.
 
 - Focus Mode.
 - Timer 15, 30, 45, 60 et 90 minutes avec fade-out.
 - Favoris et préférences dans `localStorage`.
 - Versionnement et récupération des données locales.
+
+Le timer et Focus Mode restent des états de session éphémères. Seuls les favoris
+et volumes sont persistés ; aucune donnée n’est synchronisée ou transmise.
 
 **Sortie :** persistance robuste, timer testé en arrière-plan et Focus Mode accessible.
 

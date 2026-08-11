@@ -138,6 +138,17 @@ Le texte de l’interface est anglais, bref, calme et concret.
 
 Éviter les superlatifs, les promesses de productivité et les explications de fonction visibles en permanence.
 
-## Focus Mode futur
+## Focus Mode
 
 Le mode masque progressivement les contrôles non essentiels mais ne piège jamais le clavier. L’heure, le nom, play/pause et une manière évidente de quitter restent accessibles. La réapparition ne dépend pas uniquement du mouvement de souris : focus, toucher et touche `Escape` sont aussi gérés.
+
+Le cadrage 0.3 accepté remplace la réapparition implicite par une sortie toujours
+visible et testable. Timer, favoris, préférences et comportement détaillé du mode
+sont définis dans la
+[spécification UX de la session personnelle](personal-session-ux-0.3.md).
+
+Le Lot 20 implémente cette composition sans plein écran : les zones secondaires
+sont retirées du rendu, `Exit focus` reçoit le focus à l’entrée et `Escape` ou le
+bouton visible restaurent le déclencheur. Si un changement d’ambiance a remplacé
+son nœud DOM, le nouveau déclencheur Focus est utilisé ; Play/Pause reste la
+cible de repli si aucun déclencheur n’est disponible.

@@ -1,7 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
+import { FocusModeProvider } from "@/features/focus/focus-mode";
+
 import AtmospherePage, { generateMetadata, generateStaticParams } from "./page";
+
+function renderPage(page: React.ReactNode) {
+  return render(<FocusModeProvider>{page}</FocusModeProvider>);
+}
 
 describe("AtmospherePage", () => {
   it("renders the data-driven visual player and navigation", async () => {
@@ -11,7 +17,7 @@ describe("AtmospherePage", () => {
       params: Promise.resolve({ slug: "rainy-apartment" }),
     });
 
-    render(page);
+    renderPage(page);
 
     expect(
       screen.getByRole("heading", { name: "Rainy Apartment" }),
@@ -45,7 +51,7 @@ describe("AtmospherePage", () => {
       params: Promise.resolve({ slug: "deep-forest" }),
     });
 
-    render(page);
+    renderPage(page);
 
     expect(
       screen.getByRole("heading", { name: "Deep Forest" }),

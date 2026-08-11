@@ -1,6 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
+import { PREFERENCES_STORAGE_KEY } from "../src/features/preferences/preferences-storage";
+
 function usesExpectedAudioFallback(browserName: string) {
   return (
     browserName === "webkit" ||
@@ -80,6 +82,344 @@ test("critical journey defers audio and remains recoverable", async ({
     page.getByRole("button", { name: "Play Rainy Apartment" }),
   ).toBeVisible();
   expect(runtimeErrors).toEqual([]);
+});
+
+test("invalid local preferences stay isolated from the existing experience", async ({
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) audioRequests.push(request.url());
+  });
+  await page.addInitScript((storageKey) => {
+    if (localStorage.getItem(storageKey) === null) {
+      localStorage.setItem(storageKey, "{not-json");
+    }
+  }, PREFERENCES_STORAGE_KEY);
+
+  await page.goto("/atmosphere/rainy-apartment");
+  await expect(
+    page.getByRole("heading", { name: "Rainy Apartment" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("slider", { name: "Rain", exact: true }),
+  ).toHaveValue("65");
+  expect(
+    await page.evaluate(
+      (storageKey) => localStorage.getItem(storageKey),
+      PREFERENCES_STORAGE_KEY,
+    ),
+  ).toBe("{not-json");
+
+  const unknownVersion = JSON.stringify({
+    version: 99,
+    favoriteAtmosphereIds: ["rainy-apartment"],
+    layerVolumes: {},
+  });
+  await page.evaluate(
+    ([storageKey, value]) => localStorage.setItem(storageKey, value),
+    [PREFERENCES_STORAGE_KEY, unknownVersion],
+  );
+  await page.reload();
+
+  await expect(
+    page.getByRole("slider", { name: "Rain", exact: true }),
+  ).toHaveValue("65");
+  expect(
+    await page.evaluate(
+      (storageKey) => localStorage.getItem(storageKey),
+      PREFERENCES_STORAGE_KEY,
+    ),
+  ).toBe(unknownVersion);
+  expect(audioRequests).toEqual([]);
+  expect(runtimeErrors).toEqual([]);
+});
+
+test("favorites and volumes persist locally and reset to catalogue defaults", async ({
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  await page.goto("/atmosphere/rainy-apartment");
+
+  const rain = page.getByRole("slider", { name: "Rain", exact: true });
+  await rain.fill("72");
+  const addFavorite = page.getByRole("button", {
+    name: "Add to favorites",
+  });
+  await addFavorite.click();
+  await expect(
+    page.getByRole("button", {
+      name: "Remove from favorites",
+    }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect
+    .poll(() =>
+      page.evaluate((storageKey) => {
+        const value = localStorage.getItem(storageKey);
+        if (!value) return false;
+        const snapshot = JSON.parse(value);
+        return (
+          snapshot.layerVolumes["rainy-apartment"]?.rain === 0.72 &&
+          snapshot.favoriteAtmosphereIds.includes("rainy-apartment")
+        );
+      }, PREFERENCES_STORAGE_KEY),
+    )
+    .toBe(true);
+
+  await page.reload();
+  await expect(rain).toHaveValue("72");
+  await expect(
+    page.getByRole("button", {
+      name: "Remove from favorites",
+    }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("link", { name: "Back to atmospheres" }).click();
+  const rainyLink = page.locator('[data-atmosphere-link="rainy-apartment"]');
+  await expect(rainyLink).toBeVisible();
+  await expect(rainyLink.getByText("Saved")).toBeVisible();
+
+  const preferencesTrigger = page.getByRole("button", { name: "Preferences" });
+  await preferencesTrigger.click();
+  const dialog = page.getByRole("dialog", { name: "Preferences" });
+  await expect(dialog).toBeVisible();
+  await expectNoSeriousAccessibilityViolation(page);
+  await dialog.getByRole("button", { name: "Reset saved preferences" }).click();
+  await expect(dialog.getByText("Saved preferences reset.")).toBeVisible();
+  await expect(dialog.getByText("Nothing saved yet")).toBeVisible();
+  expect(
+    await page.evaluate(
+      (storageKey) => localStorage.getItem(storageKey),
+      PREFERENCES_STORAGE_KEY,
+    ),
+  ).toBeNull();
+
+  await dialog.getByRole("button", { name: "Close preferences" }).click();
+  await expect(preferencesTrigger).toBeFocused();
+  await expect(rainyLink.getByText("Saved")).toBeHidden();
+  await rainyLink.click();
+  await expect(rain).toHaveValue("65");
+  expect(runtimeErrors).toEqual([]);
+});
+
+test("session timer starts, replaces, survives navigation and cancels locally", async ({
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) audioRequests.push(request.url());
+  });
+  await page.goto("/atmosphere/rainy-apartment");
+
+  const timerTrigger = page.getByRole("button", { name: "Timer" });
+  await timerTrigger.click();
+  const dialog = page.getByRole("dialog", { name: "Set a timer" });
+  await expect(dialog).toBeVisible();
+  for (const duration of [15, 30, 45, 60, 90]) {
+    await expect(
+      dialog.getByRole("button", { name: `${duration} minutes` }),
+    ).toBeVisible();
+  }
+  await expectNoSeriousAccessibilityViolation(page);
+
+  await dialog.getByRole("button", { name: "15 minutes" }).click();
+  await expect(
+    page.getByRole("button", { name: /Timer · 1[45]:/ }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: /Timer ·/ })).toBeFocused();
+  expect(audioRequests).toEqual([]);
+
+  await page.getByRole("button", { name: /Timer ·/ }).click();
+  await expect(dialog.getByText(/Ends in 1[45]:/)).toBeVisible();
+  await dialog.getByRole("button", { name: "30 minutes" }).click();
+  await expect(
+    page.getByRole("button", { name: /Timer · (29|30):/ }),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "Atmospheres" }).click();
+  await page
+    .getByRole("dialog", { name: "Atmospheres" })
+    .getByRole("link", { name: /Deep Forest/ })
+    .click();
+  await expect(page).toHaveURL(/\/atmosphere\/deep-forest$/);
+  await expect(
+    page.getByRole("button", { name: /Timer · (29|30):/ }),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: /Timer ·/ }).click();
+  await dialog.getByRole("button", { name: "Cancel timer" }).click();
+  await expect(page.getByRole("button", { name: "Timer" })).toBeVisible();
+  expect(audioRequests).toEqual([]);
+
+  await page.getByRole("button", { name: "Timer" }).click();
+  await dialog.getByRole("button", { name: "15 minutes" }).click();
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Timer" })).toBeVisible();
+  expect(audioRequests).toEqual([]);
+  expect(runtimeErrors).toEqual([]);
+});
+
+test("an overdue wall-clock timer finishes without creating audio", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const browserWindow = window as Window & {
+      __atmosAudioContextCount?: number;
+    };
+    const OriginalAudioContext = window.AudioContext;
+    browserWindow.__atmosAudioContextCount = 0;
+    if (!OriginalAudioContext) return;
+    window.AudioContext = new Proxy(OriginalAudioContext, {
+      construct(target, argumentsList) {
+        browserWindow.__atmosAudioContextCount =
+          (browserWindow.__atmosAudioContextCount ?? 0) + 1;
+        return Reflect.construct(target, argumentsList);
+      },
+    });
+  });
+  await page.clock.install({ time: new Date("2026-08-11T12:00:00Z") });
+  await page.goto("/atmosphere/rainy-apartment");
+
+  await page.getByRole("button", { name: "Timer" }).click();
+  await page
+    .getByRole("dialog", { name: "Set a timer" })
+    .getByRole("button", { name: "15 minutes" })
+    .click();
+  await page.clock.fastForward("15:00");
+
+  await expect(page.locator('p[role="status"]')).toHaveText("Timer finished.");
+  await expect(page.getByRole("button", { name: "Timer" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Play Rainy Apartment" }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () =>
+        (window as Window & { __atmosAudioContextCount?: number })
+          .__atmosAudioContextCount,
+    ),
+  ).toBe(0);
+});
+
+test("Focus Mode keeps essentials, expires the timer and restores focus", async ({
+  page,
+}) => {
+  await page.clock.install({ time: new Date("2026-08-11T12:00:00Z") });
+  await page.goto("/atmosphere/rainy-apartment");
+
+  await page.getByRole("button", { name: "Timer" }).click();
+  await page
+    .getByRole("dialog", { name: "Set a timer" })
+    .getByRole("button", { name: "15 minutes" })
+    .click();
+  await page.getByRole("button", { name: "Focus", exact: true }).click();
+
+  await expect(page.getByRole("button", { name: "Exit focus" })).toBeFocused();
+  await expect(
+    page.getByRole("heading", { name: "Rainy Apartment" }),
+  ).toBeVisible();
+  await expect(page.locator("time[data-ready='true']")).toBeVisible();
+  await expect(page.getByRole("button", { name: /Timer ·/ })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Play Rainy Apartment" }),
+  ).toBeVisible();
+  await expect(page.getByRole("slider")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Atmospheres" })).toHaveCount(
+    0,
+  );
+  await expect(page.getByRole("button", { name: "Preferences" })).toHaveCount(
+    0,
+  );
+  await expect(page.getByRole("button", { name: /favorites/ })).toHaveCount(0);
+  await expectNoSeriousAccessibilityViolation(page);
+
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: /Timer ·/ })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(
+    page.getByRole("button", { name: "Play Rainy Apartment" }),
+  ).toBeFocused();
+
+  await page.clock.fastForward("15:00");
+  await expect(page.locator('p[role="status"]')).toHaveText("Timer finished.");
+  await expect(page.getByRole("button", { name: "Timer" })).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("button", { name: "Focus" })).toBeFocused();
+  await expect(page.getByRole("slider")).toHaveCount(3);
+  await expect(page.getByRole("button", { name: "Atmospheres" })).toBeVisible();
+});
+
+test("background playback is not voluntarily suspended", async ({
+  browserName,
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const browserWindow = window as Window & {
+      __atmosSuspendCount?: number;
+    };
+    const OriginalAudioContext = window.AudioContext;
+    browserWindow.__atmosSuspendCount = 0;
+    if (!OriginalAudioContext) return;
+    window.AudioContext = new Proxy(OriginalAudioContext, {
+      construct(target, argumentsList) {
+        const context = Reflect.construct(
+          target,
+          argumentsList,
+        ) as AudioContext;
+        const suspend = context.suspend.bind(context);
+        Object.defineProperty(context, "suspend", {
+          configurable: true,
+          value: () => {
+            browserWindow.__atmosSuspendCount =
+              (browserWindow.__atmosSuspendCount ?? 0) + 1;
+            return suspend();
+          },
+        });
+        return context;
+      },
+    });
+  });
+  await page.goto("/atmosphere/rainy-apartment");
+  await page.getByRole("button", { name: "Play Rainy Apartment" }).click();
+  const playbackOutcome = page.getByRole("button", {
+    name: /^(Pause|Retry) Rainy Apartment$/,
+  });
+  await expect(playbackOutcome).toBeVisible({ timeout: 15_000 });
+  if ((await playbackOutcome.getAttribute("aria-label"))?.startsWith("Retry")) {
+    expect(usesExpectedAudioFallback(browserName)).toBe(true);
+    return;
+  }
+
+  await page.evaluate(() => {
+    Object.defineProperty(document, "hidden", {
+      configurable: true,
+      value: true,
+    });
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  await expect(
+    page.getByRole("button", { name: "Pause Rainy Apartment" }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () =>
+        (window as Window & { __atmosSuspendCount?: number })
+          .__atmosSuspendCount,
+    ),
+  ).toBe(0);
+
+  await page.evaluate(() => {
+    Object.defineProperty(document, "hidden", {
+      configurable: true,
+      value: false,
+    });
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  await expect(
+    page.getByRole("button", { name: "Pause Rainy Apartment" }),
+  ).toBeVisible();
 });
 
 test("audio failure is announced and retryable", async ({ page }) => {
@@ -166,6 +506,8 @@ test("keyboard order follows the visual reading order", async ({
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "ATMOS — Home" })).toBeFocused();
   await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Preferences" })).toBeFocused();
+  await page.keyboard.press("Tab");
   await expect(
     page.getByRole("link", { name: /Rainy Apartment/ }),
   ).toBeFocused();
@@ -191,6 +533,8 @@ test("keyboard order follows the visual reading order", async ({
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Atmospheres" })).toBeFocused();
   await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Preferences" })).toBeFocused();
+  await page.keyboard.press("Tab");
   await expect(
     page.getByRole("link", { name: "Back to atmospheres" }),
   ).toBeFocused();
@@ -200,6 +544,18 @@ test("keyboard order follows the visual reading order", async ({
     await expect(page.getByRole("slider", { name, exact: true })).toBeFocused();
   }
 
+  await page.keyboard.press("Tab");
+  await expect(
+    page.getByRole("button", {
+      name: "Add to favorites",
+    }),
+  ).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Timer" })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(
+    page.getByRole("button", { name: "Focus", exact: true }),
+  ).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("button", { name: "Play Rainy Apartment" }),
@@ -214,7 +570,7 @@ test("catalog previews and player navigation keep URLs and audio coherent", asyn
     if (request.url().includes("/audio/")) audioRequests.push(request.url());
   });
 
-  await page.goto("/");
+  await page.goto("/", { waitUntil: "domcontentloaded" });
   const destinations = page.getByRole("navigation", { name: "Atmospheres" });
   await expect(destinations.getByRole("link")).toHaveCount(4);
 
@@ -546,6 +902,8 @@ test("catalog and player remain usable at narrow width with reduced motion", asy
     page.getByRole("heading", { name: "Rainy Apartment" }),
   ).toBeVisible();
   await expect(page.getByRole("button", { name: /Play/ })).toBeVisible();
+  await page.getByRole("button", { name: "Focus", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Exit focus" })).toBeVisible();
   const hasHorizontalOverflow = await page.evaluate(
     () =>
       document.documentElement.scrollWidth >

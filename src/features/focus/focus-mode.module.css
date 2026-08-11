@@ -1,0 +1,60 @@
+.surface {
+  min-height: 100dvh;
+}
+
+.surface[data-focus-mode="true"] {
+  animation: focusIn 400ms var(--ease-out) both;
+}
+
+.exitButton {
+  position: fixed;
+  z-index: 20;
+  top: calc(var(--safe-top) + var(--page-gutter));
+  right: calc(var(--safe-right) + var(--page-gutter));
+  min-height: 2.75rem;
+  padding: 0 var(--space-4);
+  color: var(--atmos-foreground);
+  cursor: pointer;
+  background: color-mix(in srgb, var(--atmos-background) 68%, transparent);
+  border: 1px solid color-mix(in srgb, var(--atmos-foreground) 32%, transparent);
+  border-radius: 999px;
+  backdrop-filter: blur(0.4rem);
+  transition:
+    color var(--duration-control) var(--ease-out),
+    background-color var(--duration-control) var(--ease-out),
+    border-color var(--duration-control) var(--ease-out);
+}
+
+.exitButton:is(:hover, :focus-visible) {
+  color: var(--atmos-background);
+  background: var(--atmos-foreground);
+  border-color: var(--atmos-foreground);
+}
+
+@keyframes focusIn {
+  from {
+    opacity: 0.72;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 48rem) {
+  .exitButton {
+    top: calc(var(--safe-top) + var(--space-4));
+    right: calc(var(--safe-right) + var(--space-4));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .surface[data-focus-mode="true"] {
+    animation: none;
+  }
+
+  .exitButton {
+    backdrop-filter: none;
+    transition-duration: 0ms;
+  }
+}

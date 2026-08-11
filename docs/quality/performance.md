@@ -246,3 +246,81 @@ scores de 99, 100 et 98, des LCP de 1,96 s, 1,66 s et 1,66 s, et des TBT de
 aucune régression stable supérieure à 10 %. Rainy Apartment améliore le LCP et
 le TBT mobiles face au player 0.1 ; les trois nouveaux players respectent les
 cibles. Les rapports JSON restent locaux dans `.cache/lighthouse-production`.
+
+## Budgets du MVP 0.3
+
+Le MVP 0.3 n’ajoute aucun média. Les plafonds bloquants 0.2 restent applicables,
+avec des contraintes incrémentales pour éviter qu’une petite persistance ne
+justifie un store ou une bibliothèque disproportionnée.
+
+| Ressource ou activité                | Cible 0.3                        | Plafond bloquant   |
+| ------------------------------------ | -------------------------------- | ------------------ |
+| JavaScript accueil attribuable à 0.3 | ≤ 5 Kio gzip supplémentaires     | 8 Kio              |
+| JavaScript player attribuable à 0.3  | ≤ 10 Kio gzip supplémentaires    | 15 Kio             |
+| CSS attribuable à 0.3                | ≤ 4 Kio gzip supplémentaires     | 8 Kio              |
+| Snapshot `atmos.preferences`         | < 8 Kio pour le catalogue actuel | 32 Kio             |
+| Écritures pendant un drag continu    | regroupées après interaction     | ≤ 5 par seconde    |
+| Scheduler sans timer                 | aucun                            | 0 timeout/interval |
+| Scheduler avec timer                 | une échéance + rendu borné       | 1 échéance métier  |
+
+- Aucun package produit supplémentaire n’est attendu.
+- La lecture du stockage ne déclenche ni image, ni audio, ni contexte Web Audio.
+- Les listeners `visibilitychange`/`pageshow` et timeouts sont nettoyés au démontage.
+- Dix cycles timer/focus et vingt changements de volumes ne doivent pas produire de croissance mémoire continue.
+- Lighthouse est rejoué sur l’accueil et les quatre players avant Gate D.
+
+### Mesure du socle de préférences — Lot 17
+
+Le build de production passe de 9,7 à 10,9 Kio de JavaScript applicatif gzip sur
+l’accueil et de 54,7 à 55,9 Kio sur le player, soit +1,2 Kio sur chaque route,
+sous les cibles incrémentales. Le CSS reste à 7,3 Kio et les fonts à 29,4 Kio.
+
+Le snapshot est limité à 32 Kio avant `setItem`. Les mutations du provider sont
+regroupées sur 250 ms et un seul snapshot en attente est conservé. Le démontage
+annule le timeout puis effectue au plus un flush synchrone ; sans mutation, aucun
+timer, listener, accès réseau ou contexte audio n’est créé.
+
+### Mesure des favoris et volumes — Lot 18
+
+Le build de production mesure 11,7 Kio de JavaScript applicatif gzip sur
+l’accueil et 57,1 Kio sur le player, soit respectivement +0,8 Kio et +1,2 Kio
+depuis le Lot 17. Le CSS atteint 8,4 Kio (+1,1 Kio) et les fonts restent à
+29,4 Kio. Ces incréments restent sous les cibles 0.3 et aucun média, package ou
+scheduler supplémentaire n’est introduit.
+
+### Mesure du timer — Lot 19
+
+Le build de production mesure 11,7 Kio de JavaScript applicatif gzip sur
+l’accueil et 58,6 Kio sur le player. Le timer ajoute donc 1,5 Kio au player et
+rien à l’accueil depuis le Lot 18. Le CSS atteint 8,9 Kio (+0,5 Kio) et les fonts
+restent à 29,4 Kio. Il n’existe aucun polling en l’absence de timer ; pendant une
+session, un timeout métier vise l’échéance et un rafraîchissement visuel borné
+met à jour le texte sans annonce live.
+
+### Mesure de la lecture de fond — Lot 19b
+
+Le build de production mesure 11,7 Kio de JavaScript applicatif gzip sur
+l’accueil et 58,8 Kio sur le player, soit +0,2 Kio sur le player depuis le Lot 19. Le CSS reste à 8,9 Kio et les fonts à 29,4 Kio. L’automation anticipée
+n’ajoute ni polling, ni média, ni package ; elle réutilise le `GainNode` master
+et est annulée lors d’un remplacement, d’une annulation ou d’une Pause.
+
+### Mesure du Focus Mode — Lot 20
+
+Le build de production mesure 11,7 Kio de JavaScript applicatif gzip sur
+l’accueil et 59,6 Kio sur le player, soit +0,8 Kio depuis le Lot 19b. Le CSS du
+player atteint 9,1 Kio (+0,2 Kio) et les fonts restent à 29,4 Kio. Le mode
+n’ajoute aucun package, média, polling ou accès de stockage ; seul un listener
+`keydown` existe pendant son activation et il est nettoyé à la sortie.
+
+### Mesure de candidate — Lot 21
+
+La candidate conserve 11,7 Kio de JavaScript gzip sur l’accueil, 59,6 Kio sur le
+player, 6,8/9,1 Kio de CSS et 29,4 Kio de fonts. Dix transitions utilisent un
+seul `AudioContext`, 12 URL audio uniques et produisent un delta de tas de
++1 398 527 octets, comparable à la candidate 0.2 (+1,34 Mio).
+
+Les dix audits Lighthouse locaux obtiennent 100 en accessibilité, bonnes
+pratiques et SEO. Les performances vont de 97 à 99 sur les players mobiles et
+restent à 100 sur desktop. L’accueil mobile obtient 92 avec un LCP de 3,33 s ;
+Deep Forest obtient 97 avec 2,55 s. Ces deux dépassements locaux existaient déjà
+en 0.2 et doivent être comparés aux mesures HTTPS post-déploiement.

@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 
+import { atmospheres } from "@/data/atmospheres";
+import { PreferencesProvider } from "@/features/preferences/preferences-provider";
+
 import "./globals.css";
 
 const instrumentSans = localFont({
@@ -47,6 +50,11 @@ export const viewport: Viewport = {
   themeColor: "#0d141c",
 };
 
+const preferenceCatalogue = atmospheres.map(({ id, sounds }) => ({
+  atmosphereId: id,
+  soundLayerIds: sounds.map(({ id: soundLayerId }) => soundLayerId),
+}));
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -54,7 +62,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={instrumentSans.variable}>{children}</body>
+      <body className={instrumentSans.variable}>
+        <PreferencesProvider catalogue={preferenceCatalogue}>
+          {children}
+        </PreferencesProvider>
+      </body>
     </html>
   );
 }

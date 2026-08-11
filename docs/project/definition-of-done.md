@@ -33,6 +33,8 @@ Une tranche est terminée lorsque tous les points applicables sont vrais.
 - Effets, événements, timers, fetchs et ressources audio sont nettoyés.
 - Pas de dépendance ou abstraction non justifiée.
 - Les erreurs réseau et APIs navigateur indisponibles ne font pas crasher la page.
+- Toute donnée persistée possède schéma, version, validation, défaut sûr et méthode de suppression testés.
+- Timers, listeners et écritures différées restent bornés et sont nettoyés au démontage.
 
 ## Performance
 
@@ -46,6 +48,7 @@ Une tranche est terminée lorsque tous les points applicables sont vrais.
 - Aucun secret ni donnée sensible dans le code client ou l’historique.
 - Les entrées et URLs sont validées selon leur frontière de confiance.
 - Aucun nouveau tracker ou transfert tiers non documenté.
+- La finalité et la suppression de toute donnée locale sont compréhensibles depuis l’interface.
 - Chaque actif possède une entrée complète dans `ASSET_CREDITS.md`.
 - Les dépendances ajoutées ont une licence compatible et aucun avis critique non traité.
 

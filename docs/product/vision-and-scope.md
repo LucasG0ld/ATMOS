@@ -81,5 +81,5 @@ Les métriques d’usage ne doivent pas nécessiter une collecte analytique avan
 - Source photographique définitive de Rainy Apartment.
 - Famille typographique après essais visuels et mesure de performance.
 - Présence du timer dès 0.1 ou uniquement en 0.3 : la roadmap retient 0.3.
-- Niveau de persistance des volumes par ambiance en 0.3.
+- Niveau de persistance des volumes par ambiance en 0.3 : par couche et par ambiance, accepté dans l’ADR-0003.
 - Politique analytique avant toute instrumentation.

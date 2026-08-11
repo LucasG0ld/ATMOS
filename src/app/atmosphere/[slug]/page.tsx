@@ -8,8 +8,13 @@ import { LocalClock } from "@/components/clock/local-clock";
 import { VisualControls } from "@/components/controls/visual-controls";
 import { Reveal } from "@/components/motion/reveal";
 import { AtmosphereMenu } from "@/components/navigation/atmosphere-menu";
+import { PreferencesDialog } from "@/components/preferences/preferences-dialog";
 import { Wordmark } from "@/components/shared/wordmark";
 import { atmospheres, getAtmosphereBySlug } from "@/data/atmospheres";
+import {
+  FocusModeSecondary,
+  FocusModeSurface,
+} from "@/features/focus/focus-mode";
 
 import styles from "./player.module.css";
 
@@ -51,63 +56,72 @@ export default async function AtmospherePage({ params }: AtmospherePageProps) {
 
   return (
     <AtmosphereScene atmosphere={atmosphere}>
-      <main className={`safe-area-frame min-h-dvh ${styles.frame}`}>
-        <header className={styles.header}>
-          <Wordmark />
-          <div className={styles.headerActions}>
-            <AtmosphereMenu
-              atmospheres={atmospheres}
-              currentSlug={atmosphere.slug}
-            />
-            <Link
-              aria-label="Back to atmospheres"
-              className={`text-label ${styles.backLink}`}
-              href="/"
-            >
-              <ArrowLeft aria-hidden="true" size={16} />
-              <span className={styles.backLabel}>Back</span>
-            </Link>
-          </div>
-        </header>
+      <FocusModeSurface>
+        <main className={`safe-area-frame min-h-dvh ${styles.frame}`}>
+          <FocusModeSecondary>
+            <header className={styles.header}>
+              <Wordmark />
+              <div className={styles.headerActions}>
+                <AtmosphereMenu
+                  atmospheres={atmospheres}
+                  currentSlug={atmosphere.slug}
+                />
+                <PreferencesDialog />
+                <Link
+                  aria-label="Back to atmospheres"
+                  className={`text-label ${styles.backLink}`}
+                  href="/"
+                >
+                  <ArrowLeft aria-hidden="true" size={16} />
+                  <span className={styles.backLabel}>Back</span>
+                </Link>
+              </div>
+            </header>
+          </FocusModeSecondary>
 
-        <section aria-labelledby="atmosphere-title" className={styles.stage}>
-          <Reveal className={styles.clockColumn} delay={0.06}>
-            <LocalClock className={styles.clock} />
-          </Reveal>
+          <section aria-labelledby="atmosphere-title" className={styles.stage}>
+            <Reveal className={styles.clockColumn} delay={0.06}>
+              <LocalClock className={styles.clock} />
+            </Reveal>
 
-          <div className={styles.editorial}>
-            <div>
-              <p className={`text-label ${styles.eyebrow}`}>
-                Atmosphere · {String(atmosphereIndex + 1).padStart(2, "0")}
-              </p>
-              <h1
-                aria-label={atmosphere.name}
-                className={`text-display font-normal ${styles.title}`}
-                id="atmosphere-title"
-              >
-                {atmosphere.displayName.map((line) => (
-                  <span className="block" key={line}>
-                    {line}
-                  </span>
-                ))}
-              </h1>
+            <div className={styles.editorial}>
+              <div>
+                <FocusModeSecondary>
+                  <p className={`text-label ${styles.eyebrow}`}>
+                    Atmosphere · {String(atmosphereIndex + 1).padStart(2, "0")}
+                  </p>
+                </FocusModeSecondary>
+                <h1
+                  aria-label={atmosphere.name}
+                  className={`text-display font-normal ${styles.title}`}
+                  id="atmosphere-title"
+                >
+                  {atmosphere.displayName.map((line) => (
+                    <span className="block" key={line}>
+                      {line}
+                    </span>
+                  ))}
+                </h1>
+              </div>
+
+              <FocusModeSecondary>
+                <p className={`text-body ${styles.description}`}>
+                  {atmosphere.description}
+                </p>
+              </FocusModeSecondary>
             </div>
 
-            <p className={`text-body ${styles.description}`}>
-              {atmosphere.description}
-            </p>
-          </div>
-
-          <Reveal className={styles.controlsColumn} delay={0.28}>
-            <VisualControls
-              atmosphere={atmosphere}
-              atmosphereName={atmosphere.name}
-              key={atmosphere.id}
-              sounds={atmosphere.sounds}
-            />
-          </Reveal>
-        </section>
-      </main>
+            <Reveal className={styles.controlsColumn} delay={0.28}>
+              <VisualControls
+                atmosphere={atmosphere}
+                atmosphereName={atmosphere.name}
+                key={atmosphere.id}
+                sounds={atmosphere.sounds}
+              />
+            </Reveal>
+          </section>
+        </main>
+      </FocusModeSurface>
     </AtmosphereScene>
   );
 }

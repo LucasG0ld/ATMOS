@@ -51,7 +51,7 @@ Aucun contenu ne clignote. Les médias animés futurs nécessitent pause/arrêt 
 
 - Aucun son automatique à l’ouverture.
 - Play/pause toujours disponible et explicite.
-- Le timer futur ne doit pas produire un signal sonore obligatoire ; le fade-out est privilégié.
+- Le timer ne produit aucun signal sonore obligatoire ; il termine la session par un fade-out.
 - L’application ne dépend jamais du son seul pour signaler une erreur ou un état.
 - Les volumes peuvent être réglés au clavier et leur valeur est annoncée.
 
@@ -81,3 +81,31 @@ Le 2026-08-11, la candidate 0.2 a été validée avec lecteurs d’écran deskto
 mobile, zoom navigateur 200 %, texte agrandi et contraste élevé. Les parcours
 desktop, Chrome Android réel et Safari iOS réel sont fonctionnels sans problème
 signalé. Le mouvement réduit et axe restent couverts par la matrice automatisée.
+
+## Session personnelle 0.3
+
+- Un favori est un bouton toggle avec nom dynamique et `aria-pressed` ; son état ne dépend pas de l’icône seule.
+- Le dialogue Timer utilise un titre, un bouton de fermeture et une restauration du focus éprouvés.
+- Le compte à rebours n’est pas une région live actualisée chaque seconde ; seules activation, annulation et fin sont annoncées poliment.
+- Focus Mode retire les contrôles secondaires de la tabulation et conserve toujours `Exit focus`, Play/Pause, timer et erreurs.
+- `Escape` quitte Focus Mode sans intercepter les raccourcis d’une technologie d’assistance hors du contexte de page.
+- La réinitialisation des préférences annonce une confirmation unique et ne vole pas le focus.
+- Une erreur de stockage n’empêche jamais l’usage en mémoire du player.
+
+Le Lot 19 implémente le dialogue Timer avec cinq boutons textuels, fermeture
+native et retour du focus au déclencheur. L’état `Timer · mm:ss` reste du texte
+ordinaire ; une région live invisible et polie ne change qu’au démarrage,
+remplacement, annulation ou terme. Le dialogue et le parcours clavier passent
+axe-core sur les cinq profils Playwright.
+
+Le Lot 19b conserve une dégradation compréhensible lorsque la plateforme refuse
+de reprendre un contexte suspendu : la commande revient à Play et un message
+annonçable indique qu’un nouveau geste est requis. Aucun changement de visibilité
+ne déplace le focus ou ne crée une annonce répétitive.
+
+Le Lot 20 retire réellement navigation, description, favoris et sliders pendant
+Focus Mode. La sortie textuelle reste dans la safe area et reçoit le focus à
+l’entrée. La sortie par bouton ou `Escape` restaure le nouveau déclencheur Focus,
+ou Play/Pause si aucun déclencheur n’est disponible. Le timer, sa fin, les erreurs
+récupérables et leur action restent dans l’arbre accessible. L’animation d’entrée
+est supprimée avec `prefers-reduced-motion`.

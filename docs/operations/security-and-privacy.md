@@ -20,7 +20,23 @@ Aucune préférence persistée et aucune donnée personnelle requise. L’heure 
 
 ### À partir de 0.3
 
-Favoris et volumes peuvent être enregistrés localement. Documenter clairement : clé, schéma, finalité et méthode de suppression. Ne pas stocker identifiants personnels, historique détaillé, empreinte appareil ou données sensibles.
+Favoris et volumes peuvent être enregistrés localement dans la clé unique
+`atmos.preferences`. La valeur V1 contient uniquement les IDs d’ambiances
+favorites et les volumes par IDs d’ambiance/couche. Elle est validée avant usage
+et supprimable depuis `Reset saved preferences`. Timer, Play/Pause, Focus Mode,
+historique, identifiants personnels, empreinte appareil et données sensibles ne
+sont pas stockés.
+
+Le stockage reste local au navigateur et n’est ni transmis ni synchronisé. Un
+refus d’accès ou de quota dégrade la session vers un état mémoire sans bloquer le
+player. Aucune bannière de consentement n’est nécessaire en l’absence de traceur,
+mais l’interface explique clairement la finalité et la méthode de suppression.
+
+Le socle du Lot 17 applique l’accès après montage uniquement, la liste blanche
+issue du catalogue, la taille sérialisée maximale de 32 Kio et l’absence de
+lecture automatique d’une autre clé. Le Lot 18 expose ces règles dans le dialogue
+`Preferences` et son action de reset. Si le stockage est indisponible, un message
+non bloquant indique que les changements ne valent que pour la visite courante.
 
 Toute analytics, error tracking ou ressource distante future exige une décision séparée couvrant base légale, consentement éventuel, rétention, sous-traitants et politique publique.
 

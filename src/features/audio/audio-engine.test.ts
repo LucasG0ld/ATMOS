@@ -205,7 +205,7 @@ describe("WebAudioEngine", () => {
     expect(createContext).toHaveBeenCalledTimes(2);
   });
 
-  it("suspends a hidden page and cleans every node idempotently", async () => {
+  it("keeps a hidden session playing when allowed and recovers platform suspension", async () => {
     const fake = createFakeContext();
     const engine = new WebAudioEngine({
       createContext: () => fake.context,
@@ -215,13 +215,17 @@ describe("WebAudioEngine", () => {
     await engine.play();
 
     await engine.setPageHidden(true);
-    expect(fake.rawContext.suspend).toHaveBeenCalledTimes(1);
+    expect(fake.rawContext.suspend).not.toHaveBeenCalled();
+    await engine.setPageHidden(false);
+    expect(fake.rawContext.resume).toHaveBeenCalledTimes(1);
+
+    fake.rawContext.state = "suspended";
     await engine.setPageHidden(false);
     expect(fake.rawContext.resume).toHaveBeenCalledTimes(2);
 
     engine.pause();
     await engine.setPageHidden(true);
-    expect(fake.rawContext.suspend).toHaveBeenCalledTimes(2);
+    expect(fake.rawContext.suspend).not.toHaveBeenCalled();
     await engine.setPageHidden(false);
     expect(fake.rawContext.resume).toHaveBeenCalledTimes(2);
 
@@ -235,6 +239,91 @@ describe("WebAudioEngine", () => {
       expect(source.disconnect).toHaveBeenCalledTimes(1);
     }
     expect(fake.rawContext.close).toHaveBeenCalledTimes(1);
+  });
+
+  it("uses master automation for timer fade and lets Play supersede it", async () => {
+    const fake = createFakeContext();
+    const engine = new WebAudioEngine({
+      createContext: () => fake.context,
+      fetch: vi.fn(async () => successfulResponse()) as typeof fetch,
+    });
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    const master = fake.gains[0].gain;
+
+    expect(engine.fadeOutForTimer(5)).toBe(5_000);
+    expect(master.linearRampToValueAtTime).toHaveBeenLastCalledWith(0, 9);
+
+    await engine.play();
+    expect(master.cancelAndHoldAtTime).toHaveBeenCalledWith(4);
+    expect(master.linearRampToValueAtTime).toHaveBeenLastCalledWith(1, 4.35);
+  });
+
+  it("schedules a background-safe timer fade and reports only its remaining time", async () => {
+    const fake = createFakeContext();
+    const engine = new WebAudioEngine({
+      createContext: () => fake.context,
+      fetch: vi.fn(async () => successfulResponse()) as typeof fetch,
+    });
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    const master = fake.gains[0].gain;
+
+    expect(engine.scheduleTimerFade(900, 5)).toBe(true);
+    expect(master.setValueAtTime).toHaveBeenLastCalledWith(1, 904);
+    expect(master.linearRampToValueAtTime).toHaveBeenLastCalledWith(0, 909);
+
+    fake.rawContext.currentTime = 906;
+    expect(engine.fadeOutForTimer(5)).toBe(3_000);
+  });
+
+  it("cancels scheduled timer automation on Pause", async () => {
+    const fake = createFakeContext();
+    const engine = new WebAudioEngine({
+      createContext: () => fake.context,
+      fetch: vi.fn(async () => successfulResponse()) as typeof fetch,
+    });
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    expect(engine.scheduleTimerFade(900, 5)).toBe(true);
+
+    engine.pause();
+
+    expect(engine.fadeOutForTimer(5)).toBe(0);
+  });
+
+  it("restores full volume when a scheduled timer is canceled during its fade", async () => {
+    const fake = createFakeContext();
+    const engine = new WebAudioEngine({
+      createContext: () => fake.context,
+      fetch: vi.fn(async () => successfulResponse()) as typeof fetch,
+    });
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    const master = fake.gains[0].gain;
+    expect(engine.scheduleTimerFade(900, 5)).toBe(true);
+
+    fake.rawContext.currentTime = 906;
+    engine.cancelTimerFade();
+
+    expect(master.cancelAndHoldAtTime).toHaveBeenLastCalledWith(906);
+    expect(master.linearRampToValueAtTime).toHaveBeenLastCalledWith(1, 906.35);
+    expect(engine.fadeOutForTimer(5)).toBe(5_000);
+  });
+
+  it("finishes a timer immediately when the audio context is suspended", async () => {
+    const fake = createFakeContext();
+    const engine = new WebAudioEngine({
+      createContext: () => fake.context,
+      fetch: vi.fn(async () => successfulResponse()) as typeof fetch,
+    });
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    fake.rawContext.state = "suspended";
+
+    expect(engine.fadeOutForTimer(5)).toBe(0);
+    await engine.setPageHidden(false);
+    expect(fake.rawContext.resume).toHaveBeenCalledTimes(1);
   });
 
   it("crossfades two buses in one context and retires the outgoing sources", async () => {

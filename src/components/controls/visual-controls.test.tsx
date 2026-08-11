@@ -5,19 +5,32 @@ import { describe, expect, it, vi } from "vitest";
 
 import { rainyApartment } from "../../data/atmospheres/rainy-apartment";
 import type { AudioEngineController } from "../../features/audio/audio-engine";
+import { AudioSessionProvider } from "../../features/audio/audio-session";
+import {
+  FocusModeProvider,
+  FocusModeSurface,
+} from "../../features/focus/focus-mode";
+import {
+  PreferencesProvider,
+  usePreferences,
+} from "../../features/preferences/preferences-provider";
+import type { PreferencesStorageAdapter } from "../../features/preferences/preferences-storage";
 
 import { VisualControls } from "./visual-controls";
 
 function createMockEngine(): AudioEngineController {
   return {
     cancelPreload: vi.fn(),
+    cancelTimerFade: vi.fn(),
     destroy: vi.fn().mockResolvedValue(undefined),
+    fadeOutForTimer: vi.fn().mockReturnValue(5_000),
     load: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
     pause: vi.fn(),
     play: vi.fn().mockResolvedValue(undefined),
     preload: vi.fn().mockResolvedValue(undefined),
     setLayerVolume: vi.fn(),
     setPageHidden: vi.fn().mockResolvedValue(undefined),
+    scheduleTimerFade: vi.fn().mockReturnValue(true),
     transition: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
   };
 }
@@ -32,6 +45,49 @@ function renderControls(engine = createMockEngine()) {
   );
 
   return { engine, ...view };
+}
+
+function ResetPreferences() {
+  const preferences = usePreferences();
+  return (
+    <button onClick={preferences.resetPreferences}>
+      Reset test preferences
+    </button>
+  );
+}
+
+function renderPersistentControls(
+  engine = createMockEngine(),
+  adapter: PreferencesStorageAdapter = {
+    read: vi.fn().mockReturnValue({
+      preferences: { favoriteAtmosphereIds: [], layerVolumes: {} },
+      storageAvailable: true,
+    }),
+    reset: vi.fn().mockReturnValue(true),
+    write: vi.fn().mockReturnValue(true),
+  },
+) {
+  const view = render(
+    <PreferencesProvider
+      catalogue={[
+        {
+          atmosphereId: rainyApartment.id,
+          soundLayerIds: rainyApartment.sounds.map(({ id }) => id),
+        },
+      ]}
+      storageAdapter={adapter}
+    >
+      <VisualControls
+        atmosphere={rainyApartment}
+        atmosphereName={rainyApartment.name}
+        createEngine={() => engine}
+        sounds={rainyApartment.sounds}
+      />
+      <ResetPreferences />
+    </PreferencesProvider>,
+  );
+
+  return { adapter, engine, ...view };
 }
 
 describe("VisualControls", () => {
@@ -89,6 +145,57 @@ describe("VisualControls", () => {
     expect(thunder).toHaveValue("15");
   });
 
+  it("restores volumes and applies reset defaults to an active engine", async () => {
+    const user = userEvent.setup();
+    const adapter: PreferencesStorageAdapter = {
+      read: vi.fn().mockReturnValue({
+        preferences: {
+          favoriteAtmosphereIds: [],
+          layerVolumes: { [rainyApartment.id]: { rain: 0.31 } },
+        },
+        storageAvailable: true,
+      }),
+      reset: vi.fn().mockReturnValue(true),
+      write: vi.fn().mockReturnValue(true),
+    };
+    const { engine } = renderPersistentControls(createMockEngine(), adapter);
+    const rain = screen.getByRole("slider", { name: "Rain" });
+
+    expect(rain).toHaveValue("31");
+    await user.click(
+      screen.getByRole("button", { name: "Play Rainy Apartment" }),
+    );
+    expect(engine.setLayerVolume).toHaveBeenCalledWith("rain", 0.31);
+
+    fireEvent.change(rain, { target: { value: "72" } });
+    expect(rain).toHaveValue("72");
+    expect(engine.setLayerVolume).toHaveBeenCalledWith("rain", 0.72);
+
+    await user.click(
+      screen.getByRole("button", { name: "Reset test preferences" }),
+    );
+    expect(rain).toHaveValue("65");
+    expect(engine.setLayerVolume).toHaveBeenCalledWith("rain", 0.65);
+  });
+
+  it("exposes a pressed-state favorite action", async () => {
+    const user = userEvent.setup();
+    renderPersistentControls();
+
+    const addFavorite = screen.getByRole("button", {
+      name: "Add to favorites",
+    });
+    expect(addFavorite).toHaveAttribute("aria-pressed", "false");
+
+    await user.click(addFavorite);
+
+    expect(
+      screen.getByRole("button", {
+        name: "Remove from favorites",
+      }),
+    ).toHaveAttribute("aria-pressed", "true");
+  });
+
   it("keeps every control in a natural keyboard order", async () => {
     const user = userEvent.setup();
     renderControls();
@@ -102,6 +209,9 @@ describe("VisualControls", () => {
       screen.getByRole("slider", { name: "Distant Thunder" }),
     ).toHaveFocus();
     await user.tab();
+    expect(
+      screen.queryByRole("button", { name: /favorites/ }),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Play Rainy Apartment" }),
     ).toHaveFocus();
@@ -225,5 +335,65 @@ describe("VisualControls", () => {
     expect(createEngine).toHaveBeenCalledTimes(1);
     unmount();
     expect(engine.destroy).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps playback, timer and recoverable errors available in Focus Mode", async () => {
+    const user = userEvent.setup();
+    const engine = createMockEngine();
+    vi.mocked(engine.load).mockRejectedValue(new Error("offline"));
+
+    render(
+      <PreferencesProvider
+        catalogue={[
+          {
+            atmosphereId: rainyApartment.id,
+            soundLayerIds: rainyApartment.sounds.map(({ id }) => id),
+          },
+        ]}
+        storageAdapter={{
+          read: vi.fn().mockReturnValue({
+            preferences: { favoriteAtmosphereIds: [], layerVolumes: {} },
+            storageAvailable: true,
+          }),
+          reset: vi.fn().mockReturnValue(true),
+          write: vi.fn().mockReturnValue(true),
+        }}
+      >
+        <FocusModeProvider>
+          <AudioSessionProvider createEngine={() => engine}>
+            <FocusModeSurface>
+              <VisualControls
+                atmosphere={rainyApartment}
+                atmosphereName={rainyApartment.name}
+                sounds={rainyApartment.sounds}
+              />
+            </FocusModeSurface>
+          </AudioSessionProvider>
+        </FocusModeProvider>
+      </PreferencesProvider>,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Focus" }));
+
+    expect(screen.queryByRole("slider")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /favorites/ }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Timer" })).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Play Rainy Apartment" }),
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: "Exit focus" })).toHaveFocus();
+
+    await user.click(
+      screen.getByRole("button", { name: "Play Rainy Apartment" }),
+    );
+
+    expect(
+      await screen.findByRole("button", { name: "Retry Rainy Apartment" }),
+    ).toBeVisible();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Audio could not be loaded",
+    );
   });
 });

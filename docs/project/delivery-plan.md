@@ -274,3 +274,180 @@ Les contrôles automatisés, le smoke local de production, la documentation de
 candidate, les appareils réels et les technologies d’assistance sont validés.
 Les mesures HTTPS post-déploiement, la Gate C et la création du tag `v0.2.0` ont
 été approuvées explicitement par le responsable du projet.
+
+## Lot 16 — Cadrage produit, UX et architecture 0.3
+
+**Statut : terminé et approuvé le 2026-08-11.**
+
+### Livrables
+
+- Exigences fonctionnelles et parcours critique du MVP 0.3.
+- UX des favoris, volumes persistants, timer, Focus Mode et réinitialisation.
+- ADR-0003 sur le stockage versionné et l’état éphémère de session.
+- Modèle V1, budgets, risques, stratégie de tests et checklist Gate D.
+- Découpage des Lots 17 à 21 sans implémentation anticipée.
+
+### Validation
+
+- Périmètre inclus/exclus et vocabulaire approuvés.
+- Sémantique du timer et contenu réellement persisté acceptés.
+- ADR-0003 acceptée avant création de la couche de préférences.
+- Aucun élément v1, backend, analytics ou média supplémentaire introduit.
+
+## Lot 17 — Socle de préférences locales
+
+**Statut : terminé le 2026-08-11.**
+
+### Livrables
+
+- Adaptateur `localStorage` V1 pur, validation, erreurs et reset.
+- Provider client minimal et hydratation sans incohérence serveur.
+- Tests corruption, versions, IDs obsolètes, quota et absence de stockage.
+
+### Validation
+
+- Aucun accès navigateur au rendu serveur ou à l’import.
+- Aucun contexte audio ou réseau déclenché par la lecture des préférences.
+- Snapshot borné, écritures regroupées et nettoyage des listeners.
+
+Le provider est monté au layout racine avec une projection des seuls IDs utiles.
+Seize tests ciblés couvrent SSR, validation, corruption, versions, IDs obsolètes,
+quota, reset, coalescence et flush. Un scénario navigateur injecte JSON corrompu
+et version inconnue avant un vrai rechargement sur les cinq profils. Aucun
+contrôle public n’est encore branché.
+
+## Lot 18 — Favoris et volumes persistants
+
+**Statut : terminé et validé le 2026-08-11.**
+
+### Livrables
+
+- Toggle favori dans le player et indicateur stable sur l’accueil.
+- Volumes par ambiance restaurés et reliés au moteur actif.
+- Dialogue Preferences et réinitialisation complète.
+
+### Validation
+
+- Ordre éditorial inchangé et aucun dashboard ajouté.
+- Navigation/rechargement conservent les valeurs valides.
+- Reset restaure données, UI et gains sans redémarrer l’audio.
+
+Le player expose un toggle favori secondaire avec `aria-pressed`. L’accueil
+réserve un marqueur textuel `Saved` sans modifier l’ordre éditorial. Les volumes
+du snapshot deviennent la source du player après hydratation et chaque mutation
+reste appliquée immédiatement au moteur actif. Le dialogue `Preferences`,
+disponible sur l’accueil et les players, explique le stockage local, signale la
+dégradation mémoire et supprime la clé complète lors du reset.
+
+La couverture automatisée atteint 103 tests unitaires/composants et 70 cas
+Playwright sur cinq profils. Le parcours dédié vérifie écriture coalescée,
+rechargement réel, marqueur d’accueil, dialogue accessible, suppression de la
+clé et retour au volume catalogue. La recette des favoris, des volumes restaurés
+et du reset a été validée sur desktop et mobile par le responsable du projet.
+
+## Lot 19 — Timer de session
+
+**Statut : terminé et validé le 2026-08-11.**
+
+### Livrables
+
+- Dialogue des cinq durées, état visible, remplacement et annulation.
+- Contrôleur à échéance absolue et reprise après throttling.
+- Fade-out final de cinq secondes puis Pause confirmée.
+
+### Validation
+
+- Lecture, pause, navigation, arrière-plan et délai fortement retardé testés.
+- Une seule échéance et aucune création audio avant Play.
+- Aucun son transitoire au retour d’un onglet après échéance.
+
+Le timer vit dans le provider de session des routes player et conserve un unique
+timestamp absolu `endsAt`. Il survit donc aux changements d’ambiance, mais son
+timeout et son état sont détruits à la sortie ou au rechargement. Le réveil est
+réévalué sur `visibilitychange` et `pageshow`. Le moteur expose seulement une
+intention de fade master : cinq secondes si le contexte joue réellement, ou une
+Pause immédiate lorsque le son est absent, suspendu ou déjà fermé.
+
+Le dialogue natif propose exactement les cinq durées approuvées, le remplacement
+et l’annulation. Le compte à rebours visuel est séparé des annonces polies. La
+couverture atteint 112 tests unitaires/composants et 80 cas Playwright sur cinq
+profils. Une horloge navigateur simulée confirme une échéance fortement retardée
+sans création d’`AudioContext`. La recette humaine du fade et des contrôles
+desktop/mobile a confirmé les durées, la navigation, l’annulation et la fin de
+session. La coupure volontaire en arrière-plan observée pendant cette recette a
+motivé le Lot 19b.
+
+## Lot 19b — Lecture en arrière-plan best effort
+
+**Statut : terminé et validé le 2026-08-11.**
+
+### Livrables
+
+- Lecture maintenue sur page masquée lorsque la plateforme l’autorise.
+- Fade du timer programmé à l’avance dans Web Audio puis réarmé après Play.
+- Dégradation vers Pause si une suspension système ne peut pas être reprise.
+- ADR-0004 et limites de la promesse produit documentées.
+
+### Validation
+
+- Aucun appel volontaire à `AudioContext.suspend()` au masquage.
+- Timer remplacé, annulé, pausé ou expiré sans automation master résiduelle.
+- Échéance évaluée avant reprise et aucun son transitoire après expiration.
+- Recette desktop, Android et iOS distinguant onglet, application et verrouillage.
+
+Le moteur conserve l’heure audio de fin du fade. Si JavaScript se réveille en
+retard, la session attend seulement la portion encore active ; si le fade est
+déjà terminé, Pause est confirmée immédiatement. Les plateformes qui refusent la
+reprise restent utilisables avec un nouveau geste Play explicite. La validation
+automatisée atteint 117 tests unitaires/composants et 85 cas Playwright sur cinq
+profils : 81 réussissent et les quatre skips WebKit connus restent inchangés.
+La recette réelle confirme la lecture de fond best effort et la récupération de
+session sur desktop et mobile.
+
+## Lot 20 — Focus Mode
+
+**Statut : terminé et validé le 2026-08-11.**
+
+### Livrables
+
+- Composition épurée, sortie visible, `Escape` et restauration du focus.
+- Maintien de Play/Pause, timer et erreurs récupérables.
+- Responsive, safe areas et mouvement réduit.
+
+### Validation
+
+- Aucun contrôle masqué encore focusable.
+- Parcours souris, clavier, toucher et lecteurs d’écran.
+- Changement d’ambiance et fin du timer sans issue cachée.
+
+Le mode est un état éphémère du layout player, indépendant de Web Audio et du
+stockage. L’entrée retire les zones secondaires du rendu et place le focus sur
+la sortie textuelle. Le bouton ou `Escape` restaure le déclencheur courant, avec
+Play/Pause comme repli si aucun déclencheur n’est disponible. La validation automatisée
+atteint 120 tests unitaires/composants et 90 cas Playwright sur cinq profils ; 86
+passent et les quatre skips WebKit historiques restent inchangés. La recette
+souris, clavier, toucher et responsive est validée sur desktop et mobile.
+
+## Lot 21 — Stabilisation 0.3
+
+**Statut : candidate technique préparée le 2026-08-11 ; Gate D en attente.**
+
+### Livrables
+
+- Matrice multi-navigateurs, appareils réels, accessibilité et stockage dégradé.
+- Mesures bundles, écritures, timers/listeners, Lighthouse et smoke production.
+- Documentation de release, rollback, candidate et Gate D.
+
+### Validation
+
+- Gate D approuvée sans défaut critique ou majeur.
+- Tag `v0.3.0` autorisé explicitement.
+
+La candidate `0.3.0` passe une installation verrouillée, 120 tests, la matrice
+Playwright complète en une seule exécution, les audits médias/dépendances, le
+smoke local enrichi et dix audits Lighthouse. Un ancien parcours Firefox a été
+stabilisé en attendant le DOM utile plutôt que l’événement `load` complet. Le
+rollback public 0.2 est validé avec une préférence V1 présente. La recette
+consolidée desktop/mobile, technologies d’assistance, texte agrandi et contraste
+élevé est validée le 2026-08-11 ; le risque Safari macOS résiduel est
+renouvelé. La CI de PR et les contrôles HTTPS post-déploiement restent requis.

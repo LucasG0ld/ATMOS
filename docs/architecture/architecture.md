@@ -106,7 +106,7 @@ capacités réseau annoncées.
 - état de contrôle : volumes demandés, play/pause ;
 - état moteur : idle, loading, ready, playing, paused, error ;
 - état UI : valeur révélée, menu ouvert ;
-- préférences persistées : seulement en 0.3.
+- préférences persistées : favoris et volumes uniquement à partir de 0.3.
 
 ## Frontière serveur/client
 
@@ -170,3 +170,34 @@ Le MVP utilise : erreurs console en développement, erreurs de build/test et con
 Ces évolutions doivent prolonger les contrats existants, pas être anticipées par des abstractions vides.
 
 Le cadrage 0.2 est détaillé dans l’[ADR-0002](decisions/0002-catalogue-transitions-and-preloading.md) : registre ordonné, session persistante limitée au player, un seul contexte audio avec deux bus et préchargement d’une cible maximum.
+
+Le cadrage 0.3 accepté est détaillé dans
+l’[ADR-0003](decisions/0003-local-preferences-timer-and-focus.md) : Context de
+préférences sans dépendance tierce, snapshot V1 validé, timer fondé sur une
+échéance absolue et Focus Mode éphémère dans la session du player.
+
+Depuis le Lot 20, `FocusModeProvider` est monté dans le layout `/atmosphere` à
+côté du provider audio. Il conserve uniquement l’état actif et la cible de retour
+du focus : aucune donnée n’est persistée et aucune API audio ou Fullscreen n’est
+appelée. `FocusModeSurface` expose la sortie dans la safe area, tandis que les
+zones secondaires ne sont plus rendues pendant le mode. Le provider survit aux
+changements de slug et disparaît à la sortie du layout player.
+
+Depuis le Lot 17, `features/preferences/preferences-storage.ts` isole parsing,
+validation, écriture et suppression. `PreferencesProvider`, monté dans le layout
+racine, reçoit seulement les IDs d’ambiances et de couches nécessaires à la
+validation. Il hydrate après montage, conserve un état mémoire si le stockage
+échoue et n’importe ni moteur audio ni média.
+
+Depuis le Lot 18, les contrôles et le catalogue consomment ce Context sans
+dupliquer le registre. Le player dérive ses gains du snapshot après hydratation,
+écrit les changements via le provider et réapplique les défauts au moteur actif
+lors du reset. Le catalogue ne fait qu’annoter les favoris et conserve son ordre.
+Le dialogue `Preferences` est une vue du même état et ne possède aucun stockage
+parallèle.
+
+Depuis le Lot 19, `AudioSessionProvider` possède également le timer éphémère. Un
+seul timeout métier vise un `endsAt` absolu et les réveils de page recalculent
+l’échéance depuis `Date.now()`. Le rendu du compte à rebours possède son propre
+rafraîchissement borné uniquement pendant un timer actif. Le moteur ne connaît ni
+l’horloge ni React : il sait seulement automatiser ou refuser un fade de fin.

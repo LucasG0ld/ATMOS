@@ -120,6 +120,76 @@ agrandi, le contraste élevé et les lecteurs d’écran desktop/mobile. Aucun d
 critique ou majeur n’a été signalé. Safari macOS réel reste le risque résiduel
 explicitement accepté pour cette release.
 
+## Matrice prévue pour le MVP 0.3
+
+Le Lot 16 ajoute les axes suivants sans réduire la matrice 0.2 :
+
+- adaptateur de préférences : absence, V1 valide, JSON invalide, version inconnue, IDs obsolètes, volumes hors bornes, quota et reset ;
+- hydratation : HTML serveur stable, préférence appliquée après montage et aucun audio/réseau déclenché ;
+- favoris/volumes : navigation entre quatre ambiances, rechargement et retour aux défauts ;
+- timer avec fausse horloge : cinq durées, remplacement, annulation, pause, navigation, `visibilitychange`, délai fortement retardé et fade final ;
+- lecture de fond : aucune suspension volontaire, automation Web Audio réarmée et refus de reprise ramené à Pause ;
+- Focus Mode : ordre clavier, éléments masqués, `Escape`, restauration du focus, erreur audio et fin du timer ;
+- E2E : stockage injecté avant chargement, rechargement réel, onglet masqué et absence de reprise sonore.
+
+Le temps restant visible n’est pas testé par attente réelle de 15 minutes :
+l’unitaire contrôle l’échéance avec horloge simulée et le navigateur valide une
+durée injectée courte réservée aux tests. La Gate D conserve une session manuelle
+longue et les appareils réels.
+
+Le Lot 17 porte la suite à 98 tests unitaires/composants. Ses 16 scénarios ciblés
+couvrent le schéma V1, les limites de confiance du stockage, le budget de 32 Kio,
+le rendu serveur sans accès navigateur, l’hydratation sans réécriture, les
+mutations en mémoire, la coalescence à 250 ms, le reset, le flush au démontage et
+l’absence de fetch ou d’`AudioContext`. La matrice Playwright passe à 65 cas : le
+nouveau scénario de stockage invalide réussit sur les cinq profils, conserve la
+valeur inconnue sans réécriture et confirme les volumes par défaut sans requête
+audio.
+
+Le Lot 18 porte la suite à 103 tests unitaires/composants et la matrice Playwright
+à 70 cas. Les nouveaux contrôles couvrent la restauration d’un volume, son
+application au moteur, le retour immédiat au défaut pendant une session active,
+le toggle `aria-pressed`, le marqueur `Saved`, l’ordre inchangé et le dialogue
+avec reset, retour du focus et dégradation mémoire. Le parcours E2E dédié passe
+sur les cinq profils avec un vrai rechargement et vérifie aussi la suppression de
+la clé. Quatre skips WebKit connus restent limités au décodage audio et à la
+politique de tabulation Safari.
+
+La recette manuelle du Lot 18 confirme également les favoris, les volumes
+distincts, leur restauration et le reset sur desktop et mobile.
+
+Le Lot 19 porte la suite à 112 tests unitaires/composants et la matrice Playwright
+à 80 cas. Les tests à horloge simulée couvrent les cinq durées, échéance absolue,
+remplacement, annulation, Pause, navigation, réveil de visibilité, fade de cinq
+secondes, priorité de Play et expiration sans contexte. Deux parcours navigateur
+passent sur les cinq profils : dialogue/navigation/rechargement sans requête
+audio, puis avance murale de quinze minutes en un saut sans création
+d’`AudioContext`. Le compte à rebours n’est jamais placé dans une région live.
+
+Le Lot 19b ajoute les cas d’automation anticipée, d’annulation/réarmement, de
+portion de fade restante, de suspension imposée par la plateforme et de refus de
+reprise. Le parcours navigateur vérifie sur les cinq profils qu’un masquage de
+page ne provoque aucun appel volontaire à `AudioContext.suspend()`. Les résultats
+automatisés portent la suite à 117 tests unitaires/composants et la matrice à 85
+cas Playwright : 81 passent et les quatre skips WebKit connus restent inchangés.
+Ils ne remplacent pas la recette sur desktop, Android et iOS réels.
+
+Le Lot 20 porte la suite à 120 tests unitaires/composants et la matrice à 90 cas
+Playwright. Les tests couvrent entrée et sortie, retrait des contrôles
+secondaires, focus initial, restauration, `Escape`, changement d’ambiance,
+erreur audio et timer arrivé à échéance. Le parcours Focus Mode et axe passe sur
+les cinq profils ; les quatre skips WebKit historiques restent inchangés. Le
+profil 320 px avec mouvement réduit confirme aussi la sortie visible et l’absence
+de débordement horizontal.
+
+Le Lot 21 rejoue la candidate après `npm ci`. Les 120 tests et la matrice de 90
+cas réussissent ; les quatre reports WebKit historiques restent explicites. Un
+timeout Firefox reproductible uniquement sous cinq workers provenait d’une
+attente `load` trop large sur un test de navigation : l’attente
+`DOMContentLoaded`, suffisante pour les assertions DOM, supprime la flake sans
+réduire les contrôles de médias couverts ailleurs. Le smoke 0.3 ajoute favoris,
+volume, timer et Focus Mode au parcours de quatre routes, transition audio et 404.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

@@ -1,0 +1,138 @@
+.trigger {
+  min-height: 2.75rem;
+  padding: 0;
+  color: var(--atmos-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  transition: color var(--duration-control) var(--ease-out);
+}
+
+.trigger:is(:hover, :focus-visible) {
+  color: var(--atmos-foreground);
+}
+
+.dialog {
+  width: min(calc(100% - var(--page-gutter) - var(--page-gutter)), 34rem);
+  max-width: none;
+  max-height: calc(100dvh - (2 * var(--page-gutter)));
+  padding: 0;
+  margin: auto;
+  color: var(--atmos-foreground);
+  background: color-mix(in srgb, var(--atmos-background) 94%, transparent);
+  border: 1px solid color-mix(in srgb, var(--atmos-foreground) 24%, transparent);
+  border-radius: var(--radius-medium);
+  box-shadow: 0 2rem 8rem rgb(0 0 0 / 38%);
+}
+
+.dialog::backdrop {
+  background: rgb(3 6 8 / 68%);
+  backdrop-filter: blur(0.35rem);
+}
+
+.panel {
+  padding: clamp(1.5rem, 5vw, 3rem);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  margin-bottom: clamp(2rem, 5vh, 3rem);
+}
+
+.title {
+  font-size: clamp(2rem, 7vw, 3.75rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.closeButton {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  color: var(--atmos-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--atmos-foreground) 24%, transparent);
+  border-radius: 999px;
+  transition:
+    color var(--duration-control) var(--ease-out),
+    border-color var(--duration-control) var(--ease-out);
+}
+
+.closeButton:is(:hover, :focus-visible) {
+  color: var(--atmos-foreground);
+  border-color: var(--atmos-foreground);
+}
+
+.content {
+  display: grid;
+  gap: var(--space-5);
+  color: var(--atmos-muted);
+}
+
+.summary {
+  color: var(--atmos-accent);
+}
+
+.notice {
+  padding-top: var(--space-5);
+  border-top: 1px solid
+    color-mix(in srgb, var(--atmos-foreground) 20%, transparent);
+}
+
+.footer {
+  display: grid;
+  gap: var(--space-3);
+  min-height: 5.75rem;
+  padding-top: clamp(2rem, 5vh, 3rem);
+  margin-top: clamp(2rem, 5vh, 3rem);
+  border-top: 1px solid
+    color-mix(in srgb, var(--atmos-foreground) 20%, transparent);
+}
+
+.resetButton {
+  justify-self: start;
+  min-height: 2.75rem;
+  padding: 0;
+  color: var(--atmos-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  transition: color var(--duration-control) var(--ease-out);
+}
+
+.resetButton:is(:hover, :focus-visible) {
+  color: var(--atmos-foreground);
+}
+
+.resetStatus {
+  min-height: 1.4em;
+  color: var(--atmos-accent);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 40rem) {
+  .dialog {
+    width: calc(100% - var(--safe-left) - var(--safe-left));
+    max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog::backdrop {
+    backdrop-filter: none;
+  }
+
+  .trigger,
+  .closeButton,
+  .resetButton {
+    transition-duration: 0ms;
+  }
+}

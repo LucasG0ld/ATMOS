@@ -25,6 +25,12 @@
   text-align: right;
 }
 
+.headerMeta {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
 .hero {
   align-self: center;
   max-width: 68rem;
@@ -87,10 +93,27 @@
 }
 
 .name {
-  display: block;
   font-size: clamp(1.5rem, 3.2vw, 3.25rem);
   line-height: 1;
   letter-spacing: -0.035em;
+}
+
+.nameRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3) var(--space-4);
+}
+
+.savedMarker {
+  color: var(--atmos-accent);
+  visibility: hidden;
+  opacity: 0;
+}
+
+.savedMarker[data-saved="true"] {
+  visibility: visible;
+  opacity: 1;
 }
 
 .description {
