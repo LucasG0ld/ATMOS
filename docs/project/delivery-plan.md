@@ -450,7 +450,8 @@ stabilisé en attendant le DOM utile plutôt que l’événement `load` complet.
 rollback public 0.2 est validé avec une préférence V1 présente. La recette
 consolidée desktop/mobile, technologies d’assistance, texte agrandi et contraste
 élevé est validée le 2026-08-11 ; le risque Safari macOS résiduel est
-renouvelé. La CI de PR et les contrôles HTTPS post-déploiement restent requis.
+renouvelé. La CI de PR et les contrôles HTTPS post-déploiement ont ensuite été
+validés avant la publication du tag `v0.3.0`.
 
 La PR #3 est fusionnée par Squash sur `main` au commit `71db4e7`. Les workflows
 `quality`, build et déploiement Pages réussissent. Le smoke HTTPS 0.3 valide
