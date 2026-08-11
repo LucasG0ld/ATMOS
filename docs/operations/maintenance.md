@@ -69,22 +69,23 @@ manuelles ci-dessous.
 
 ## Rollback
 
-Le dernier point de retour validé est le tag annoté `v0.1.0`, commit
-`889de88`. Pour un défaut critique après publication de 0.2 :
+Le dernier point de retour validé est le tag annoté `v0.2.0`, commit
+`4c9d186`. Pour un défaut critique pendant le développement ou après publication
+de 0.3 :
 
 1. suspendre toute nouvelle fusion ou exécution du workflow Pages ;
-2. relancer `Deploy GitHub Pages` avec la référence `v0.1.0` via
+2. relancer `Deploy GitHub Pages` avec la référence `v0.2.0` via
    `workflow_dispatch`, puis vérifier l’URL officielle avec un cache vide ;
-3. confirmer le retour de l’accueil, de Rainy Apartment, des trois couches audio
-   et de la 404 avec le parcours compatible 0.1 ;
+3. confirmer le catalogue, les quatre players, les transitions audio et la 404
+   avec le parcours compatible 0.2 ;
 4. ouvrir un correctif ou un revert revu vers `main` afin que son prochain
-   déploiement ne réintroduise pas 0.2 par inadvertance ;
+   déploiement ne réintroduise pas 0.3 par inadvertance ;
 5. consigner le défaut, son impact, l’heure du rollback et la décision de
    republication.
 
 Ne pas modifier manuellement les fichiers servis par Pages et ne pas déplacer le
-tag `v0.1.0`. ATMOS 0.2 ne crée aucune donnée utilisateur ni migration : ce
-rollback de code et d’actifs est réversible.
+tag `v0.2.0`. La version 0.2 ignore la clé `atmos.preferences` créée par 0.3 ; le
+rollback ne doit ni la lire, ni planter, ni tenter une migration descendante.
 
 ## Mises à jour
 
@@ -114,7 +115,7 @@ Le code, la documentation et la configuration versionnable vivent dans Git. Le M
 - Canal de sécurité : signalement privé de vulnérabilité GitHub actif.
 - Preuves de licence : registres versionnés dans `docs/operations/` et
   `ASSET_CREDITS.md` ; emplacement pérenne des originaux externes à confirmer.
-- Analytics : absentes du MVP 0.2 ; aucune conservation de données utilisateur.
+- Analytics : absentes ; le MVP 0.3 ne conserve localement que favoris et volumes.
 - Code : propriétaire, `UNLICENSED`, copyright LucasG0ld ; actifs tiers sous
   leurs licences respectives.
 - Exécution : Node.js 24 et npm 11, commandes réelles documentées dans le README.

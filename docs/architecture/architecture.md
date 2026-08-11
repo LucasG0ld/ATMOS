@@ -106,7 +106,7 @@ capacités réseau annoncées.
 - état de contrôle : volumes demandés, play/pause ;
 - état moteur : idle, loading, ready, playing, paused, error ;
 - état UI : valeur révélée, menu ouvert ;
-- préférences persistées : seulement en 0.3.
+- préférences persistées : favoris et volumes uniquement à partir de 0.3.
 
 ## Frontière serveur/client
 
@@ -170,3 +170,8 @@ Le MVP utilise : erreurs console en développement, erreurs de build/test et con
 Ces évolutions doivent prolonger les contrats existants, pas être anticipées par des abstractions vides.
 
 Le cadrage 0.2 est détaillé dans l’[ADR-0002](decisions/0002-catalogue-transitions-and-preloading.md) : registre ordonné, session persistante limitée au player, un seul contexte audio avec deux bus et préchargement d’une cible maximum.
+
+Le cadrage 0.3 proposé est détaillé dans
+l’[ADR-0003](decisions/0003-local-preferences-timer-and-focus.md) : Context de
+préférences sans dépendance tierce, snapshot V1 validé, timer fondé sur une
+échéance absolue et Focus Mode éphémère dans la session du player.

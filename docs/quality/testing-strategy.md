@@ -120,6 +120,22 @@ agrandi, le contraste élevé et les lecteurs d’écran desktop/mobile. Aucun d
 critique ou majeur n’a été signalé. Safari macOS réel reste le risque résiduel
 explicitement accepté pour cette release.
 
+## Matrice prévue pour le MVP 0.3
+
+Le Lot 16 ajoute les axes suivants sans réduire la matrice 0.2 :
+
+- adaptateur de préférences : absence, V1 valide, JSON invalide, version inconnue, IDs obsolètes, volumes hors bornes, quota et reset ;
+- hydratation : HTML serveur stable, préférence appliquée après montage et aucun audio/réseau déclenché ;
+- favoris/volumes : navigation entre quatre ambiances, rechargement et retour aux défauts ;
+- timer avec fausse horloge : cinq durées, remplacement, annulation, pause, navigation, `visibilitychange`, délai fortement retardé et fade final ;
+- Focus Mode : ordre clavier, éléments masqués, `Escape`, restauration du focus, erreur audio et fin du timer ;
+- E2E : stockage injecté avant chargement, rechargement réel, onglet masqué et absence de reprise sonore.
+
+Le temps restant visible n’est pas testé par attente réelle de 15 minutes :
+l’unitaire contrôle l’échéance avec horloge simulée et le navigateur valide une
+durée injectée courte réservée aux tests. La Gate D conserve une session manuelle
+longue et les appareils réels.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

@@ -117,6 +117,20 @@ Une couche cible en échec est désactivée sans bloquer les autres. Un échec t
 ferme le master, conserve l’URL et la scène demandées, annonce l’erreur et expose
 Retry. Quitter `/atmosphere/*` détruit le contexte et tous les bus.
 
+## Fin de timer 0.3 proposée
+
+Le contrôleur de session, pas le moteur, possède l’échéance du timer. Lorsqu’elle
+est atteinte, il fixe d’abord l’intention utilisateur à Pause afin qu’une reprise
+de visibilité ne rouvre pas le master. Il demande ensuite au moteur un fade-out
+fonctionnel de cinq secondes, puis confirme l’état Pause.
+
+Une échéance sans `AudioContext` se termine sans en créer. Remplacer ou annuler
+un timer ne planifie aucune automation audio. Si le contexte est suspendu ou le
+master déjà silencieux, la session confirme Pause sans attendre un fade
+inaudible. Une action Play explicite pendant le fade l’annule et reprend avec la
+rampe normale. Le moteur n’expose pas de compteur et reste indépendant de
+`Date.now()`, de React et de `localStorage`.
+
 ## Nettoyage
 
 Au démontage, changement annulé ou erreur :

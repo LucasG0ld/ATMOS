@@ -7,6 +7,7 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [Vision et périmètre](product/vision-and-scope.md) — problème, promesse, utilisateurs, limites et indicateurs.
 - [Spécification du MVP](product/mvp-requirements.md) — exigences vérifiables et critères d’acceptation.
 - [Spécification du MVP 0.2](product/mvp-requirements-0.2.md) — catalogue, transitions et préchargement.
+- [Spécification du MVP 0.3](product/mvp-requirements-0.3.md) — préférences locales, timer et Focus Mode.
 - [Matrice des ambiances 0.2](product/atmosphere-matrix-0.2.md) — identités et besoins médias.
 - [Roadmap](product/roadmap.md) — progression 0.1, 0.2, 0.3 et version 1.
 
@@ -15,6 +16,7 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [Spécification UX](design/ux-specification.md) — parcours, états et comportements responsive.
 - [Système de design](design/design-system.md) — fondations visuelles, tokens, mouvement et contenu.
 - [UX du catalogue 0.2](design/catalogue-ux-0.2.md) — accueil, previews et navigation interne.
+- [UX de la session personnelle 0.3](design/personal-session-ux-0.3.md) — favoris, timer, Focus Mode et préférences.
 
 ## Architecture
 
@@ -23,6 +25,7 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [Moteur audio](architecture/audio-engine.md) — cycle de vie Web Audio, transitions et erreurs.
 - [ADR-0001 : décisions fondatrices](architecture/decisions/0001-foundational-architecture.md).
 - [ADR-0002 : catalogue, transitions et préchargement](architecture/decisions/0002-catalogue-transitions-and-preloading.md).
+- [ADR-0003 : préférences locales, timer et Focus Mode](architecture/decisions/0003-local-preferences-timer-and-focus.md) — proposé au Lot 16.
 - [Modèle d’ADR](architecture/decisions/0000-template.md).
 
 ## Projet et qualité
@@ -38,7 +41,8 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [Checklist de release 0.1](project/release-checklist-0.1.md).
 - [Fiche de recette manuelle Gate B](project/gate-b-manual-test.md).
 - [Checklist Gate C — 0.2](project/gate-c-checklist-0.2.md).
-- [Candidate de release 0.2](project/release-candidate-0.2.md) — résultats automatisés, matrice et validations externes restantes.
+- [Candidate de release 0.2](project/release-candidate-0.2.md) — résultats automatisés, recette et validation de production.
+- [Checklist Gate D — 0.3](project/gate-d-checklist-0.3.md).
 
 ## Exploitation et conformité
 

@@ -246,3 +246,25 @@ scores de 99, 100 et 98, des LCP de 1,96 s, 1,66 s et 1,66 s, et des TBT de
 aucune régression stable supérieure à 10 %. Rainy Apartment améliore le LCP et
 le TBT mobiles face au player 0.1 ; les trois nouveaux players respectent les
 cibles. Les rapports JSON restent locaux dans `.cache/lighthouse-production`.
+
+## Budgets du MVP 0.3
+
+Le MVP 0.3 n’ajoute aucun média. Les plafonds bloquants 0.2 restent applicables,
+avec des contraintes incrémentales pour éviter qu’une petite persistance ne
+justifie un store ou une bibliothèque disproportionnée.
+
+| Ressource ou activité                | Cible 0.3                        | Plafond bloquant   |
+| ------------------------------------ | -------------------------------- | ------------------ |
+| JavaScript accueil attribuable à 0.3 | ≤ 5 Kio gzip supplémentaires     | 8 Kio              |
+| JavaScript player attribuable à 0.3  | ≤ 10 Kio gzip supplémentaires    | 15 Kio             |
+| CSS attribuable à 0.3                | ≤ 4 Kio gzip supplémentaires     | 8 Kio              |
+| Snapshot `atmos.preferences`         | < 8 Kio pour le catalogue actuel | 32 Kio             |
+| Écritures pendant un drag continu    | regroupées après interaction     | ≤ 5 par seconde    |
+| Scheduler sans timer                 | aucun                            | 0 timeout/interval |
+| Scheduler avec timer                 | une échéance + rendu borné       | 1 échéance métier  |
+
+- Aucun package produit supplémentaire n’est attendu.
+- La lecture du stockage ne déclenche ni image, ni audio, ni contexte Web Audio.
+- Les listeners `visibilitychange`/`pageshow` et timeouts sont nettoyés au démontage.
+- Dix cycles timer/focus et vingt changements de volumes ne doivent pas produire de croissance mémoire continue.
+- Lighthouse est rejoué sur l’accueil et les quatre players avant Gate D.

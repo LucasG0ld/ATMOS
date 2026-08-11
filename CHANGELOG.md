@@ -2,6 +2,14 @@
 
 Tous les changements notables du projet sont consignés ici. Le format s’inspire de Keep a Changelog et le projet utilisera le versionnage sémantique à partir de sa première version publiée.
 
+## Non publié
+
+### Ajouté
+
+- Cadrage du MVP 0.3 : préférences locales versionnées, favoris, volumes persistants, timer et Focus Mode.
+- ADR-0003 proposé, modèle de stockage V1, budgets 0.3, risques associés et checklist Gate D.
+- Plan de réalisation des Lots 16 à 21 sans implémentation anticipée.
+
 ## [0.2.0] — 2026-08-11
 
 ### Ajouté

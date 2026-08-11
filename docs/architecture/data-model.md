@@ -155,9 +155,10 @@ type PlayerState = {
 
 Éviter plusieurs booléens tels que `isLoading`, `isPlaying` et `hasError` capables de former des combinaisons impossibles.
 
-## Persistance future
+## Persistance 0.3 proposée
 
-À partir de 0.3, utiliser une clé versionnée unique :
+Le Lot 16 propose une clé stable unique `atmos.preferences`, dont la valeur porte
+sa propre version :
 
 ```ts
 type StoredPreferencesV1 = {
@@ -168,7 +169,24 @@ type StoredPreferencesV1 = {
 ```
 
 - Lire dans un `try/catch`, valider puis appliquer.
-- Limiter taille et fréquence des écritures.
-- Ne jamais stocker état de chargement, erreur ou timer actif sans décision précise.
+- Filtrer les IDs inconnus et borner chaque volume entre 0 et 1.
+- Limiter le snapshot à 32 Kio et regrouper les écritures après interaction.
+- Ne jamais stocker état de chargement, erreur, Play/Pause, Focus Mode ou timer actif.
 - Une migration transforme une version connue ; une version inconnue est ignorée sans crash.
 - Une suppression d’ambiance ne doit pas rendre le stockage illisible.
+- `Reset saved preferences` supprime la clé entière et restaure les défauts du catalogue.
+
+Le modèle éphémère du timer reste dans la session du player :
+
+```ts
+type SessionTimer = {
+  endsAt: number;
+  durationMinutes: 15 | 30 | 45 | 60 | 90;
+  status: "running" | "fading";
+};
+```
+
+`endsAt` est une échéance absolue issue de `Date.now()`. Le restant n’est jamais
+la source de vérité et peut être recalculé après throttling ou changement de
+visibilité. Le timer et l’état `focusMode` sont détruits en quittant les routes
+du player.

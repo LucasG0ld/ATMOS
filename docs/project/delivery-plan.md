@@ -274,3 +274,101 @@ Les contrôles automatisés, le smoke local de production, la documentation de
 candidate, les appareils réels et les technologies d’assistance sont validés.
 Les mesures HTTPS post-déploiement, la Gate C et la création du tag `v0.2.0` ont
 été approuvées explicitement par le responsable du projet.
+
+## Lot 16 — Cadrage produit, UX et architecture 0.3
+
+**Statut : cadrage proposé le 2026-08-11 ; approbation requise avant le Lot 17.**
+
+### Livrables
+
+- Exigences fonctionnelles et parcours critique du MVP 0.3.
+- UX des favoris, volumes persistants, timer, Focus Mode et réinitialisation.
+- ADR-0003 sur le stockage versionné et l’état éphémère de session.
+- Modèle V1, budgets, risques, stratégie de tests et checklist Gate D.
+- Découpage des Lots 17 à 21 sans implémentation anticipée.
+
+### Validation
+
+- Périmètre inclus/exclus et vocabulaire approuvés.
+- Sémantique du timer et contenu réellement persisté acceptés.
+- ADR-0003 acceptée avant création de la couche de préférences.
+- Aucun élément v1, backend, analytics ou média supplémentaire introduit.
+
+## Lot 17 — Socle de préférences locales
+
+**Statut : planifié après approbation du Lot 16.**
+
+### Livrables
+
+- Adaptateur `localStorage` V1 pur, validation, erreurs et reset.
+- Provider client minimal et hydratation sans incohérence serveur.
+- Tests corruption, versions, IDs obsolètes, quota et absence de stockage.
+
+### Validation
+
+- Aucun accès navigateur au rendu serveur ou à l’import.
+- Aucun contexte audio ou réseau déclenché par la lecture des préférences.
+- Snapshot borné, écritures regroupées et nettoyage des listeners.
+
+## Lot 18 — Favoris et volumes persistants
+
+**Statut : planifié.**
+
+### Livrables
+
+- Toggle favori dans le player et indicateur stable sur l’accueil.
+- Volumes par ambiance restaurés et reliés au moteur actif.
+- Dialogue Preferences et réinitialisation complète.
+
+### Validation
+
+- Ordre éditorial inchangé et aucun dashboard ajouté.
+- Navigation/rechargement conservent les valeurs valides.
+- Reset restaure données, UI et gains sans redémarrer l’audio.
+
+## Lot 19 — Timer de session
+
+**Statut : planifié.**
+
+### Livrables
+
+- Dialogue des cinq durées, état visible, remplacement et annulation.
+- Contrôleur à échéance absolue et reprise après throttling.
+- Fade-out final de cinq secondes puis Pause confirmée.
+
+### Validation
+
+- Lecture, pause, navigation, arrière-plan et délai fortement retardé testés.
+- Une seule échéance et aucune création audio avant Play.
+- Aucun son transitoire au retour d’un onglet après échéance.
+
+## Lot 20 — Focus Mode
+
+**Statut : planifié.**
+
+### Livrables
+
+- Composition épurée, sortie visible, `Escape` et restauration du focus.
+- Maintien de Play/Pause, timer et erreurs récupérables.
+- Responsive, safe areas et mouvement réduit.
+
+### Validation
+
+- Aucun contrôle masqué encore focusable.
+- Parcours souris, clavier, toucher et lecteurs d’écran.
+- Changement d’ambiance et fin du timer sans issue cachée.
+
+## Lot 21 — Stabilisation 0.3
+
+**Statut : planifié.**
+
+### Livrables
+
+- Matrice multi-navigateurs, appareils réels, accessibilité et stockage dégradé.
+- Mesures bundles, écritures, timers/listeners, Lighthouse et smoke production.
+- Documentation de release, rollback, candidate et Gate D.
+
+### Validation
+
+- Gate D approuvée sans défaut critique ou majeur.
+- Tag `v0.3.0` autorisé explicitement.

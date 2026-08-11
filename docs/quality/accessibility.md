@@ -81,3 +81,13 @@ Le 2026-08-11, la candidate 0.2 a été validée avec lecteurs d’écran deskto
 mobile, zoom navigateur 200 %, texte agrandi et contraste élevé. Les parcours
 desktop, Chrome Android réel et Safari iOS réel sont fonctionnels sans problème
 signalé. Le mouvement réduit et axe restent couverts par la matrice automatisée.
+
+## Session personnelle 0.3
+
+- Un favori est un bouton toggle avec nom dynamique et `aria-pressed` ; son état ne dépend pas de l’icône seule.
+- Le dialogue Timer utilise un titre, un bouton de fermeture et une restauration du focus éprouvés.
+- Le compte à rebours n’est pas une région live actualisée chaque seconde ; seules activation, annulation et fin sont annoncées poliment.
+- Focus Mode retire les contrôles secondaires de la tabulation et conserve toujours `Exit focus`, Play/Pause, timer et erreurs.
+- `Escape` quitte Focus Mode sans intercepter les raccourcis d’une technologie d’assistance hors du contexte de page.
+- La réinitialisation des préférences annonce une confirmation unique et ne vole pas le focus.
+- Une erreur de stockage n’empêche jamais l’usage en mémoire du player.

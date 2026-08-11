@@ -9,7 +9,7 @@ Cette matrice permet de retrouver où chaque thème du brief initial devient une
 | 7–8, 16, 21–23, 41 | accueil, player, horloge, navigation, layouts                  | [Spécification UX](../design/ux-specification.md)                                                                                                                              |
 | 9–11               | layers, mixer et sliders                                       | [Moteur audio](../architecture/audio-engine.md) et [MVP](../product/mvp-requirements.md)                                                                                       |
 | 12–15, 28, 40      | mouvement, transitions, background, grain, thème               | [Système de design](../design/design-system.md) et [Spécification UX](../design/ux-specification.md)                                                                           |
-| 17–20              | Focus Mode, timer, favoris, mixes                              | [Roadmap](../product/roadmap.md)                                                                                                                                               |
+| 17–20              | Focus Mode, timer, favoris, mixes                              | [MVP 0.3](../product/mvp-requirements-0.3.md), [UX 0.3](../design/personal-session-ux-0.3.md) et [Roadmap](../product/roadmap.md)                                              |
 | 24–27              | composants, données, état, stack                               | [Architecture](../architecture/architecture.md), [Modèle de données](../architecture/data-model.md) et [ADR-0001](../architecture/decisions/0001-foundational-architecture.md) |
 | 29                 | responsive                                                     | [Spécification UX](../design/ux-specification.md) et [Définition de terminé](definition-of-done.md)                                                                            |
 | 30                 | accessibilité                                                  | [Référentiel d’accessibilité](../quality/accessibility.md)                                                                                                                     |
@@ -24,6 +24,12 @@ Pour le MVP 0.2, les sections catalogue, navigation, transitions et performance
 sont précisées par la [spécification 0.2](../product/mvp-requirements-0.2.md), la
 [matrice des ambiances](../product/atmosphere-matrix-0.2.md), l’[UX catalogue](../design/catalogue-ux-0.2.md)
 et l’[ADR-0002](../architecture/decisions/0002-catalogue-transitions-and-preloading.md).
+
+Pour le MVP 0.3, favoris, volumes, timer, Focus Mode et récupération du stockage
+sont précisés par la [spécification 0.3](../product/mvp-requirements-0.3.md),
+l’[UX de session personnelle](../design/personal-session-ux-0.3.md),
+l’[ADR-0003 proposé](../architecture/decisions/0003-local-preferences-timer-and-focus.md)
+et la [Gate D](gate-d-checklist-0.3.md).
 
 ## Éléments ajoutés pour rendre le projet maintenable
 
@@ -43,3 +49,4 @@ Le brief n’explicite pas entièrement certains besoins de livraison. Ils sont 
 - Préchargement et performance : implémentation de l’ADR-0002 au Lot 14, avec une cible bornée, politique réseau, cache compressé, annulation et mesures reproductibles.
 - Licence du code source : code propriétaire `UNLICENSED`, copyright LucasG0ld et licences des médias conservées séparément.
 - Analytics : absentes par défaut, décision de confidentialité préalable obligatoire.
+- Reprise du timer, synchronisation multi-onglets et mixes : explicitement exclus du MVP 0.3 ; réévaluation seulement après usage démontré.
