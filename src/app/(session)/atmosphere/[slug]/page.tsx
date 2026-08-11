@@ -108,6 +108,12 @@ export default async function AtmospherePage({ params }: AtmospherePageProps) {
                 <p className={`text-body ${styles.description}`}>
                   {atmosphere.description}
                 </p>
+                <Link
+                  className={`text-label ${styles.composeLink}`}
+                  href={`/compose?scene=${encodeURIComponent(atmosphere.slug)}`}
+                >
+                  Create a mix
+                </Link>
               </FocusModeSecondary>
             </div>
 

@@ -70,7 +70,7 @@ et volumes sont persistés ; aucune donnée n’est synchronisée ou transmise.
 
 ## Version 1 — Composition
 
-**Statut : cadrage et ADR-0005 approuvés ; Lot 23 terminé le 2026-08-11.**
+**Statut : cadrage et ADR-0005 approuvés ; Lot 24 implémenté le 2026-08-12, recette visuelle en attente.**
 
 **Résultat :** l’utilisateur crée et sauvegarde localement ses propres mixes.
 

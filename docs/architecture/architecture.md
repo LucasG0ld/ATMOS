@@ -88,11 +88,12 @@ Ne pas créer tous les dossiers à vide. Une frontière apparaît lorsqu’un pr
 
 ### État
 
-Depuis le Lot 13, un Context ciblé dans `app/atmosphere/layout.tsx` conserve
-l’intention de lecture et l’orchestrateur audio pendant les changements de slug.
-Il est détruit dès que l’utilisateur quitte les routes du player. Zustand n’est
-introduit que si les interactions futures rendent ce Context objectivement
-difficile à maintenir.
+Depuis le Lot 24, le route group `app/(session)/layout.tsx` porte le Context de
+session pour les players et `/compose`. Il conserve l’intention de lecture et
+l’orchestrateur audio pendant les changements internes, puis les détruit lorsque
+l’utilisateur quitte cette frontière. Le compositeur reste un client ciblé sous
+une page statique ; Zustand n’est introduit que si les interactions futures
+rendent ce Context objectivement difficile à maintenir.
 
 Le Lot 14 isole les décisions d’anticipation dans
 `features/preloading/media-preloader.ts`. L’accueil ne prépare qu’un visuel

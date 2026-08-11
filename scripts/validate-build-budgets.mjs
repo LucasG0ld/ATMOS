@@ -18,11 +18,20 @@ const routes = [
   {
     label: "Player",
     manifestPath:
-      "server/app/atmosphere/[slug]/page_client-reference-manifest.js",
-    manifestKey: "/atmosphere/[slug]/page",
-    entryKey: "[project]/src/app/atmosphere/[slug]/page",
+      "server/app/(session)/atmosphere/[slug]/page_client-reference-manifest.js",
+    manifestKey: "/(session)/atmosphere/[slug]/page",
+    entryKey: "[project]/src/app/(session)/atmosphere/[slug]/page",
     javascriptBudget: 140 * 1024,
     cssBudget: 60 * 1024,
+  },
+  {
+    label: "Composer",
+    manifestPath:
+      "server/app/(session)/compose/page_client-reference-manifest.js",
+    manifestKey: "/(session)/compose/page",
+    entryKey: "[project]/src/app/(session)/compose/page",
+    javascriptBudget: 180 * 1024,
+    cssBudget: 70 * 1024,
   },
 ];
 

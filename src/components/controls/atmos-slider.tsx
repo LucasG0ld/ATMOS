@@ -10,6 +10,7 @@ type SliderCustomProperties = {
 };
 
 type AtmosSliderProps = {
+  accessibleLabel?: string;
   disabled?: boolean;
   label: string;
   value: number;
@@ -17,6 +18,7 @@ type AtmosSliderProps = {
 };
 
 export function AtmosSlider({
+  accessibleLabel,
   disabled = false,
   label,
   value,
@@ -43,6 +45,7 @@ export function AtmosSlider({
         </output>
       </div>
       <input
+        aria-label={accessibleLabel}
         aria-valuetext={`${normalizedValue}%`}
         className={styles.range}
         disabled={disabled}

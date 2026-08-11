@@ -519,7 +519,7 @@ attendent ensuite explicitement les contrôles et la matrice complète est verte
 
 ## Lot 24 — Fondations visuelles du compositeur
 
-**Statut : planifié.**
+**Statut : implémenté le 2026-08-12 ; validation visuelle utilisateur en attente.**
 
 ### Livrables
 
@@ -532,6 +532,28 @@ attendent ensuite explicitement les contrôles et la matrice complète est verte
 - Parcours complet simulé au clavier, toucher et zoom 200 %.
 - Aucune requête audio avant Play et aucun dashboard visuel.
 - Dialogues et navigation restaurent le focus.
+
+La route statique `/compose` partage désormais la frontière de session des
+players via le route group `(session)`. L’entrée `Create a mix` transmet la scène
+d’origine, avec repli sûr vers Rainy Apartment. Le brouillon affiche trois
+couches initiales, leurs origines et leurs volumes persistés, puis permet
+d’ajouter ou retirer des sons du registre dans la limite de quatre et sans
+descendre sous une couche.
+
+La bibliothèque est un dialogue natif regroupé par ambiance. Les sons déjà
+présents et les ajouts au-delà de la limite sont désactivés explicitement ; la
+fermeture restaure le focus et les changements sont annoncés. Les actions Play
+et Save restent visibles mais indisponibles avec une explication, car le moteur
+live et la sauvegarde relèvent respectivement des Lots 25 et 26. Aucun chargement
+audio, fetch ou `AudioContext` n’est déclenché par ce lot.
+
+La couverture atteint 136 tests unitaires/composants sur 25 fichiers et la
+matrice Playwright 100 cas : 96 réussissent et les quatre reports WebKit
+historiques restent inchangés. Le parcours compositeur, l’ordre clavier et la
+largeur 320 px passent sur les cinq profils. Le build statique, les types, le
+lint, l’audit, les actifs et les budgets passent ; `/compose` mesure 20,9 Kio de
+JavaScript gzip et 9,2 Kio de CSS. La recette manuelle desktop, mobile et zoom
+200 % reste la dernière validation du lot.
 
 ## Lot 25 — Moteur de composition live
 

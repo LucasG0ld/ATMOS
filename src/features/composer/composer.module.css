@@ -1,0 +1,370 @@
+.frame {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(2.5rem, 7vh, 6rem);
+}
+
+.header,
+.backLink,
+.playButton,
+.composerHeader,
+.layerControls,
+.actions,
+.addButton,
+.dialogHeader,
+.soundOption {
+  display: flex;
+  align-items: center;
+}
+
+.header,
+.composerHeader,
+.dialogHeader,
+.soundOption {
+  justify-content: space-between;
+}
+
+.header {
+  gap: var(--space-6);
+}
+
+.backLink {
+  min-height: 2.75rem;
+  gap: var(--space-3);
+  color: var(--atmos-muted);
+  transition: color var(--duration-control) var(--ease-out);
+}
+
+.backLink:is(:hover, :focus-visible) {
+  color: var(--atmos-foreground);
+}
+
+.stage {
+  align-self: center;
+  display: grid;
+  grid-template-columns: minmax(18rem, 1fr) minmax(20rem, 28rem);
+  gap: clamp(3rem, 8vw, 9rem);
+  width: min(100%, 82rem);
+  margin-inline: auto;
+}
+
+.editorial {
+  align-self: center;
+  min-width: 0;
+}
+
+.eyebrow,
+.sectionLabel,
+.dirtyState,
+.groupTitle {
+  color: var(--atmos-accent);
+}
+
+.eyebrow {
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  max-width: 8ch;
+  font-size: clamp(3.25rem, 7vw, 7.5rem);
+}
+
+.introduction {
+  max-width: 31rem;
+  margin-top: var(--space-8);
+  color: var(--atmos-muted);
+}
+
+.playButton {
+  min-height: 3.25rem;
+  padding: 0 var(--space-6);
+  margin-top: var(--space-8);
+  gap: var(--space-3);
+  color: var(--atmos-background);
+  cursor: not-allowed;
+  background: var(--atmos-foreground);
+  border: 0;
+  border-radius: 999px;
+  opacity: 0.7;
+}
+
+.availabilityNote,
+.requirement,
+.announcement,
+.layerCount,
+.origin,
+.optionState {
+  color: var(--atmos-muted);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.availabilityNote {
+  max-width: 24rem;
+  margin-top: var(--space-3);
+}
+
+.composer {
+  align-self: center;
+  min-width: 0;
+  padding-top: var(--space-6);
+  border-top: 1px solid color-mix(in srgb, var(--atmos-muted) 35%, transparent);
+}
+
+.composerHeader {
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.layerCount {
+  margin-top: var(--space-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.dirtyState {
+  text-align: right;
+}
+
+.layers,
+.libraryList {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.layers {
+  display: grid;
+  margin-top: var(--space-6);
+}
+
+.layer {
+  padding-block: var(--space-4);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--atmos-muted) 24%, transparent);
+}
+
+.origin {
+  margin-bottom: var(--space-1);
+}
+
+.layerControls {
+  align-items: end;
+  gap: var(--space-4);
+}
+
+.layerControls > :first-child {
+  flex: 1;
+}
+
+.removeButton,
+.closeButton {
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  min-width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  color: var(--atmos-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  transition:
+    color var(--duration-control) var(--ease-out),
+    background-color var(--duration-control) var(--ease-out);
+}
+
+.removeButton:is(:hover, :focus-visible),
+.closeButton:is(:hover, :focus-visible) {
+  color: var(--atmos-foreground);
+  background: color-mix(in srgb, var(--atmos-surface) 88%, transparent);
+}
+
+.removeButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+
+.requirement {
+  margin-top: var(--space-3);
+}
+
+.actions {
+  justify-content: space-between;
+  margin-top: var(--space-6);
+  gap: var(--space-4);
+}
+
+.addButton,
+.saveButton {
+  min-height: 2.75rem;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.addButton {
+  gap: var(--space-2);
+  color: var(--atmos-foreground);
+}
+
+.saveButton {
+  color: var(--atmos-accent);
+}
+
+.saveButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.announcement {
+  min-height: 1.25rem;
+  margin-top: var(--space-4);
+}
+
+.dialog {
+  width: min(calc(100% - 2rem), 42rem);
+  max-height: min(46rem, calc(100dvh - 2rem));
+  padding: 0;
+  color: var(--atmos-foreground);
+  background: color-mix(in srgb, var(--atmos-background) 94%, black);
+  border: 1px solid color-mix(in srgb, var(--atmos-muted) 32%, transparent);
+  border-radius: var(--radius-medium);
+  box-shadow: 0 2rem 6rem rgb(0 0 0 / 45%);
+}
+
+.dialog::backdrop {
+  background: rgb(2 6 10 / 72%);
+  backdrop-filter: blur(5px);
+}
+
+.dialogPanel {
+  max-height: inherit;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  overflow-y: auto;
+}
+
+.dialogHeader {
+  align-items: flex-start;
+  gap: var(--space-6);
+}
+
+.dialogTitle {
+  margin-top: var(--space-2);
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+}
+
+.dialogDescription {
+  max-width: 34rem;
+  margin-top: var(--space-6);
+  color: var(--atmos-muted);
+}
+
+.libraryGroups {
+  display: grid;
+  gap: var(--space-8);
+  margin-top: var(--space-8);
+}
+
+.groupTitle {
+  margin-bottom: var(--space-3);
+}
+
+.libraryList {
+  border-top: 1px solid color-mix(in srgb, var(--atmos-muted) 24%, transparent);
+}
+
+.soundOption {
+  width: 100%;
+  min-height: 3rem;
+  padding: var(--space-3) 0;
+  color: var(--atmos-foreground);
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--atmos-muted) 24%, transparent);
+}
+
+.soundOption:disabled {
+  cursor: not-allowed;
+  opacity: 0.46;
+}
+
+.optionState {
+  color: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+@media (max-width: 48rem) {
+  .frame {
+    gap: clamp(2.5rem, 6vh, 4rem);
+  }
+
+  .stage {
+    align-self: end;
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+  }
+
+  .title {
+    max-width: 9ch;
+  }
+
+  .dialog {
+    width: 100%;
+    max-width: none;
+    max-height: 100dvh;
+    margin: 0;
+    border-width: 0;
+    border-radius: 0;
+  }
+
+  .dialogPanel {
+    min-height: 100dvh;
+    padding-block: var(--safe-top) var(--safe-bottom);
+    padding-inline: var(--safe-left) var(--safe-right);
+  }
+}
+
+@media (max-width: 24rem) {
+  .header {
+    align-items: flex-start;
+  }
+
+  .backLink span {
+    max-width: 7rem;
+  }
+
+  .actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .composer,
+  .layer,
+  .dialog,
+  .libraryList,
+  .soundOption {
+    border-color: var(--atmos-muted);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backLink,
+  .removeButton,
+  .closeButton {
+    transition-duration: 0ms;
+  }
+
+  .dialog::backdrop {
+    backdrop-filter: none;
+  }
+}

@@ -15,6 +15,12 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
   quatre couches, 20 mixes et 128 Kio.
 - Opérations locales de création, mise à jour et suppression des mixes dans le
   provider de préférences, sans effet audio ou réseau.
+- Route statique `/compose` partageant la session des players et entrée
+  `Create a mix` depuis chaque ambiance.
+- Brouillon visuel d’une à quatre couches avec volumes, origine de chaque son,
+  bibliothèque accessible, annonces et restauration du focus.
+- États explicites du compositeur avant moteur live et sauvegarde, sans requête
+  audio, ainsi que couverture multi-navigateurs et responsive à 320 px.
 
 ## [0.3.0] — 2026-08-11
 

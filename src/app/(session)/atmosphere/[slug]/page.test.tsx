@@ -26,6 +26,10 @@ describe("AtmospherePage", () => {
     expect(
       screen.getByRole("link", { name: "Back to atmospheres" }),
     ).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: "Create a mix" })).toHaveAttribute(
+      "href",
+      "/compose?scene=rainy-apartment",
+    );
     expect(
       screen.getByRole("group", { name: "Sound layers" }),
     ).toBeInTheDocument();

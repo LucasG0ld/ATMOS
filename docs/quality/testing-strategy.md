@@ -202,6 +202,16 @@ historiques restent inchangés. Un `page.goto` Firefox de lecture en arrière-pl
 attend désormais `DOMContentLoaded` plutôt que tous les médias ; les assertions
 fonctionnelles explicites restent identiques et l’exécution consolidée est verte.
 
+Le Lot 24 porte la suite à 136 tests unitaires/composants sur 25 fichiers et la
+matrice à 100 cas. Les tests du compositeur vérifient la scène d’origine, les
+volumes restaurés, l’ajout et le retrait, les bornes d’une à quatre couches, les
+libellés accessibles, le focus du dialogue et le repli d’une scène inconnue.
+Le parcours navigateur traverse `Create a mix`, construit un brouillon de quatre
+sons, contrôle axe et confirme l’absence de requête audio ou d’`AudioContext`.
+Le scénario responsive couvre aussi `/compose` à 320 px avec mouvement réduit.
+L’exécution consolidée compte 96 réussites et les quatre reports WebKit
+historiques documentés.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

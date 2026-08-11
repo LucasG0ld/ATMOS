@@ -378,3 +378,15 @@ Le snapshot V2 est refusé au-delà de 128 Kio. Validation et provider appliquen
 les limites de quatre couches et 20 mixes avant `setItem`, avec une seule
 écriture coalescée. Ce lot n’ajoute ni route, média, package, requête réseau,
 timer, listener ou création d’`AudioContext`.
+
+### Mesure des fondations visuelles — Lot 24
+
+Le build de production mesure 20,9 Kio de JavaScript applicatif gzip et 9,2 Kio
+de CSS sur `/compose`, pour des budgets respectifs de 180 et 70 Kio. L’accueil
+reste à 12,6 Kio de JavaScript et le player à 60,5 Kio ; les fonts restent à
+29,4 Kio. Le script de budget résout désormais les manifests du route group
+`(session)` et bloque aussi explicitement les plafonds du compositeur.
+
+La bibliothèque lit uniquement le registre en mémoire. Les tests navigateur
+confirment zéro requête `/audio/` pendant l’ouverture, l’ajout, le retrait et le
+réglage visuel d’un brouillon ; le décodage et le graphe live restent hors du Lot 24.

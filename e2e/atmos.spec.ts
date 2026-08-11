@@ -582,6 +582,8 @@ test("keyboard order follows the visual reading order", async ({
   await expect(
     page.getByRole("link", { name: "Back to atmospheres" }),
   ).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Create a mix" })).toBeFocused();
 
   for (const name of ["Rain", "Window Rain", "Distant Thunder"]) {
     await page.keyboard.press("Tab");
@@ -954,4 +956,65 @@ test("catalog and player remain usable at narrow width with reduced motion", asy
       document.documentElement.clientWidth,
   );
   expect(hasHorizontalOverflow).toBe(false);
+
+  await page.goto("/compose?scene=rainy-apartment");
+  await expect(
+    page.getByRole("heading", { name: "Untitled mix" }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth <=
+        document.documentElement.clientWidth,
+    ),
+  ).toBe(true);
+});
+
+test("visual composer builds a four-sound draft without loading audio", async ({
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) audioRequests.push(request.url());
+  });
+
+  await page.goto("/atmosphere/deep-forest");
+  await page.getByRole("link", { name: "Create a mix" }).click();
+  await expect(page).toHaveURL(/\/compose\?scene=deep-forest$/);
+  await expect(
+    page.getByRole("heading", { name: "Untitled mix" }),
+  ).toBeVisible();
+  await expect(page.getByRole("slider")).toHaveCount(3);
+  await expect(
+    page.getByRole("slider", { name: "Forest Air from Deep Forest" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Play Untitled mix" }),
+  ).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Save mix" })).toBeDisabled();
+
+  await page.getByRole("button", { name: "Add sound" }).click();
+  await page
+    .getByRole("button", { name: "Add Rain from Rainy Apartment" })
+    .click();
+  await expect(page.getByRole("slider")).toHaveCount(4);
+  await expect(
+    page.getByRole("button", { name: "Mix full · 4 sounds" }),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "Mix full · 4 sounds" }).click();
+  await expect(page.getByText(/already has four sounds/i)).toBeVisible();
+  await expect(
+    page.getByRole("button", {
+      name: "Add Window Rain from Rainy Apartment",
+    }),
+  ).toBeDisabled();
+  await page.getByRole("button", { name: "Close sound library" }).click();
+  await page.getByRole("button", { name: "Remove Rain" }).click();
+  await expect(page.getByRole("slider")).toHaveCount(3);
+
+  expect(audioRequests).toEqual([]);
+  expect(runtimeErrors).toEqual([]);
+  await expectNoSeriousAccessibilityViolation(page);
 });
