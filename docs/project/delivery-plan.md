@@ -296,7 +296,7 @@ Les mesures HTTPS post-déploiement, la Gate C et la création du tag `v0.2.0` o
 
 ## Lot 17 — Socle de préférences locales
 
-**Statut : prochaine tranche autorisée, non démarrée.**
+**Statut : terminé le 2026-08-11.**
 
 ### Livrables
 
@@ -310,9 +310,15 @@ Les mesures HTTPS post-déploiement, la Gate C et la création du tag `v0.2.0` o
 - Aucun contexte audio ou réseau déclenché par la lecture des préférences.
 - Snapshot borné, écritures regroupées et nettoyage des listeners.
 
+Le provider est monté au layout racine avec une projection des seuls IDs utiles.
+Seize tests ciblés couvrent SSR, validation, corruption, versions, IDs obsolètes,
+quota, reset, coalescence et flush. Un scénario navigateur injecte JSON corrompu
+et version inconnue avant un vrai rechargement sur les cinq profils. Aucun
+contrôle public n’est encore branché.
+
 ## Lot 18 — Favoris et volumes persistants
 
-**Statut : planifié.**
+**Statut : prochaine tranche, non démarrée.**
 
 ### Livrables
 

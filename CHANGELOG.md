@@ -9,6 +9,7 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 - Cadrage du MVP 0.3 : préférences locales versionnées, favoris, volumes persistants, timer et Focus Mode.
 - ADR-0003 accepté, modèle de stockage V1, budgets 0.3, risques associés et checklist Gate D.
 - Plan de réalisation des Lots 16 à 21 sans implémentation anticipée.
+- Socle de préférences locales V1 avec validation, état mémoire de secours, écritures regroupées et provider client sans effet audio ou réseau.
 
 ## [0.2.0] — 2026-08-11
 

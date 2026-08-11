@@ -136,6 +136,15 @@ l’unitaire contrôle l’échéance avec horloge simulée et le navigateur val
 durée injectée courte réservée aux tests. La Gate D conserve une session manuelle
 longue et les appareils réels.
 
+Le Lot 17 porte la suite à 98 tests unitaires/composants. Ses 16 scénarios ciblés
+couvrent le schéma V1, les limites de confiance du stockage, le budget de 32 Kio,
+le rendu serveur sans accès navigateur, l’hydratation sans réécriture, les
+mutations en mémoire, la coalescence à 250 ms, le reset, le flush au démontage et
+l’absence de fetch ou d’`AudioContext`. La matrice Playwright passe à 65 cas : le
+nouveau scénario de stockage invalide réussit sur les cinq profils, conserve la
+valeur inconnue sans réécriture et confirme les volumes par défaut sans requête
+audio.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

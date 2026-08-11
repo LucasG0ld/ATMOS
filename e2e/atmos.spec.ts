@@ -1,6 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
+import { PREFERENCES_STORAGE_KEY } from "../src/features/preferences/preferences-storage";
+
 function usesExpectedAudioFallback(browserName: string) {
   return (
     browserName === "webkit" ||
@@ -79,6 +81,58 @@ test("critical journey defers audio and remains recoverable", async ({
   await expect(
     page.getByRole("button", { name: "Play Rainy Apartment" }),
   ).toBeVisible();
+  expect(runtimeErrors).toEqual([]);
+});
+
+test("invalid local preferences stay isolated from the existing experience", async ({
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) audioRequests.push(request.url());
+  });
+  await page.addInitScript((storageKey) => {
+    if (localStorage.getItem(storageKey) === null) {
+      localStorage.setItem(storageKey, "{not-json");
+    }
+  }, PREFERENCES_STORAGE_KEY);
+
+  await page.goto("/atmosphere/rainy-apartment");
+  await expect(
+    page.getByRole("heading", { name: "Rainy Apartment" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("slider", { name: "Rain", exact: true }),
+  ).toHaveValue("65");
+  expect(
+    await page.evaluate(
+      (storageKey) => localStorage.getItem(storageKey),
+      PREFERENCES_STORAGE_KEY,
+    ),
+  ).toBe("{not-json");
+
+  const unknownVersion = JSON.stringify({
+    version: 99,
+    favoriteAtmosphereIds: ["rainy-apartment"],
+    layerVolumes: {},
+  });
+  await page.evaluate(
+    ([storageKey, value]) => localStorage.setItem(storageKey, value),
+    [PREFERENCES_STORAGE_KEY, unknownVersion],
+  );
+  await page.reload();
+
+  await expect(
+    page.getByRole("slider", { name: "Rain", exact: true }),
+  ).toHaveValue("65");
+  expect(
+    await page.evaluate(
+      (storageKey) => localStorage.getItem(storageKey),
+      PREFERENCES_STORAGE_KEY,
+    ),
+  ).toBe(unknownVersion);
+  expect(audioRequests).toEqual([]);
   expect(runtimeErrors).toEqual([]);
 });
 

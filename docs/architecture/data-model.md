@@ -190,3 +190,10 @@ type SessionTimer = {
 la source de vérité et peut être recalculé après throttling ou changement de
 visibilité. Le timer et l’état `focusMode` sont détruits en quittant les routes
 du player.
+
+Le Lot 17 implémente le schéma V1 dans
+`features/preferences/preferences-storage.ts`. La lecture filtre doublons, IDs
+inconnus, valeurs non finies et volumes hors de `[0, 1]`. JSON invalide et
+version inconnue donnent un snapshot vide sans réécriture automatique. L’accès
+refusé, le quota et une suppression impossible basculent le provider en état
+`unavailable`, tout en conservant les changements de la session en mémoire.

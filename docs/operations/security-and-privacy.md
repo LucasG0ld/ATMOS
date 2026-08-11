@@ -32,6 +32,10 @@ refus d’accès ou de quota dégrade la session vers un état mémoire sans blo
 player. Aucune bannière de consentement n’est nécessaire en l’absence de traceur,
 mais l’interface explique clairement la finalité et la méthode de suppression.
 
+Le socle du Lot 17 applique ces règles sans exposer encore de commande publique :
+accès après montage uniquement, liste blanche issue du catalogue, taille
+sérialisée maximale de 32 Kio et aucune lecture automatique d’une autre clé.
+
 Toute analytics, error tracking ou ressource distante future exige une décision séparée couvrant base légale, consentement éventuel, rétention, sous-traitants et politique publique.
 
 ## Frontières et protections

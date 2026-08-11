@@ -13,8 +13,8 @@
 - [ ] Volumes restaurés séparément pour les quatre ambiances.
 - [ ] Défauts du registre appliqués si préférence absente ou invalide.
 - [ ] Reset supprime la clé et remet UI et moteur actif aux défauts.
-- [ ] JSON corrompu, version inconnue, IDs obsolètes et écriture refusée récupérables.
-- [ ] Aucune requête réseau, donnée personnelle ou initialisation audio causée par la persistance.
+- [x] JSON corrompu, version inconnue, IDs obsolètes et écriture refusée récupérables.
+- [x] Aucune requête réseau, donnée personnelle ou initialisation audio causée par la persistance.
 
 ## Timer
 
@@ -37,11 +37,11 @@
 
 ## Performance, sécurité et confidentialité
 
-- [ ] Aucun nouveau média, service distant ou dépendance produit non approuvée.
-- [ ] Snapshot sous 32 Kio et écritures regroupées.
-- [ ] Aucun polling actif sans timer et aucune fuite de listener/timeout.
-- [ ] Budgets JS/CSS 0.2 respectés et incrément 0.3 mesuré.
-- [ ] Aucun secret, identifiant personnel, historique détaillé ou donnée sensible stocké.
+- [x] Aucun nouveau média, service distant ou dépendance produit non approuvée.
+- [x] Snapshot sous 32 Kio et écritures regroupées.
+- [x] Aucun polling actif sans timer et aucune fuite de listener/timeout.
+- [x] Budgets JS/CSS 0.2 respectés et incrément 0.3 mesuré.
+- [x] Aucun secret, identifiant personnel, historique détaillé ou donnée sensible stocké.
 - [ ] Rollback 0.2 testé avec présence d’une préférence V1 ignorée sans crash.
 
 ## Qualité et release

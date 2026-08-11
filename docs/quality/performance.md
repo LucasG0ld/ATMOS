@@ -268,3 +268,14 @@ justifie un store ou une bibliothèque disproportionnée.
 - Les listeners `visibilitychange`/`pageshow` et timeouts sont nettoyés au démontage.
 - Dix cycles timer/focus et vingt changements de volumes ne doivent pas produire de croissance mémoire continue.
 - Lighthouse est rejoué sur l’accueil et les quatre players avant Gate D.
+
+### Mesure du socle de préférences — Lot 17
+
+Le build de production passe de 9,7 à 10,9 Kio de JavaScript applicatif gzip sur
+l’accueil et de 54,7 à 55,9 Kio sur le player, soit +1,2 Kio sur chaque route,
+sous les cibles incrémentales. Le CSS reste à 7,3 Kio et les fonts à 29,4 Kio.
+
+Le snapshot est limité à 32 Kio avant `setItem`. Les mutations du provider sont
+regroupées sur 250 ms et un seul snapshot en attente est conservé. Le démontage
+annule le timeout puis effectue au plus un flush synchrone ; sans mutation, aucun
+timer, listener, accès réseau ou contexte audio n’est créé.

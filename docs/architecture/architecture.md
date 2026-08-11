@@ -175,3 +175,10 @@ Le cadrage 0.3 accepté est détaillé dans
 l’[ADR-0003](decisions/0003-local-preferences-timer-and-focus.md) : Context de
 préférences sans dépendance tierce, snapshot V1 validé, timer fondé sur une
 échéance absolue et Focus Mode éphémère dans la session du player.
+
+Depuis le Lot 17, `features/preferences/preferences-storage.ts` isole parsing,
+validation, écriture et suppression. `PreferencesProvider`, monté dans le layout
+racine, reçoit seulement les IDs d’ambiances et de couches nécessaires à la
+validation. Il hydrate après montage, conserve un état mémoire si le stockage
+échoue et n’importe ni moteur audio ni média. Aucun contrôle visible ne consomme
+encore ce Context avant le Lot 18.
