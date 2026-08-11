@@ -6,7 +6,7 @@
 - [x] ADR-0002 acceptée.
 - [x] Sources et licences des nouveaux médias archivées avant commit.
 - [ ] Licence du code source décidée et fichier `LICENSE` ajouté ou absence explicitement assumée.
-- [ ] Aucun périmètre 0.3 introduit implicitement.
+- [x] Aucun périmètre 0.3 introduit implicitement.
 
 ## Catalogue et navigation
 
@@ -35,20 +35,24 @@
 
 ## Qualité et release
 
-- [ ] Format, lint, types, tests, audio, build, budgets et audit réussis.
-- [ ] Chromium, Firefox, WebKit et profils mobiles automatisés.
-- [ ] Axe sans violation critique ou sérieuse.
+- [x] Format, lint, types, tests, audio, images, build, budgets et audit réussis.
+- [x] Chromium, Firefox, WebKit et profils mobiles automatisés.
+- [x] Axe sans violation critique ou sérieuse.
 - [ ] Zoom 200 %, mouvement réduit, contraste élevé et lecteurs d’écran contrôlés.
 - [ ] Android Chrome et Safari iOS réels ; écart Safari macOS réévalué.
 - [ ] Smoke test HTTPS cache froid sans erreur console ou ressource critique en 404.
-- [ ] Documentation, crédits, changelog et procédure de rollback à jour.
+- [x] Documentation, crédits, changelog et procédure de rollback à jour.
 - [ ] `main` protégée ou contrôle équivalent confirmé avant la fusion de release.
-- [ ] Aucun défaut critique ou majeur ouvert.
+- [x] Aucun défaut critique ou majeur ouvert dans le suivi public au 2026-08-11.
 
 ## Décision
 
 Gate C n’est validée qu’après consignation des exceptions, acceptation explicite
 des risques résiduels et approbation du tag `v0.2.0` par le responsable du projet.
+
+Les résultats de la candidate et les contrôles encore ouverts sont consignés
+dans la [fiche de candidate 0.2](release-candidate-0.2.md). Le smoke local ne
+valide pas la ligne HTTPS de production, qui reste volontairement ouverte.
 
 ### Recette manuelle du Lot 12
 

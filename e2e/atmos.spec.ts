@@ -92,6 +92,36 @@ test("audio failure is announced and retryable", async ({ page }) => {
   ).toBeEnabled();
 });
 
+test("one unavailable layer keeps the remaining mix playable", async ({
+  browserName,
+  page,
+}) => {
+  test.skip(
+    browserName === "webkit",
+    "Playwright WebKit on Windows does not expose AudioContext.",
+  );
+  await page.route("**/audio/moving-leaves.mp3", (route) =>
+    route.fulfill({ status: 503, body: "Unavailable" }),
+  );
+  await page.goto("/atmosphere/deep-forest");
+
+  await page.getByRole("button", { name: "Play Deep Forest" }).click();
+
+  await expect(
+    page.getByRole("button", { name: "Pause Deep Forest" }),
+  ).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("status")).toContainText(
+    "One sound layer is unavailable. Playback continues",
+  );
+  await expect(
+    page.getByRole("slider", { name: "Moving Leaves" }),
+  ).toBeDisabled();
+  await expect(page.getByRole("slider", { name: "Forest Air" })).toBeEnabled();
+  await expect(
+    page.getByRole("slider", { name: "Distant Stream" }),
+  ).toBeEnabled();
+});
+
 test("routes expose metadata, security headers and a useful 404", async ({
   page,
 }) => {
@@ -470,12 +500,19 @@ test("home and player have no serious automated accessibility violation", async 
   );
   await expectNoSeriousAccessibilityViolation(page);
 
-  await page.goto("/atmosphere/rainy-apartment");
-  await expect(page.locator('[data-atmosphere="rainy-apartment"]')).toHaveCSS(
-    "opacity",
-    "1",
-  );
-  await expectNoSeriousAccessibilityViolation(page);
+  for (const slug of [
+    "rainy-apartment",
+    "quiet-coffee-shop",
+    "deep-forest",
+    "fireplace",
+  ]) {
+    await page.goto(`/atmosphere/${slug}`);
+    await expect(page.locator(`[data-atmosphere="${slug}"]`)).toHaveCSS(
+      "opacity",
+      "1",
+    );
+    await expectNoSeriousAccessibilityViolation(page);
+  }
 });
 
 test("catalog and player remain usable at narrow width with reduced motion", async ({

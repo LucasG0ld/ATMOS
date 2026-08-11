@@ -29,6 +29,8 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 - Préchargement borné à une cible visuelle et, après Play, une cible audio compressée sans décodage anticipé.
 - Désactivation du préchargement audio avec `Save-Data`, connexion lente ou hors ligne, annulation des cibles obsolètes et réutilisation lors d’une sélection explicite.
 - Mesures reproductibles des bundles, de Lighthouse et de dix transitions ; police latine locale allégée et visuel mobile Deep Forest optimisé.
+- Smoke de release couvrant les quatre routes et une transition audio, avec variante reproductible sur build local.
+- Scénario navigateur de couche audio partielle et dossier de candidate 0.2 séparant validations automatisées et contrôles Gate C externes.
 
 ## [0.1.0] — 2026-08-10
 

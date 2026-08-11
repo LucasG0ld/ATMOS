@@ -101,9 +101,15 @@ Le Lot 14 porte la suite à 82 tests unitaires/composants. Elle couvre la politi
 `Save-Data`/connexion, le remplacement d’une preview responsive, l’absence de
 décodage anticipé, la réutilisation d’un téléchargement, l’annulation d’une cible
 obsolète et dix transitions avec un seul contexte et un seul bus final. La
-matrice Playwright compte 55 scénarios : 53 validations et les 2 reports clavier
-WebKit existants. Un scénario réseau confirme zéro audio avant Play, la
+matrice Playwright du Lot 15 compte 60 scénarios : 56 validations et 4 reports
+WebKit documentés. Un scénario réseau confirme zéro audio avant Play, la
 réutilisation de la cible préchargée et le blocage sous `Save-Data`.
+
+Le Lot 15 ajoute la dégradation d’une couche réelle : sous Chromium, Firefox et
+Chromium mobile, le mix continue, le slider concerné devient indisponible et les
+deux autres restent réglables. Les deux profils WebKit reportent ce scénario car
+leur binaire Windows n’expose pas d’`AudioContext`, déjà traité par le fallback
+récupérable et les tests unitaires.
 
 ## CI attendue
 

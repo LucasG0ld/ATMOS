@@ -19,6 +19,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:report": "playwright show-report",
+    "smoke:local": "npm run build && node scripts/smoke-local.mjs",
     "smoke:production": "node scripts/smoke-production.mjs",
     "audio:prepare": "node scripts/prepare-audio.mjs && node scripts/validate-audio.mjs",
     "audio:check": "node scripts/validate-audio.mjs",

@@ -38,6 +38,7 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [Checklist de release 0.1](project/release-checklist-0.1.md).
 - [Fiche de recette manuelle Gate B](project/gate-b-manual-test.md).
 - [Checklist Gate C — 0.2](project/gate-c-checklist-0.2.md).
+- [Candidate de release 0.2](project/release-candidate-0.2.md) — résultats automatisés, matrice et validations externes restantes.
 
 ## Exploitation et conformité
 

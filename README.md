@@ -8,9 +8,9 @@ Le projet démarre par un prototype visuel complet de **Rainy Apartment**. Le mo
 
 ## État du projet
 
-- Phase actuelle : MVP 0.1 publié ; Lots 8 à 14 du MVP 0.2 terminés sur `mvp-0.2`.
+- Phase actuelle : MVP 0.1 publié ; candidate technique du MVP 0.2 préparée sur `mvp-0.2`.
 - Code applicatif : catalogue à quatre destinations, navigation accessible, identités visuelles responsive, mixages à trois couches, session audio persistante et préchargement borné.
-- Prochaine étape : Lot 15 — stabilisation du MVP 0.2 et Gate C.
+- Prochaine étape : validations externes du Lot 15, Gate C, puis autorisation explicite de release.
 - Langue de l’interface : anglais.
 - Langue de la documentation : français.
 
@@ -61,6 +61,7 @@ npm run budget:check # contrôle les budgets JS, CSS et fonts après build
 npm run performance:runtime # mesure dix transitions et la mémoire du player local
 npm run performance:lighthouse # audite les cinq routes en mobile et desktop
 npm run test:e2e    # exécute la recette sur cinq profils navigateur/mobile
+npm run smoke:local # contrôle le parcours de release sur un build local
 npm run smoke:production # contrôle le parcours critique sur l’URL publique, cache désactivé
 ```
 

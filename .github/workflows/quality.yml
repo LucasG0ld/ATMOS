@@ -51,6 +51,9 @@ jobs:
         env:
           FFMPEG_PATH: ffmpeg
 
+      - name: Audit production dependencies
+        run: npm run audit:prod
+
       - name: Build
         run: npm run build
 

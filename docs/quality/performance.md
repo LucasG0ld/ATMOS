@@ -203,3 +203,19 @@ mesurée sur GitHub Pages : l’accueil et Deep Forest dépassent de 0,15 s et
 Lighthouse de production, à refaire avec la candidate déployée. Les rapports JSON
 sont régénérables dans `.cache/lighthouse` avec
 `npm run performance:lighthouse` ; ce dossier n’est pas versionné.
+
+### Stabilisation de la candidate — Lot 15
+
+La répétition complète du 2026-08-11 confirme les mêmes tailles de bundles et
+un seul `AudioContext`. Après dix transitions et collecte, le tas varie de
++1 406 456 octets (1,34 Mio). Le smoke du build de production visite les quatre
+routes avec cache désactivé, puis vérifie Rainy Apartment → Deep Forest sans
+requête audio dupliquée.
+
+Lighthouse local reste à 100 pour accessibilité, bonnes pratiques et SEO sur les
+dix audits. Tous les profils desktop atteignent 100 en performance, avec un LCP
+de 0,44 à 0,64 s. Sur mobile : Rainy Apartment 98/2,26 s, Quiet Coffee Shop
+99/2,11 s, Deep Forest 97/2,55 s et Fireplace 99/2,26 s. L’accueil varie davantage
+et mesure 92/3,33 s lors de cette passe. Cette valeur ouvre un contrôle Gate C
+sur l’URL HTTPS de candidate ; elle ne justifie pas seule une exception, car la
+baseline 0.1 a été mesurée dans un environnement différent.

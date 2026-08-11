@@ -39,7 +39,7 @@ La roadmap est orientée résultats. Une phase ne commence que lorsque les crit�
 
 ## MVP 0.2 — Catalogue initial
 
-**Statut : Lots 8 à 14 terminés sur `mvp-0.2` ; stabilisation 0.2 suivante.**
+**Statut : candidate technique des Lots 8 à 15 préparée sur `mvp-0.2` ; Gate C externe en attente.**
 
 **Résultat :** l’utilisateur explore plusieurs personnalités sans rupture d’expérience.
 

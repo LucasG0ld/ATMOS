@@ -18,9 +18,9 @@
 | R-12 | Pas de canal privé de signalement avant publication   |   3 |   3 | SECURITY sans contact                                   | définir canal avant release publique                                       | projet       | mitigé pour 0.1                          |
 | R-13 | Catalogue multiplie le poids des médias               |   4 |   4 | chargement initial ou dépôt grossit rapidement          | budgets par ambiance, lazy load et une seule cible préchargée              | front-end    | mitigé automatiquement pour 0.2          |
 | R-14 | Crossfade crée sons doublés, clics ou fuites          |   4 |   4 | deux contextes, mémoire croissante, audio résiduel      | un contexte, deux bus, annulation et tests de stress                       | audio        | mitigé pour 0.2                          |
-| R-15 | Navigation catalogue devient dense ou générique       |   3 |   4 | grille SaaS, double tap, focus perdu                    | liste éditoriale, revue UX clavier/toucher et quatre entrées maximum       | design       | ouvert 0.2                               |
-| R-16 | Travail 0.2 modifie directement la production 0.1     |   3 |   5 | commit incomplet sur `main`                             | branche `mvp-0.2`, pull request, CI et Gate C avant fusion                 | projet       | mitigé par branche                       |
-| R-17 | Droits incomplets sur neuf nouveaux médias potentiels |   3 |   5 | source vague ou preuve absente avant commit             | matrice d’actifs, validation individuelle et crédits obligatoires          | projet       | ouvert 0.2                               |
+| R-15 | Navigation catalogue devient dense ou générique       |   3 |   4 | grille SaaS, double tap, focus perdu                    | liste éditoriale, revue UX clavier/toucher et quatre entrées maximum       | design       | mitigé automatiquement pour 0.2          |
+| R-16 | Travail 0.2 modifie directement la production 0.1     |   3 |   5 | commit incomplet sur `main`                             | branche `mvp-0.2`, pull request, CI et Gate C avant fusion                 | projet       | surveillé : `main` non protégée          |
+| R-17 | Droits incomplets sur neuf nouveaux médias potentiels |   3 |   5 | source vague ou preuve absente avant commit             | matrice d’actifs, validation individuelle et crédits obligatoires          | projet       | mitigé pour le catalogue 0.2             |
 
 ## Règle d’escalade
 
