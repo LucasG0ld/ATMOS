@@ -1,3 +1,6 @@
+export type AtmosphereId = string;
+export type SoundLayerId = string;
+
 export type AtmosphereTheme = {
   background: string;
   foreground: string;
@@ -25,14 +28,14 @@ export type AtmosphereVisuals = {
 };
 
 export type SoundLayer = {
-  id: string;
+  id: SoundLayerId;
   name: string;
   src: string;
   defaultVolume: number;
 };
 
 export type Atmosphere = {
-  id: string;
+  id: AtmosphereId;
   slug: string;
   name: string;
   displayName: readonly string[];

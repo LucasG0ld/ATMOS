@@ -462,7 +462,7 @@ explicitement le tag `v0.3.0` le 2026-08-11.
 
 ## Lot 22 — Cadrage produit et UX 1.0
 
-**Statut : cadrage préparé le 2026-08-11 ; validation produit et ADR-0005 en attente.**
+**Statut : terminé et approuvé le 2026-08-11.**
 
 ### Livrables
 
@@ -481,7 +481,7 @@ explicitement le tag `v0.3.0` le 2026-08-11.
 
 ## Lot 23 — Registre sonore et stockage V2
 
-**Statut : planifié après validation du Lot 22.**
+**Statut : terminé le 2026-08-11.**
 
 ### Livrables
 
@@ -492,9 +492,30 @@ explicitement le tag `v0.3.0` le 2026-08-11.
 
 ### Validation
 
-- Préférences 0.3 préservées bit à bit par la migration.
+- Valeurs 0.3 valides préservées sémantiquement par la migration.
 - Aucun accès stockage côté serveur et aucune création audio.
-- Reset, quota, version inconnue et rollback couverts.
+- Reset, quota et version inconnue couverts ; rollback complet réservé à Gate E.
+
+Le registre sonore est dérivé des quatre ambiances et résout les douze actifs par
+couple `atmosphereId`/`layerId`, sans dupliquer chemin ou licence. Les contrats
+`SoundReference`, `SavedMix` et `StoredPreferencesV2` restent indépendants de
+l’UI. La migration V1 valide les valeurs existantes, initialise `savedMixes`,
+puis tente une écriture atomique ; quota refusé et version inconnue conservent un
+état mémoire sûr sans suppression. Le provider expose création, mise à jour et
+suppression, coalesce les écritures et bloque les limites approuvées.
+
+La couverture atteint 132 tests unitaires/composants sur 24 fichiers. Build,
+lint, types, audit de dépendances et budgets réussissent sans nouveau package,
+média, fetch ou `AudioContext`. Le build mesure 12,5 Kio de JavaScript gzip sur
+l’accueil et 60,4 Kio sur le player, soit +0,8 Kio par route face à la candidate
+0.3 ; CSS et fonts restent respectivement à 6,8/9,1 Kio et 29,4 Kio.
+
+Un parcours navigateur injecte une V1 réelle, vérifie la V2 écrite, les valeurs
+restaurées et l’absence d’audio sur les cinq profils. La matrice consolidée
+compte 95 cas : 91 réussissent et les quatre skips WebKit documentés restent
+inchangés. Une attente `load` Firefox ponctuellement bloquée sous cinq workers a
+été limitée à `DOMContentLoaded` sur le parcours concerné ; ses assertions
+attendent ensuite explicitement les contrôles et la matrice complète est verte.
 
 ## Lot 24 — Fondations visuelles du compositeur
 

@@ -1,6 +1,6 @@
 # ADR-0005 — Composition locale et mixes sauvegardés 1.0
 
-- Statut : proposé
+- Statut : accepté le 2026-08-11
 - Date : 2026-08-11
 - Décideur : LucasG0ld
 - Remplace : aucune décision
@@ -161,7 +161,8 @@ couvrent les responsabilités sans dépendance supplémentaire.
 - Besoin d’URLs partageables ou de rendu serveur d’un mix.
 - Complexité du provider ou du moteur rendant leurs tests difficiles à isoler.
 
-## Validation attendue
+## Validation
 
-Cette ADR doit être approuvée avec le cadrage du Lot 22 avant toute migration du
-stockage, nouvelle route ou évolution du moteur audio.
+ADR approuvée par LucasG0ld le 2026-08-11 avec le cadrage du Lot 22. Son
+implémentation progressive commence au Lot 23 par le registre sonore, les
+contrats de mix et la migration du stockage V1 vers V2.

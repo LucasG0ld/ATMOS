@@ -60,7 +60,11 @@ function renderPersistentControls(
   engine = createMockEngine(),
   adapter: PreferencesStorageAdapter = {
     read: vi.fn().mockReturnValue({
-      preferences: { favoriteAtmosphereIds: [], layerVolumes: {} },
+      preferences: {
+        favoriteAtmosphereIds: [],
+        layerVolumes: {},
+        savedMixes: [],
+      },
       storageAvailable: true,
     }),
     reset: vi.fn().mockReturnValue(true),
@@ -152,6 +156,7 @@ describe("VisualControls", () => {
         preferences: {
           favoriteAtmosphereIds: [],
           layerVolumes: { [rainyApartment.id]: { rain: 0.31 } },
+          savedMixes: [],
         },
         storageAvailable: true,
       }),
@@ -352,7 +357,11 @@ describe("VisualControls", () => {
         ]}
         storageAdapter={{
           read: vi.fn().mockReturnValue({
-            preferences: { favoriteAtmosphereIds: [], layerVolumes: {} },
+            preferences: {
+              favoriteAtmosphereIds: [],
+              layerVolumes: {},
+              savedMixes: [],
+            },
             storageAvailable: true,
           }),
           reset: vi.fn().mockReturnValue(true),

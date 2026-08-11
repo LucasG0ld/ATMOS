@@ -131,7 +131,8 @@ Le code, la documentation et la configuration versionnable vivent dans Git. Le M
 - Canal de sécurité : signalement privé de vulnérabilité GitHub actif.
 - Preuves de licence : registres versionnés dans `docs/operations/` et
   `ASSET_CREDITS.md` ; emplacement pérenne des originaux externes à confirmer.
-- Analytics : absentes ; le MVP 0.3 ne conserve localement que favoris et volumes.
+- Analytics : absentes ; ATMOS conserve localement favoris, volumes et, à partir
+  de 1.0, mixes bornés sans transmission.
 - Code : propriétaire, `UNLICENSED`, copyright LucasG0ld ; actifs tiers sous
   leurs licences respectives.
 - Exécution : Node.js 24 et npm 11, commandes réelles documentées dans le README.

@@ -56,6 +56,7 @@ describe("AtmosphereCatalogue", () => {
         preferences: {
           favoriteAtmosphereIds: ["deep-forest"],
           layerVolumes: {},
+          savedMixes: [],
         },
         storageAvailable: true,
       }),

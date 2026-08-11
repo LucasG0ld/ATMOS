@@ -198,9 +198,9 @@ version inconnue donnent un snapshot vide sans réécriture automatique. L’acc
 refusé, le quota et une suppression impossible basculent le provider en état
 `unavailable`, tout en conservant les changements de la session en mémoire.
 
-## Cible proposée pour la composition 1.0
+## Composition 1.0 acceptée
 
-L’ADR-0005 propose de référencer une couche par son ambiance et son ID local,
+L’ADR-0005 retient une référence de couche par ambiance et ID local,
 sans recopier son nom, son chemin ou sa licence dans les données utilisateur :
 
 ```ts
@@ -230,4 +230,11 @@ type StoredPreferencesV2 = {
 Un mix valide contient une scène connue, un ID opaque, un nom de 1 à 40
 caractères et de une à quatre références distinctes dont les volumes sont finis
 et bornés. La collection contient au plus 20 mixes et le snapshot complet reste
-sous 128 Kio. Ces contrats ne deviennent acceptés qu’avec l’ADR-0005.
+sous 128 Kio. Ces contrats sont acceptés par l’ADR-0005.
+
+Le Lot 23 implémente ces contrats dans `types/mix.ts`, le registre dérivé dans
+`data/sounds/index.ts` et la validation dans l’adaptateur de préférences. Une
+lecture V1 reconstruit un snapshot V2 validé, conserve favoris et volumes, puis
+tente une unique écriture atomique. Un échec d’écriture conserve le résultat en
+mémoire et signale le stockage indisponible. Une V2 existante n’est pas réécrite
+au chargement ; une version inconnue reste intacte et donne les défauts sûrs.

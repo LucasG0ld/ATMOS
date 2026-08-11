@@ -136,6 +136,48 @@ test("invalid local preferences stay isolated from the existing experience", asy
   expect(runtimeErrors).toEqual([]);
 });
 
+test("V1 preferences migrate to V2 without starting audio", async ({
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) audioRequests.push(request.url());
+  });
+  await page.addInitScript((storageKey) => {
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        version: 1,
+        favoriteAtmosphereIds: ["rainy-apartment"],
+        layerVolumes: { "rainy-apartment": { rain: 0.44 } },
+      }),
+    );
+  }, PREFERENCES_STORAGE_KEY);
+
+  await page.goto("/atmosphere/rainy-apartment");
+  await expect(
+    page.getByRole("slider", { name: "Rain", exact: true }),
+  ).toHaveValue("44");
+  await expect(
+    page.getByRole("button", { name: "Remove from favorites" }),
+  ).toHaveAttribute("aria-pressed", "true");
+
+  expect(
+    await page.evaluate((storageKey) => {
+      const serialized = localStorage.getItem(storageKey);
+      return serialized ? JSON.parse(serialized) : null;
+    }, PREFERENCES_STORAGE_KEY),
+  ).toEqual({
+    version: 2,
+    favoriteAtmosphereIds: ["rainy-apartment"],
+    layerVolumes: { "rainy-apartment": { rain: 0.44 } },
+    savedMixes: [],
+  });
+  expect(audioRequests).toEqual([]);
+  expect(runtimeErrors).toEqual([]);
+});
+
 test("favorites and volumes persist locally and reset to catalogue defaults", async ({
   page,
 }) => {
@@ -381,7 +423,9 @@ test("background playback is not voluntarily suspended", async ({
       },
     });
   });
-  await page.goto("/atmosphere/rainy-apartment");
+  await page.goto("/atmosphere/rainy-apartment", {
+    waitUntil: "domcontentloaded",
+  });
   await page.getByRole("button", { name: "Play Rainy Apartment" }).click();
   const playbackOutcome = page.getByRole("button", {
     name: /^(Pause|Retry) Rainy Apartment$/,

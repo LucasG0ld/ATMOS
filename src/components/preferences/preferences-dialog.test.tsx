@@ -13,6 +13,7 @@ function renderDialog(storageAvailable = true) {
       preferences: {
         favoriteAtmosphereIds: ["rainy-apartment"],
         layerVolumes: { "rainy-apartment": { rain: 0.42 } },
+        savedMixes: [],
       },
       storageAvailable,
     }),

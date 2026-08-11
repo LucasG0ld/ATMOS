@@ -190,6 +190,18 @@ attente `load` trop large sur un test de navigation : l’attente
 réduire les contrôles de médias couverts ailleurs. Le smoke 0.3 ajoute favoris,
 volume, timer et Focus Mode au parcours de quatre routes, transition audio et 404.
 
+Le Lot 23 porte la suite à 132 tests unitaires/composants sur 24 fichiers. Les
+nouveaux scénarios couvrent les douze références sonores globales, migration V1
+vers V2, absence de réécriture V2, version inconnue intacte, corruption, quota,
+limites de noms/couches/collection/snapshot et CRUD coalescé du provider. Les
+tests confirment aussi qu’un 21e mix est refusé et que lecture ou migration du
+stockage ne crée ni requête réseau ni contexte audio. Un parcours E2E migre une
+V1 réelle sur les cinq profils, restaure favori et volume et confirme la V2 sans
+audio. La matrice atteint 95 cas : 91 réussissent et les quatre skips WebKit
+historiques restent inchangés. Un `page.goto` Firefox de lecture en arrière-plan
+attend désormais `DOMContentLoaded` plutôt que tous les médias ; les assertions
+fonctionnelles explicites restent identiques et l’exécution consolidée est verte.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

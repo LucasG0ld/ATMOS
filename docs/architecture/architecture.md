@@ -106,7 +106,8 @@ capacités réseau annoncées.
 - état de contrôle : volumes demandés, play/pause ;
 - état moteur : idle, loading, ready, playing, paused, error ;
 - état UI : valeur révélée, menu ouvert ;
-- préférences persistées : favoris et volumes uniquement à partir de 0.3.
+- préférences persistées : favoris et volumes à partir de 0.3, puis mixes locaux
+  bornés à partir du Lot 23.
 
 ## Frontière serveur/client
 

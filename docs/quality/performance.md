@@ -366,3 +366,15 @@ La bibliothèque ne précharge aucun des douze sons. Après dix changements de m
 le nombre d’`AudioContext`, de listeners et de nœuds actifs doit revenir à sa
 ligne de base ; une croissance mémoire stable supérieure à 10 % face au même
 parcours 0.3 bloque la Gate E sans exception explicite.
+
+### Mesure du registre et du stockage V2 — Lot 23
+
+Le build mesure 12,5 Kio de JavaScript applicatif gzip sur l’accueil et 60,4 Kio
+sur le player, soit +0,8 Kio par route face à la candidate 0.3. Le CSS reste à
+6,8 Kio sur l’accueil et 9,1 Kio sur le player ; les fonts restent à 29,4 Kio.
+Les plafonds historiques sont respectés.
+
+Le snapshot V2 est refusé au-delà de 128 Kio. Validation et provider appliquent
+les limites de quatre couches et 20 mixes avant `setItem`, avec une seule
+écriture coalescée. Ce lot n’ajoute ni route, média, package, requête réseau,
+timer, listener ou création d’`AudioContext`.

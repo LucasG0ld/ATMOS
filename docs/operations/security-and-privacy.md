@@ -38,6 +38,16 @@ lecture automatique d’une autre clé. Le Lot 18 expose ces règles dans le dia
 `Preferences` et son action de reset. Si le stockage est indisponible, un message
 non bloquant indique que les changements ne valent que pour la visite courante.
 
+### À partir du Lot 23
+
+La valeur V2 ajoute au même snapshot des mixes composés uniquement de références
+au catalogue, volumes et noms saisis localement. Elle est limitée à quatre
+couches par mix, 20 mixes, 40 caractères par nom et 128 Kio au total. La
+migration V1 est pure puis écrite atomiquement ; un échec conserve les valeurs en
+mémoire et ne supprime pas la source. Une version inconnue n’est ni réécrite ni
+supprimée. Aucun chemin média, contenu de fichier ou donnée distante n’entre dans
+le snapshot.
+
 Toute analytics, error tracking ou ressource distante future exige une décision séparée couvrant base légale, consentement éventuel, rétention, sous-traitants et politique publique.
 
 ## Frontières et protections

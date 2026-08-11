@@ -9,6 +9,12 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 - Cadrage de la version 1.0 : composition locale à partir des couches licenciées,
   bibliothèque bornée, mixes sauvegardés et Gate E.
 - ADR-0005 proposé, modèle de stockage V2, budgets, risques et Lots 22 à 28.
+- Registre dérivé des douze sons avec résolution par référence globale
+  `atmosphereId`/`layerId`.
+- Stockage V2 avec migration atomique de V1, validation des mixes, limites de
+  quatre couches, 20 mixes et 128 Kio.
+- Opérations locales de création, mise à jour et suppression des mixes dans le
+  provider de préférences, sans effet audio ou réseau.
 
 ## [0.3.0] — 2026-08-11
 

@@ -34,7 +34,7 @@ et la [Gate D](gate-d-checklist-0.3.md).
 Pour la version 1.0, composition, bibliothèque, stockage V2 et mixes sauvegardés
 sont précisés par la [spécification 1.0](../product/mvp-requirements-1.0.md),
 l’[UX de composition](../design/composition-ux-1.0.md),
-l’[ADR-0005 proposé](../architecture/decisions/0005-local-composition-and-saved-mixes.md)
+l’[ADR-0005 accepté](../architecture/decisions/0005-local-composition-and-saved-mixes.md)
 et la [Gate E](gate-e-checklist-1.0.md).
 
 ## Éléments ajoutés pour rendre le projet maintenable
