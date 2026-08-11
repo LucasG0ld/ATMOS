@@ -26,6 +26,8 @@ introduit.
 - [x] Aucune issue ou pull request ouverte selon l’API publique GitHub le 2026-08-11.
 - [x] Code propriétaire `UNLICENSED`, copyright LucasG0ld et licences des médias séparées.
 - [x] Risque résiduel Safari macOS reconduit par LucasG0ld pour la version 0.2.
+- [x] Ruleset `Protect main` actif : PR, historique linéaire, conversations résolues et contrôle strict `quality`, sans bypass.
+- [x] Seul Squash merging est autorisé dans les réglages du dépôt, confirmé par LucasG0ld.
 
 ## Matrice automatisée
 
@@ -79,7 +81,6 @@ production exigera correction ou exception explicite.
 ## Validations requises avant Gate C
 
 - [ ] Obtenir une CI verte sur la pull request vers `main`.
-- [ ] Protéger `main` ou confirmer un contrôle équivalent ; l’API publique indique `protected: false` le 2026-08-11.
 - [ ] Rejouer le parcours 0.2 sur Chrome Android et Safari iOS réels.
 - [ ] Contrôler zoom 200 %, texte agrandi, contraste élevé et lecteurs d’écran sur la candidate 0.2.
 - [ ] Confirmer qu’aucun défaut critique ou majeur n’est ouvert.

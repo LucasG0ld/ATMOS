@@ -108,8 +108,9 @@ Le code, la documentation et la configuration versionnable vivent dans Git. Le M
 
 - Production officielle : `https://lucasg0ld.github.io/ATMOS/`.
 - Propriétaire du dépôt et responsable du déploiement : LucasG0ld.
-- Branche `main` : non protégée selon l’API GitHub le 2026-08-11 ; protection
-  ou contrôle équivalent requis avant la fusion 0.2.
+- Branche `main` : ruleset `Protect main` actif depuis le 2026-08-11, avec PR,
+  historique linéaire et contrôle strict `quality` obligatoires ; fusion par
+  squash uniquement.
 - Canal de sécurité : signalement privé de vulnérabilité GitHub actif.
 - Preuves de licence : registres versionnés dans `docs/operations/` et
   `ASSET_CREDITS.md` ; emplacement pérenne des originaux externes à confirmer.

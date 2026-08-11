@@ -43,7 +43,7 @@
 - [x] Écart Safari macOS réévalué et risque résiduel de nouveau accepté par LucasG0ld.
 - [ ] Smoke test HTTPS cache froid sans erreur console ou ressource critique en 404.
 - [x] Documentation, crédits, changelog et procédure de rollback à jour.
-- [ ] `main` protégée ou contrôle équivalent confirmé avant la fusion de release.
+- [x] `main` protégée par le ruleset actif `Protect main`, PR et contrôle strict `quality` obligatoires.
 - [x] Aucun défaut critique ou majeur ouvert dans le suivi public au 2026-08-11.
 
 ## Décision
