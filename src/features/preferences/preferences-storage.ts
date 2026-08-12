@@ -255,6 +255,20 @@ function toStoredPreferences(
   };
 }
 
+export function fitsPreferencesStorageBudget(
+  preferences: PreferencesSnapshot,
+  catalogue: readonly PreferenceCatalogueEntry[],
+): boolean {
+  try {
+    return (
+      JSON.stringify(toStoredPreferences(preferences, catalogue)).length <=
+      PREFERENCES_MAX_SERIALIZED_LENGTH
+    );
+  } catch {
+    return false;
+  }
+}
+
 export function migrateStoredPreferences(
   value: unknown,
   catalogue: readonly PreferenceCatalogueEntry[],

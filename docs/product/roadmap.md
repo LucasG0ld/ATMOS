@@ -70,7 +70,7 @@ et volumes sont persistés ; aucune donnée n’est synchronisée ou transmise.
 
 ## Version 1 — Composition
 
-**Statut : cadrage et ADR-0005 approuvés ; Lot 24 validé et Lot 25 implémenté le 2026-08-12, recette audio en attente.**
+**Statut : cadrage et ADR-0005 approuvés ; Lots 24–25 validés et Lot 26 implémenté le 2026-08-12, recette manuelle en attente.**
 
 **Résultat :** l’utilisateur crée et sauvegarde localement ses propres mixes.
 

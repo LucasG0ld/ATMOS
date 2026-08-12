@@ -31,7 +31,7 @@
 | R-25 | Composition transforme ATMOS en station audio         |   4 |   5 | pistes, vu-mètres, effets ou panneaux se multiplient       | quatre couches, anti-patterns UX et revue visuelle au Lot 24               | design       | ouvert pour 1.0                          |
 | R-26 | Migration V2 perd préférences ou mixes                |   3 |   5 | favoris absents, snapshot écrasé ou rollback destructif    | migration pure, validation atomique, fixtures V1 et test de rollback       | front-end    | migration mitigée ; rollback à Gate E    |
 | R-27 | Mixes multi-ambiances saturent mémoire ou réseau      |   4 |   4 | décodages simultanés, chauffe, buffers non libérés         | quatre couches, cache borné, aucun preload bibliothèque et stress test     | audio        | ouvert pour 1.0                          |
-| R-28 | Brouillon local perdu sans avertissement              |   3 |   4 | navigation interne après modification non sauvegardée      | état dirty, confirmation interne et sauvegarde explicite                   | design       | ouvert pour 1.0                          |
+| R-28 | Brouillon local perdu sans avertissement              |   3 |   4 | navigation interne après modification non sauvegardée      | état dirty, confirmation interne et sauvegarde explicite                   | design       | mitigé automatiquement au Lot 26         |
 | R-29 | Travail 1.0 modifie directement la production 0.3     |   3 |   5 | changement incomplet sur `main`                            | branche `mvp-1.0`, PR, contrôle strict et Gate E avant fusion              | projet       | mitigé par branche et ruleset actifs     |
 
 ## Règle d’escalade

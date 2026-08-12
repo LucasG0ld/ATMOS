@@ -25,6 +25,10 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
   ajout/retrait différentiel, volumes par référence globale et rampes anti-clic.
 - Dégradation locale d’un ajout audio en échec, requêtes concurrentes partagées,
   nettoyage borné et conservation de Play/Pause, timer, Focus Mode et arrière-plan.
+- Nommage et sauvegarde locale des mixes avec ID stable, état non enregistré et
+  limites explicites de 20 mixes et 128 Kio.
+- Vue `Your mixes` pour ouvrir en pause, renommer et supprimer, avec confirmations
+  de perte, reset global étendu et repli mémoire si le stockage est indisponible.
 
 ## [0.3.0] — 2026-08-11
 

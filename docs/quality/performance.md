@@ -404,3 +404,15 @@ fichier et un retrait ne recharge rien. Les tests de dix cycles confirment un
 seul `AudioContext` et un retour au nombre initial de sources. Le plafond stable
 est de quatre couches et le bref chevauchement retrait/ajout reste inférieur au
 plafond transitoire de huit.
+
+### Mesure de la gestion locale des mixes — Lot 26
+
+Le build mesure 25,5 Kio de JavaScript applicatif gzip et 9,7 Kio de CSS sur
+`/compose`, soit +2,1 et +0,4 Kio depuis le Lot 25. L’accueil mesure 12,9 Kio,
+le player 61,8 Kio et les fonts 29,4 Kio ; tous les budgets restent largement
+respectés. Les dialogues CRUD n’ajoutent aucun package, média ou requête réseau.
+
+Le snapshot est validé et mesuré avant commit, plafonné à 20 mixes et 128 Kio.
+Les écritures restent coalescées à 250 ms et un rechargement n’initialise ni
+audio ni lecture. Le parcours CRUD multi-navigateurs confirme zéro requête
+`/audio/` tant que Play n’est pas activé.

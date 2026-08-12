@@ -557,7 +557,7 @@ validée par le responsable du projet.
 
 ## Lot 25 — Moteur de composition live
 
-**Statut : implémenté le 2026-08-12 ; recette audio desktop/mobile en attente.**
+**Statut : terminé et validé sur desktop et mobile le 2026-08-12.**
 
 ### Livrables
 
@@ -591,14 +591,14 @@ Playwright comporte 110 cas : 106 réussissent, dont l’ajout/retrait live, le
 Focus Mode et l’échec partiel sur cinq profils ; les quatre reports WebKit restent
 inchangés. Le build, les types, le lint, l’audit et les budgets passent.
 `/compose` mesure 23,4 Kio de JavaScript gzip et 9,3 Kio de CSS. La dernière
-sortie du lot est une écoute manuelle desktop/mobile des mutations pendant la
-lecture, y compris timer, Focus Mode et arrière-plan. Le timeout E2E passe à 60
+La recette manuelle desktop/mobile des mutations pendant la lecture, y compris
+timer, Focus Mode et arrière-plan, est validée par le responsable du projet. Le timeout E2E passe à 60
 secondes afin d’absorber les chargements `load` Firefox sous cinq workers, sans
 modifier les assertions fonctionnelles.
 
 ## Lot 26 — Sauvegarde et gestion des mixes
 
-**Statut : planifié.**
+**Statut : implémenté le 2026-08-12 ; recette manuelle desktop/mobile en attente.**
 
 ### Livrables
 
@@ -611,6 +611,28 @@ modifier les assertions fonctionnelles.
 - CRUD et rechargement réels sans reprise audio automatique.
 - Noms identiques, IDs stables et données obsolètes couverts.
 - Reset global explicite et accessible.
+
+Le premier `Save mix` ouvre un dialogue de nommage borné à 40 caractères ; les
+sauvegardes suivantes mettent à jour le même ID opaque. `Your mixes` apparaît
+uniquement lorsqu’une collection existe et conserve son ordre de création. Il
+permet d’ouvrir en pause, renommer et supprimer chaque mix, y compris lorsque des
+noms sont identiques. Supprimer le mix actif restaure un brouillon sûr de sa
+scène sans toucher aux médias.
+
+Les changements non sauvegardés protègent l’ouverture d’un autre mix et le
+retour à la scène par une confirmation interne ; `beforeunload` couvre aussi la
+fermeture complète selon la politique du navigateur. La collection pleine est
+expliquée avant sauvegarde. Le budget sérialisé de 128 Kio est vérifié avant
+commit, et un échec de stockage conserve l’état en mémoire avec une annonce.
+Le reset des préférences exige désormais une confirmation nommant favoris,
+volumes et tous les mixes.
+
+La couverture atteint 149 tests unitaires/composants sur 25 fichiers. La matrice
+Playwright comporte 115 cas : 111 réussissent, dont un CRUD réel avec
+rechargement et contrôle de l’ID stable sur cinq profils, et les quatre skips
+WebKit historiques restent inchangés. `/compose` mesure 25,5 Kio de JavaScript gzip et
+9,7 Kio de CSS. Types, lint, format, build, médias, audit et budgets passent ; la
+recette manuelle reste la dernière sortie du lot.
 
 ## Lot 27 — Intégration et performance 1.0
 

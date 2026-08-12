@@ -228,6 +228,15 @@ restent réservés au décodage MP3 et à la politique de tabulation Safari. La
 recette réelle doit encore écouter les fondus, l’absence de son résiduel et la
 continuité timer/Focus/arrière-plan sur desktop et mobile.
 
+Le Lot 26 porte la suite à 149 tests unitaires/composants sur 25 fichiers et la
+matrice à 115 cas. Les tests couvrent nom vide ou trop long, collection de 20,
+stockage indisponible, noms identiques, ID stable, CRUD, ordre, ouverture en
+pause, confirmation d’abandon, suppression active et reset global confirmé. Le
+parcours navigateur effectue une écriture réelle, recharge `/compose`, rouvre le
+mix, modifie le volume, renomme sous le même ID puis supprime sans requête audio.
+Il passe sur les cinq profils. L’exécution consolidée compte 111 réussites et les
+quatre skips WebKit historiques restent inchangés.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

@@ -238,3 +238,11 @@ lecture V1 reconstruit un snapshot V2 validé, conserve favoris et volumes, puis
 tente une unique écriture atomique. Un échec d’écriture conserve le résultat en
 mémoire et signale le stockage indisponible. Une V2 existante n’est pas réécrite
 au chargement ; une version inconnue reste intacte et donne les défauts sûrs.
+
+Depuis le Lot 26, le provider applique les limites de collection et de taille
+avant toute mutation persistante. La création génère l’ID côté client puis ajoute
+le mix en fin de collection ; mise à jour et renommage remplacent l’objet au même
+index et avec le même ID. La suppression filtre uniquement cet ID. Les noms ne
+sont jamais une clé et peuvent donc être identiques. Les écritures restent
+regroupées ; si `localStorage` refuse l’écriture, le snapshot courant demeure
+utilisable en mémoire et le statut `unavailable` devient visible.

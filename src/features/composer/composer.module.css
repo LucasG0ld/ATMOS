@@ -5,7 +5,9 @@
 }
 
 .header,
+.headerActions,
 .backLink,
+.mixesButton,
 .playButton,
 .composerHeader,
 .layerControls,
@@ -15,6 +17,21 @@
 .soundOption {
   display: flex;
   align-items: center;
+}
+
+.headerActions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-5);
+}
+
+.mixesButton {
+  min-height: 2.75rem;
+  padding: 0;
+  color: var(--atmos-foreground);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
 }
 
 .header,
@@ -284,6 +301,10 @@
   overflow-y: auto;
 }
 
+.compactPanel {
+  width: min(100%, 34rem);
+}
+
 .dialogHeader {
   align-items: flex-start;
   gap: var(--space-6);
@@ -340,6 +361,120 @@
   letter-spacing: 0.12em;
 }
 
+.nameField {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+  color: var(--atmos-accent);
+}
+
+.nameField input {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0 var(--space-4);
+  color: var(--atmos-foreground);
+  background: color-mix(in srgb, var(--atmos-surface) 82%, transparent);
+  border: 1px solid color-mix(in srgb, var(--atmos-muted) 45%, transparent);
+  border-radius: var(--radius-small);
+  outline: none;
+}
+
+.nameField input:focus-visible {
+  border-color: var(--atmos-accent);
+  box-shadow:
+    0 0 0 2px var(--atmos-background),
+    0 0 0 4px var(--atmos-accent);
+}
+
+.characterCount,
+.errorMessage {
+  margin-top: var(--space-2);
+  font-size: 0.8125rem;
+}
+
+.characterCount {
+  color: var(--atmos-muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.errorMessage {
+  color: var(--atmos-foreground);
+}
+
+.dialogActions,
+.savedMixActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.dialogActions {
+  justify-content: flex-end;
+  gap: var(--space-5);
+  margin-top: var(--space-8);
+}
+
+.primaryButton,
+.secondaryButton,
+.dangerButton,
+.savedMixActions button {
+  min-height: 2.75rem;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.primaryButton {
+  padding-inline: var(--space-5);
+  color: var(--atmos-background);
+  background: var(--atmos-foreground);
+  border-radius: 999px;
+}
+
+.secondaryButton,
+.savedMixActions button {
+  padding: 0;
+  color: var(--atmos-muted);
+}
+
+.dangerButton {
+  padding: 0;
+  color: var(--atmos-foreground);
+}
+
+.savedMixList {
+  padding: 0;
+  margin: var(--space-8) 0 0;
+  list-style: none;
+  border-top: 1px solid color-mix(in srgb, var(--atmos-muted) 24%, transparent);
+}
+
+.savedMix {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-5);
+  align-items: center;
+  padding-block: var(--space-5);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--atmos-muted) 24%, transparent);
+}
+
+.savedMixName {
+  overflow-wrap: anywhere;
+}
+
+.savedMixActions {
+  justify-content: flex-end;
+  gap: var(--space-4);
+}
+
+.savedMixActions button {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
 @media (max-width: 48rem) {
   .frame {
     gap: clamp(2.5rem, 6vh, 4rem);
@@ -376,6 +511,12 @@
     align-items: flex-start;
   }
 
+  .headerActions {
+    align-items: flex-end;
+    flex-direction: column-reverse;
+    gap: var(--space-2);
+  }
+
   .backLink span {
     max-width: 7rem;
   }
@@ -383,6 +524,14 @@
   .actions {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .savedMix {
+    grid-template-columns: 1fr;
+  }
+
+  .savedMixActions {
+    justify-content: flex-start;
   }
 }
 

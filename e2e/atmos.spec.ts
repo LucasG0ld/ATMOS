@@ -227,6 +227,11 @@ test("favorites and volumes persist locally and reset to catalogue defaults", as
   await expect(dialog).toBeVisible();
   await expectNoSeriousAccessibilityViolation(page);
   await dialog.getByRole("button", { name: "Reset saved preferences" }).click();
+  const resetDialog = page.getByRole("dialog", {
+    name: "Reset saved preferences?",
+  });
+  await expect(resetDialog).toContainText("all mixes from this device");
+  await resetDialog.getByRole("button", { name: "Reset everything" }).click();
   await expect(dialog.getByText("Saved preferences reset.")).toBeVisible();
   await expect(dialog.getByText("Nothing saved yet")).toBeVisible();
   expect(
@@ -1006,7 +1011,7 @@ test("visual composer builds a four-sound draft without loading audio", async ({
   await expect(
     page.getByRole("button", { name: "Play Untitled mix" }),
   ).toBeEnabled();
-  await expect(page.getByRole("button", { name: "Save mix" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Save mix" })).toBeEnabled();
 
   await page.getByRole("button", { name: "Add sound" }).click();
   await page
@@ -1119,4 +1124,118 @@ test("one failed live addition leaves the custom mix playable", async ({
       (message) => !message.includes("Failed to load resource"),
     ),
   ).toEqual([]);
+});
+
+test("a local mix survives reload, updates by stable ID and deletes safely", async ({
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) audioRequests.push(request.url());
+  });
+
+  await page.goto("/compose?scene=deep-forest");
+  await page.getByRole("button", { name: "Save mix" }).click();
+  const nameDialog = page.getByRole("dialog", { name: "Name your mix" });
+  await expect(
+    nameDialog.getByRole("textbox", { name: "Mix name" }),
+  ).toBeFocused();
+  await expectNoSeriousAccessibilityViolation(page);
+  await nameDialog
+    .getByRole("textbox", { name: "Mix name" })
+    .fill("Forest rest");
+  await nameDialog.getByRole("button", { name: "Save", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Forest rest" }),
+  ).toBeVisible();
+  await expect(page.getByText("Mix saved on this device.")).toBeVisible();
+  await expect
+    .poll(async () =>
+      page.evaluate(() => {
+        const value = localStorage.getItem("atmos.preferences");
+        if (!value) return null;
+        const parsed = JSON.parse(value) as {
+          savedMixes?: Array<{ id: string; name: string }>;
+        };
+        return parsed.savedMixes?.[0] ?? null;
+      }),
+    )
+    .toMatchObject({ name: "Forest rest" });
+  const firstId = await page.evaluate(() => {
+    const parsed = JSON.parse(localStorage.getItem("atmos.preferences")!) as {
+      savedMixes: Array<{ id: string }>;
+    };
+    return parsed.savedMixes[0]!.id;
+  });
+
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "Untitled mix" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Your mixes" }).click();
+  await page.getByRole("button", { name: "Open Forest rest" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Forest rest" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Play Forest rest" }),
+  ).toBeVisible();
+
+  await page
+    .getByRole("slider", { name: "Forest Air from Deep Forest" })
+    .fill("31");
+  await expect(
+    page.getByText("Unsaved changes", { exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Save changes" }).click();
+  await page.getByRole("button", { name: "Your mixes" }).click();
+  await page.getByRole("button", { name: "Rename Forest rest" }).click();
+  const renameDialog = page.getByRole("dialog", { name: "Rename mix" });
+  await renameDialog
+    .getByRole("textbox", { name: "Mix name" })
+    .fill("Forest rest renamed");
+  await renameDialog.getByRole("button", { name: "Save name" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Forest rest renamed" }),
+  ).toBeVisible();
+  await expect
+    .poll(async () =>
+      page.evaluate(() => {
+        const parsed = JSON.parse(
+          localStorage.getItem("atmos.preferences")!,
+        ) as {
+          savedMixes: Array<{ id: string; name: string }>;
+        };
+        return parsed.savedMixes[0];
+      }),
+    )
+    .toMatchObject({ id: firstId, name: "Forest rest renamed" });
+
+  await page
+    .getByRole("button", { name: "Delete Forest rest renamed" })
+    .click();
+  const deleteDialog = page.getByRole("dialog", {
+    name: "Delete “Forest rest renamed”?",
+  });
+  await expect(deleteDialog).toContainText("No catalogue sounds are deleted.");
+  await expectNoSeriousAccessibilityViolation(page);
+  await deleteDialog.getByRole("button", { name: "Delete mix" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Untitled mix" }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Your mixes" })).toHaveCount(0);
+  await expect
+    .poll(async () =>
+      page.evaluate(() => {
+        const value = localStorage.getItem("atmos.preferences");
+        if (!value) return -1;
+        return (JSON.parse(value) as { savedMixes: unknown[] }).savedMixes
+          .length;
+      }),
+    )
+    .toBe(0);
+  expect(audioRequests).toEqual([]);
+  expect(runtimeErrors).toEqual([]);
+  await expectNoSeriousAccessibilityViolation(page);
 });

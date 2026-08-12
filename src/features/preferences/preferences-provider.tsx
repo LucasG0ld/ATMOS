@@ -14,6 +14,7 @@ import {
 import {
   createEmptyPreferences,
   createPreferencesStorageAdapter,
+  fitsPreferencesStorageBudget,
   MAX_SAVED_MIXES,
   validateSavedMix,
   type PreferenceCatalogueEntry,
@@ -188,10 +189,14 @@ export function PreferencesProvider({
 
       const mix = validateSavedMix({ id, ...draft }, catalogue);
       if (!mix) return null;
-      commitPreferences({
+      const nextPreferences = {
         ...current,
         savedMixes: [...current.savedMixes, mix],
-      });
+      };
+      if (!fitsPreferencesStorageBudget(nextPreferences, catalogue)) {
+        return null;
+      }
+      commitPreferences(nextPreferences);
       return mix.id;
     },
     [catalogue, commitPreferences],
@@ -205,12 +210,16 @@ export function PreferencesProvider({
 
       const mix = validateSavedMix({ id: mixId, ...draft }, catalogue);
       if (!mix) return false;
-      commitPreferences({
+      const nextPreferences = {
         ...current,
         savedMixes: current.savedMixes.map((existingMix, index) =>
           index === mixIndex ? mix : existingMix,
         ),
-      });
+      };
+      if (!fitsPreferencesStorageBudget(nextPreferences, catalogue)) {
+        return false;
+      }
+      commitPreferences(nextPreferences);
       return true;
     },
     [catalogue, commitPreferences],
