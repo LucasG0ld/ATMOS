@@ -145,6 +145,12 @@ référence dupliquée ou plus de quatre couches. Au nettoyage, les chargements
 live, délais de retrait, sources, gains et buffers sont libérés de façon
 idempotente.
 
+Depuis le Lot 27, la session mémorise aussi la signature `id`/`src` de l’ensemble
+réellement actif. Une reprise après ouverture en pause ne se contente pas de
+l’ID visuel de la scène : si les couches ont changé, `syncLayers()` prépare le
+nouvel ensemble avant de rouvrir le master. Deux mixes de la même scène ne
+peuvent donc plus partager par erreur un ancien graphe sous un nouveau nom.
+
 ## Fin de timer 0.3
 
 Le contrôleur de session, pas le moteur, possède l’échéance murale du timer. Dès

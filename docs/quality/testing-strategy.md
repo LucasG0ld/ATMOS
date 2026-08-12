@@ -237,6 +237,14 @@ mix, modifie le volume, renomme sous le même ID puis supprime sans requête aud
 Il passe sur les cinq profils. L’exécution consolidée compte 111 réussites et les
 quatre skips WebKit historiques restent inchangés.
 
+Le Lot 27 porte la suite à 151 tests unitaires/composants. Les nouveaux cas
+couvrent l’entrée `Your mixes` conditionnelle de l’accueil et la reprise d’un
+mix de même scène mais de couches différentes après Pause. Le parcours CRUD E2E
+traverse désormais l’accueil avant réouverture. La matrice reste à 115 cas : 111
+réussissent et les quatre skips WebKit historiques sont inchangés. Le smoke local
+ajoute sauvegarde, entrée d’accueil, réouverture et lecture d’un mix au parcours
+0.1–1.0.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

@@ -1173,6 +1173,15 @@ test("a local mix survives reload, updates by stable ID and deletes safely", asy
   await expect(
     page.getByRole("heading", { name: "Untitled mix" }),
   ).toBeVisible();
+  await page.getByRole("link", { name: "ATMOS — Home" }).click();
+  await expect(
+    page.getByRole("heading", { name: /What atmosphere/ }),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "Your mixes" })).toBeVisible();
+  await page.getByRole("link", { name: "Your mixes" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Untitled mix" }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Your mixes" }).click();
   await page.getByRole("button", { name: "Open Forest rest" }).click();
   await expect(

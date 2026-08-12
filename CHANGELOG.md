@@ -29,6 +29,10 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
   limites explicites de 20 mixes et 128 Kio.
 - Vue `Your mixes` pour ouvrir en pause, renommer et supprimer, avec confirmations
   de perte, reset global étendu et repli mémoire si le stockage est indisponible.
+- Entrée `Your mixes` conditionnelle sur l’accueil et smoke consolidé jusqu’à la
+  lecture d’un mix sauvegardé.
+- Mesure bornée de dix changements de mix, signature de couches vérifiée à la
+  reprise et audits Lighthouse du compositeur en mobile et desktop.
 
 ## [0.3.0] — 2026-08-11
 

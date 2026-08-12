@@ -3,6 +3,7 @@ import { act } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { atmospheres } from "../../data/atmospheres";
+import { preferenceCatalogue } from "../../data/sounds";
 import { PreferencesProvider } from "../../features/preferences/preferences-provider";
 import type { PreferencesStorageAdapter } from "../../features/preferences/preferences-storage";
 
@@ -64,7 +65,10 @@ describe("AtmosphereCatalogue", () => {
       write: vi.fn().mockReturnValue(true),
     };
     render(
-      <PreferencesProvider catalogue={[]} storageAdapter={adapter}>
+      <PreferencesProvider
+        catalogue={preferenceCatalogue}
+        storageAdapter={adapter}
+      >
         <AtmosphereCatalogue atmospheres={atmospheres} />
       </PreferencesProvider>,
     );
@@ -86,5 +90,48 @@ describe("AtmosphereCatalogue", () => {
         .getAllByText("Saved")
         .filter((marker) => marker.dataset.saved === "true"),
     ).toHaveLength(1);
+  });
+
+  it("exposes one quiet Your mixes entry only when the local collection exists", () => {
+    const adapter: PreferencesStorageAdapter = {
+      read: vi.fn().mockReturnValue({
+        preferences: {
+          favoriteAtmosphereIds: [],
+          layerVolumes: {},
+          savedMixes: [
+            {
+              id: "mix-1",
+              name: "Quiet layers",
+              sceneAtmosphereId: "rainy-apartment",
+              layers: [
+                {
+                  sound: {
+                    atmosphereId: "rainy-apartment",
+                    layerId: "rain",
+                  },
+                  volume: 0.5,
+                },
+              ],
+            },
+          ],
+        },
+        storageAvailable: true,
+      }),
+      reset: vi.fn().mockReturnValue(true),
+      write: vi.fn().mockReturnValue(true),
+    };
+    render(
+      <PreferencesProvider catalogue={[]} storageAdapter={adapter}>
+        <AtmosphereCatalogue atmospheres={atmospheres} />
+      </PreferencesProvider>,
+    );
+
+    expect(screen.getByRole("link", { name: "Your mixes" })).toHaveAttribute(
+      "href",
+      "/compose",
+    );
+    expect(
+      screen.getByRole("navigation", { name: "Atmospheres" }),
+    ).toBeVisible();
   });
 });

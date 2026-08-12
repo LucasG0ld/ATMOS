@@ -178,6 +178,32 @@ describe("AudioSessionProvider", () => {
     await screen.findByRole("button", { name: /Pause Rainy/ });
   });
 
+  it("synchronizes a changed same-scene mix before resuming from Pause", async () => {
+    const user = userEvent.setup();
+    const engine = createMockEngine();
+    const view = render(
+      <Session atmosphere={rainyApartment} createEngine={() => engine} />,
+    );
+    await user.click(screen.getByRole("button", { name: /Play Rainy/ }));
+    await user.click(
+      await screen.findByRole("button", { name: /Pause Rainy/ }),
+    );
+
+    const reducedMix: Atmosphere = {
+      ...rainyApartment,
+      sounds: rainyApartment.sounds.slice(0, 2),
+    };
+    view.rerender(
+      <Session atmosphere={reducedMix} createEngine={() => engine} />,
+    );
+    expect(engine.syncLayers).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole("button", { name: /Play Rainy/ }));
+    await screen.findByRole("button", { name: /Pause Rainy/ });
+    expect(engine.syncLayers).toHaveBeenCalledWith(reducedMix.sounds);
+    expect(engine.transition).not.toHaveBeenCalled();
+  });
+
   it("keeps Pause available while a slow target is loading", async () => {
     const user = userEvent.setup();
     let resolveTransition!: (result: AudioLoadResult) => void;

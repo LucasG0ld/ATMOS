@@ -598,7 +598,7 @@ modifier les assertions fonctionnelles.
 
 ## Lot 26 — Sauvegarde et gestion des mixes
 
-**Statut : implémenté le 2026-08-12 ; recette manuelle desktop/mobile en attente.**
+**Statut : terminé et validé sur desktop et mobile le 2026-08-12.**
 
 ### Livrables
 
@@ -631,12 +631,13 @@ La couverture atteint 149 tests unitaires/composants sur 25 fichiers. La matrice
 Playwright comporte 115 cas : 111 réussissent, dont un CRUD réel avec
 rechargement et contrôle de l’ID stable sur cinq profils, et les quatre skips
 WebKit historiques restent inchangés. `/compose` mesure 25,5 Kio de JavaScript gzip et
-9,7 Kio de CSS. Types, lint, format, build, médias, audit et budgets passent ; la
-recette manuelle reste la dernière sortie du lot.
+9,7 Kio de CSS. Types, lint, format, build, médias, audit et budgets passent. La
+recette manuelle desktop/mobile du CRUD et des confirmations est validée par le
+responsable du projet.
 
 ## Lot 27 — Intégration et performance 1.0
 
-**Statut : planifié.**
+**Statut : implémenté le 2026-08-12 ; recette d’intégration desktop/mobile en attente.**
 
 ### Livrables
 
@@ -649,6 +650,31 @@ recette manuelle reste la dernière sortie du lot.
 - Dix changements de mix sans fuite ni croissance non bornée.
 - Budgets réseau, mémoire, stockage et JavaScript respectés.
 - Aucune régression catalogue, timer, favoris ou Focus Mode.
+
+L’accueil expose désormais un unique lien textuel `Your mixes`, après
+hydratation et seulement si la collection n’est pas vide. Il mène au compositeur
+sans ajouter de grille ou de bloc promotionnel. Les players conservent leur
+entrée secondaire `Create a mix`. Le smoke local couvre les quatre routes,
+préférences, timer, Focus Mode, transition catalogue, création/sauvegarde,
+réouverture depuis l’accueil, lecture du mix et 404.
+
+La reprise audio compare désormais l’ID de scène et la signature réelle des
+couches : deux mixes d’une même scène ouverts en pause sont resynchronisés avant
+Play. Le test dédié évite qu’un ancien graphe reste audible sous un nouveau nom.
+
+La mesure de dix changements de mix retourne à deux sources stables, atteint au
+plus sept sources transitoires sur huit, conserve un seul `AudioContext` et huit
+listeners avant/après. Neuf URL audio uniques transfèrent 4 628 969 octets, sous
+le budget catalogue de 12 Mio. Après collecte du garbage collector, le tas croît
+de 575 933 octets, contre 1 334 668 octets sur le parcours catalogue 0.3 mesuré
+dans le même build, et sous le plafond automatique de 1,5 Mo.
+
+Le build conserve 12,9 Kio de JavaScript sur l’accueil, 61,9 Kio sur le player et
+25,6 Kio sur `/compose`, avec 9,7 Kio de CSS. Les douze audits Lighthouse locaux
+obtiennent 100 en accessibilité, bonnes pratiques et SEO. Le compositeur obtient
+99 en performance mobile (LCP 2,10 s) et 100 desktop (LCP 0,45 s). La couverture
+atteint 151 tests unitaires/composants ; la matrice consolidée reste à 115 cas,
+111 réussites et quatre skips WebKit historiques.
 
 ## Lot 28 — Stabilisation 1.0
 

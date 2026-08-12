@@ -22,6 +22,7 @@ const allRoutes = [
   ["quiet-coffee-shop", "/atmosphere/quiet-coffee-shop"],
   ["deep-forest", "/atmosphere/deep-forest"],
   ["fireplace", "/atmosphere/fireplace"],
+  ["composer", "/compose"],
 ];
 const requestedRoute = process.argv[2];
 const requestedProfile = process.argv[3];

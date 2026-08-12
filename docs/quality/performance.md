@@ -416,3 +416,31 @@ Le snapshot est validé et mesuré avant commit, plafonné à 20 mixes et 128 Ki
 Les écritures restent coalescées à 250 ms et un rechargement n’initialise ni
 audio ni lecture. Le parcours CRUD multi-navigateurs confirme zéro requête
 `/audio/` tant que Play n’est pas activé.
+
+### Mesure d’intégration 1.0 — Lot 27
+
+Le build conserve 12,9 Kio de JavaScript gzip sur l’accueil, 61,9 Kio sur le
+player et 25,6 Kio sur `/compose`. Le CSS partagé mesure 9,7 Kio et les fonts
+29,4 Kio. Le lien conditionnel d’accueil n’ajoute aucun média, fetch ou package.
+
+`npm run performance:composer` injecte quatre mixes valides puis en effectue dix
+changements pendant la lecture. La mesure bloque au-delà d’un contexte, quatre
+sources stables, huit transitoires, douze URL/12 Mio transférés, une variation de
+listeners ou 1,5 Mo de croissance du tas après collecte. Résultat du 2026-08-12 :
+
+| Mesure                            |  Résultat |
+| --------------------------------- | --------: |
+| `AudioContext`                    |         1 |
+| Sources finales / pic transitoire |     2 / 7 |
+| Listeners ciblés avant / après    |     8 / 8 |
+| Requêtes / URL audio uniques      |    33 / 9 |
+| Octets audio transférés           | 4 628 969 |
+| Delta de tas après GC             |   575 933 |
+| Delta catalogue 0.3, même build   | 1 334 668 |
+
+Les douze audits Lighthouse locaux couvrent désormais accueil, quatre players
+et compositeur en mobile/desktop. Toutes les routes obtiennent 100 en
+accessibilité, bonnes pratiques et SEO. Le compositeur obtient 99 en performance
+mobile avec FCP 0,90 s, LCP 2,10 s, TBT 26 ms et CLS 0 ; en desktop, il obtient
+100 avec LCP 0,45 s, TBT 0 et CLS 0. L’accueil mobile reste à 92/LCP 3,33 s,
+mesure locale historique qui sera recontrôlée en HTTPS au Lot 28.

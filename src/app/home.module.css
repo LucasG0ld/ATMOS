@@ -28,7 +28,14 @@
 .headerMeta {
   display: flex;
   align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: clamp(1rem, 3vw, 2rem);
+}
+
+.mixesLink {
+  min-height: 2.75rem;
+  color: var(--atmos-foreground);
 }
 
 .hero {

@@ -45,7 +45,9 @@ rester configurée sur **GitHub Actions**.
 
 Pour le point 4, construire d’abord avec `npm run build`, puis exécuter
 `npm run budget:check`, `npm run performance:runtime` et
-`npm run performance:lighthouse`. Cette dernière commande audite les cinq routes
+`npm run performance:composer` puis `npm run performance:lighthouse`. La mesure
+du compositeur alterne dix mixes et bloque les dépassements de contexte, sources,
+listeners, réseau et tas. La dernière commande audite les six routes
 en profils mobile et desktop ; une route et un profil peuvent être ciblés, par
 exemple `npm run performance:lighthouse -- home mobile`. Les rapports temporaires
 sont écrits sous `.cache/`.
