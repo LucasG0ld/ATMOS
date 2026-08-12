@@ -423,9 +423,7 @@ test("background playback is not voluntarily suspended", async ({
       },
     });
   });
-  await page.goto("/atmosphere/rainy-apartment", {
-    waitUntil: "domcontentloaded",
-  });
+  await page.goto("/atmosphere/rainy-apartment");
   await page.getByRole("button", { name: "Play Rainy Apartment" }).click();
   const playbackOutcome = page.getByRole("button", {
     name: /^(Pause|Retry) Rainy Apartment$/,
@@ -516,7 +514,9 @@ test("one unavailable layer keeps the remaining mix playable", async ({
 test("routes expose metadata, security headers and a useful 404", async ({
   page,
 }) => {
-  const response = await page.goto("/atmosphere/rainy-apartment");
+  const response = await page.goto("/atmosphere/rainy-apartment", {
+    waitUntil: "domcontentloaded",
+  });
   expect(response?.status()).toBe(200);
   expect(response?.headers()["content-security-policy"]).toContain(
     "default-src 'self'",
@@ -530,7 +530,9 @@ test("routes expose metadata, security headers and a useful 404", async ({
   expect(audioResponse.headers()["content-type"]).toContain("audio/mpeg");
   expect(audioResponse.headers()["cache-control"]).toContain("max-age=86400");
 
-  const notFoundResponse = await page.goto("/atmosphere/unknown");
+  const notFoundResponse = await page.goto("/atmosphere/unknown", {
+    waitUntil: "domcontentloaded",
+  });
   expect(notFoundResponse?.status()).toBe(404);
   await expect(
     page.getByRole("heading", { name: "This atmosphere does not exist." }),
@@ -616,11 +618,23 @@ test("catalog previews and player navigation keep URLs and audio coherent", asyn
     if (request.url().includes("/audio/")) audioRequests.push(request.url());
   });
 
-  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.goto("/");
   const destinations = page.getByRole("navigation", { name: "Atmospheres" });
   await expect(destinations.getByRole("link")).toHaveCount(4);
 
-  await destinations.getByRole("link", { name: /Deep Forest/ }).focus();
+  const deepForestDestination = destinations.getByRole("link", {
+    name: /Deep Forest/,
+  });
+  await expect
+    .poll(
+      async () => {
+        await deepForestDestination.blur();
+        await deepForestDestination.focus();
+        return page.locator('[data-atmosphere="deep-forest"]').count();
+      },
+      { timeout: 10_000 },
+    )
+    .toBe(1);
   await expect(page.locator('[data-atmosphere="deep-forest"]')).toBeVisible();
   expect(audioRequests).toEqual([]);
 
@@ -991,7 +1005,7 @@ test("visual composer builds a four-sound draft without loading audio", async ({
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Play Untitled mix" }),
-  ).toBeDisabled();
+  ).toBeEnabled();
   await expect(page.getByRole("button", { name: "Save mix" })).toBeDisabled();
 
   await page.getByRole("button", { name: "Add sound" }).click();
@@ -1017,4 +1031,92 @@ test("visual composer builds a four-sound draft without loading audio", async ({
   expect(audioRequests).toEqual([]);
   expect(runtimeErrors).toEqual([]);
   await expectNoSeriousAccessibilityViolation(page);
+});
+
+test("live composer changes one layer without loading the whole library", async ({
+  browserName,
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) {
+      audioRequests.push(new URL(request.url()).pathname);
+    }
+  });
+
+  await page.goto("/compose?scene=deep-forest");
+  expect(audioRequests).toEqual([]);
+  await page.getByRole("button", { name: "Play Untitled mix" }).click();
+  const playbackOutcome = page.getByRole("button", {
+    name: /^(Pause|Retry) Untitled mix$/,
+  });
+  await expect(playbackOutcome).toBeVisible({ timeout: 15_000 });
+  if ((await playbackOutcome.getAttribute("aria-label"))?.startsWith("Retry")) {
+    expect(usesExpectedAudioFallback(browserName)).toBe(true);
+    expect(runtimeErrors).toEqual([]);
+    return;
+  }
+
+  await expect.poll(() => audioRequests.length).toBe(3);
+  await page.getByRole("button", { name: "Add sound" }).click();
+  await page.getByRole("button", { name: "Add Fire from Fireplace" }).click();
+  await expect.poll(() => audioRequests.length).toBe(4);
+  await expect(
+    page.getByRole("button", { name: "Pause Untitled mix" }),
+  ).toBeVisible();
+  await page.getByRole("slider", { name: "Fire from Fireplace" }).fill("36");
+  await page.getByRole("button", { name: "Remove Fire" }).click();
+  await expect(page.getByRole("slider")).toHaveCount(3);
+  expect(audioRequests).toHaveLength(4);
+
+  await page.getByRole("button", { name: "Focus" }).click();
+  await expect(page.getByRole("button", { name: "Exit focus" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Pause Untitled mix" }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Timer" })).toBeVisible();
+  await page.getByRole("button", { name: "Exit focus" }).click();
+  await page.getByRole("button", { name: "Pause Untitled mix" }).click();
+  await expect(
+    page.getByRole("button", { name: "Play Untitled mix" }),
+  ).toBeVisible();
+
+  expect(runtimeErrors).toEqual([]);
+});
+
+test("one failed live addition leaves the custom mix playable", async ({
+  browserName,
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  await page.route("**/audio/fire.mp3", (route) => route.abort("failed"));
+  await page.goto("/compose?scene=deep-forest");
+  await page.getByRole("button", { name: "Play Untitled mix" }).click();
+  const playbackOutcome = page.getByRole("button", {
+    name: /^(Pause|Retry) Untitled mix$/,
+  });
+  await expect(playbackOutcome).toBeVisible({ timeout: 15_000 });
+  if ((await playbackOutcome.getAttribute("aria-label"))?.startsWith("Retry")) {
+    expect(usesExpectedAudioFallback(browserName)).toBe(true);
+    expect(runtimeErrors).toEqual([]);
+    return;
+  }
+
+  await page.getByRole("button", { name: "Add sound" }).click();
+  await page.getByRole("button", { name: "Add Fire from Fireplace" }).click();
+  await expect(page.getByRole("status")).toContainText(
+    "One sound layer is unavailable",
+  );
+  await expect(
+    page.getByRole("slider", { name: "Fire from Fireplace" }),
+  ).toBeDisabled();
+  await expect(
+    page.getByRole("button", { name: "Pause Untitled mix" }),
+  ).toBeVisible();
+  expect(
+    runtimeErrors.filter(
+      (message) => !message.includes("Failed to load resource"),
+    ),
+  ).toEqual([]);
 });

@@ -212,6 +212,22 @@ Le scénario responsive couvre aussi `/compose` à 320 px avec mouvement réduit
 L’exécution consolidée compte 96 réussites et les quatre reports WebKit
 historiques documentés.
 
+Le Lot 25 porte la suite à 144 tests unitaires/composants sur 25 fichiers et la
+matrice à 110 cas. Le moteur est vérifié sur ajout/retrait différentiel, rampes,
+échec partiel, partage d’une requête concurrente, ensembles invalides et dix
+cycles revenant à trois sources avec un contexte unique. La session couvre la
+synchronisation d’un mix dont l’identifiant reste stable. Le compositeur couvre
+Play/Pause, volume par référence globale, ajout/retrait sans Pause, timer et
+Focus Mode avec restauration du focus.
+
+Deux parcours navigateur chargent seulement les trois sons initiaux puis le son
+ajouté, ou provoquent l’échec de ce seul ajout tout en conservant le mix courant.
+Ils passent sur les cinq profils avec axe. L’exécution consolidée compte 106
+réussites ; quatre skips WebKit historiques
+restent réservés au décodage MP3 et à la politique de tabulation Safari. La
+recette réelle doit encore écouter les fondus, l’absence de son résiduel et la
+continuité timer/Focus/arrière-plan sur desktop et mobile.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

@@ -21,6 +21,10 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
   bibliothèque accessible, annonces et restauration du focus.
 - États explicites du compositeur avant moteur live et sauvegarde, sans requête
   audio, ainsi que couverture multi-navigateurs et responsive à 320 px.
+- Composition audio live d’une à quatre couches dans un contexte unique, avec
+  ajout/retrait différentiel, volumes par référence globale et rampes anti-clic.
+- Dégradation locale d’un ajout audio en échec, requêtes concurrentes partagées,
+  nettoyage borné et conservation de Play/Pause, timer, Focus Mode et arrière-plan.
 
 ## [0.3.0] — 2026-08-11
 

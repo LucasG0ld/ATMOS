@@ -292,7 +292,38 @@ export function AudioSessionProvider({
   const selectAtmosphere = useCallback(
     (atmosphere: Atmosphere) => {
       const previousAtmosphere = currentAtmosphereRef.current;
-      if (previousAtmosphere?.id === atmosphere.id) return;
+      if (previousAtmosphere?.id === atmosphere.id) {
+        currentAtmosphereRef.current = atmosphere;
+        const layersAreUnchanged =
+          previousAtmosphere.sounds.length === atmosphere.sounds.length &&
+          previousAtmosphere.sounds.every(
+            (sound, index) =>
+              sound.id === atmosphere.sounds[index]?.id &&
+              sound.src === atmosphere.sounds[index]?.src,
+          );
+        if (
+          layersAreUnchanged ||
+          !intentPlayingRef.current ||
+          !engineRef.current
+        ) {
+          return;
+        }
+
+        const operation = ++operationRef.current;
+        setSnapshot((current) => ({
+          ...current,
+          statusMessage: "Updating the live mix…",
+          unavailableLayerIds: EMPTY_LAYERS,
+        }));
+        void engineRef.current
+          .syncLayers(atmosphere.sounds)
+          .then((result) => {
+            if (operation !== operationRef.current) return;
+            applyResult(result);
+          })
+          .catch((error: unknown) => reportFailure(operation, error));
+        return;
+      }
       currentAtmosphereRef.current = atmosphere;
       visualPreloaderRef.current?.cancel();
 

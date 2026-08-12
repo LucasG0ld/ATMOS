@@ -203,3 +203,11 @@ seul timeout métier vise un `endsAt` absolu et les réveils de page recalculent
 l’échéance depuis `Date.now()`. Le rendu du compte à rebours possède son propre
 rafraîchissement borné uniquement pendant un timer actif. Le moteur ne connaît ni
 l’horloge ni React : il sait seulement automatiser ou refuser un fade de fin.
+
+Depuis le Lot 25, le même provider accepte aussi une sélection personnalisée
+éphémère. Si son identifiant reste stable mais que sa liste de sons change, la
+session demande au moteur une synchronisation différentielle au lieu d’un
+crossfade de scène complet. L’UI du compositeur ne possède donc ni contexte
+audio, ni timer, ni politique de visibilité parallèles. Les références globales
+évitent les collisions entre couches provenant d’ambiances différentes ; la
+persistance du brouillon demeure hors de cette tranche.

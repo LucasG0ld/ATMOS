@@ -81,11 +81,50 @@
   margin-top: var(--space-8);
   gap: var(--space-3);
   color: var(--atmos-background);
-  cursor: not-allowed;
+  cursor: pointer;
   background: var(--atmos-foreground);
   border: 0;
   border-radius: 999px;
+  opacity: 1;
+}
+
+.playButton:disabled {
+  cursor: wait;
   opacity: 0.7;
+}
+
+.playButton[data-playing="true"] {
+  color: var(--atmos-foreground);
+  background: color-mix(in srgb, var(--atmos-surface) 82%, transparent);
+}
+
+.loadingIcon {
+  animation: composerSpin 900ms linear infinite;
+}
+
+.sessionActions,
+.focusButton {
+  display: flex;
+  align-items: center;
+}
+
+.sessionActions {
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  margin-top: var(--space-5);
+}
+
+.focusButton {
+  min-height: 2.75rem;
+  gap: var(--space-2);
+  color: var(--atmos-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.focusButton:is(:hover, :focus-visible) {
+  color: var(--atmos-foreground);
 }
 
 .availabilityNote,
@@ -367,4 +406,23 @@
   .dialog::backdrop {
     backdrop-filter: none;
   }
+
+  .loadingIcon {
+    animation-duration: 1.8s;
+  }
+}
+
+@keyframes composerSpin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+:global([data-focus-mode="true"]) .frame {
+  grid-template-rows: 1fr;
+  gap: 0;
+}
+
+:global([data-focus-mode="true"]) .stage {
+  grid-template-columns: 1fr;
 }

@@ -519,7 +519,7 @@ attendent ensuite explicitement les contrôles et la matrice complète est verte
 
 ## Lot 24 — Fondations visuelles du compositeur
 
-**Statut : implémenté le 2026-08-12 ; validation visuelle utilisateur en attente.**
+**Statut : terminé et validé sur desktop et mobile le 2026-08-12.**
 
 ### Livrables
 
@@ -552,12 +552,12 @@ matrice Playwright 100 cas : 96 réussissent et les quatre reports WebKit
 historiques restent inchangés. Le parcours compositeur, l’ordre clavier et la
 largeur 320 px passent sur les cinq profils. Le build statique, les types, le
 lint, l’audit, les actifs et les budgets passent ; `/compose` mesure 20,9 Kio de
-JavaScript gzip et 9,2 Kio de CSS. La recette manuelle desktop, mobile et zoom
-200 % reste la dernière validation du lot.
+JavaScript gzip et 9,2 Kio de CSS. La recette manuelle desktop et mobile est
+validée par le responsable du projet.
 
 ## Lot 25 — Moteur de composition live
 
-**Statut : planifié.**
+**Statut : implémenté le 2026-08-12 ; recette audio desktop/mobile en attente.**
 
 ### Livrables
 
@@ -570,6 +570,31 @@ JavaScript gzip et 9,2 Kio de CSS. La recette manuelle desktop, mobile et zoom
 - Un contexte unique et quatre voies stables maximum.
 - Aucun clic, son résiduel ou chargement de la bibliothèque complète.
 - Tests de stress sur changements rapides et erreurs partielles.
+
+Le compositeur pilote désormais la session audio existante avec un identifiant
+de mix éphémère et les références globales `atmosphereId:layerId`. Play demeure
+le seul geste qui crée l’`AudioContext` et charge les trois sons initiaux. Une
+mutation ultérieure synchronise uniquement la différence : l’ajout charge et
+démarre une source, le retrait l’éteint puis la déconnecte, et les volumes
+utilisent les rampes de 50 ms déjà éprouvées. Le moteur refuse les ensembles
+vides, dupliqués ou supérieurs à quatre couches.
+
+Une couche ajoutée en erreur reste locale : son contrôle est désactivé et les
+autres continuent. Les requêtes concurrentes d’une même référence sont
+partagées, les ajouts devenus obsolètes sont annulés et le nettoyage arrête
+sources, gains, timers et fetchs. Timer, Focus Mode et lecture en arrière-plan
+best effort restent portés par la même session ; la sauvegarde reste désactivée
+jusqu’au Lot 26.
+
+La couverture atteint 144 tests unitaires/composants sur 25 fichiers. La matrice
+Playwright comporte 110 cas : 106 réussissent, dont l’ajout/retrait live, le
+Focus Mode et l’échec partiel sur cinq profils ; les quatre reports WebKit restent
+inchangés. Le build, les types, le lint, l’audit et les budgets passent.
+`/compose` mesure 23,4 Kio de JavaScript gzip et 9,3 Kio de CSS. La dernière
+sortie du lot est une écoute manuelle desktop/mobile des mutations pendant la
+lecture, y compris timer, Focus Mode et arrière-plan. Le timeout E2E passe à 60
+secondes afin d’absorber les chargements `load` Firefox sous cinq workers, sans
+modifier les assertions fonctionnelles.
 
 ## Lot 26 — Sauvegarde et gestion des mixes
 

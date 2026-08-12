@@ -390,3 +390,17 @@ reste à 12,6 Kio de JavaScript et le player à 60,5 Kio ; les fonts restent à
 La bibliothèque lit uniquement le registre en mémoire. Les tests navigateur
 confirment zéro requête `/audio/` pendant l’ouverture, l’ajout, le retrait et le
 réglage visuel d’un brouillon ; le décodage et le graphe live restent hors du Lot 24.
+
+### Mesure du moteur de composition live — Lot 25
+
+Le build mesure 23,4 Kio de JavaScript applicatif gzip et 9,3 Kio de CSS sur
+`/compose`, soit respectivement +2,5 et +0,1 Kio depuis le Lot 24, très sous les
+budgets de 180 et 70 Kio. L’accueil reste à 12,6 Kio, le player à 61,5 Kio et les
+fonts à 29,4 Kio.
+
+Le compositeur ne demande toujours aucun octet audio avant Play. Le premier Play
+charge les trois couches du brouillon ; un ajout ultérieur ne demande que son
+fichier et un retrait ne recharge rien. Les tests de dix cycles confirment un
+seul `AudioContext` et un retour au nombre initial de sources. Le plafond stable
+est de quatre couches et le bref chevauchement retrait/ajout reste inférieur au
+plafond transitoire de huit.
