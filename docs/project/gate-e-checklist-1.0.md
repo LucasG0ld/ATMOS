@@ -23,14 +23,14 @@
 - [x] Ajout, retrait, pause, reprise et changement de mix restent sans clic audible.
 - [x] Un seul contexte, quatre voies stables maximum et nettoyage des transitions confirmé.
 - [x] Timer, Focus Mode et arrière-plan best effort ne régressent pas.
-- [ ] Écoute continue d’au moins dix minutes sur plusieurs mixes validée.
+- [x] Écoute continue d’au moins dix minutes sur plusieurs mixes validée.
 
 ## Accessibilité et appareils
 
-- [ ] Clavier seul, toucher et lecteurs d’écran couvrent le parcours critique.
+- [x] Clavier seul, toucher et lecteurs d’écran couvrent le parcours critique.
 - [x] Dialogues, confirmations et erreurs restaurent correctement le focus.
-- [ ] Zoom 200 %, texte agrandi, contraste élevé et mouvement réduit validés.
-- [ ] Chrome Android et Safari iOS réels validés.
+- [x] Zoom 200 %, texte agrandi, contraste élevé et mouvement réduit validés.
+- [x] Chrome Android et Safari iOS réels validés.
 - [ ] Risque Safari macOS réel réévalué explicitement.
 
 ## Qualité et livraison

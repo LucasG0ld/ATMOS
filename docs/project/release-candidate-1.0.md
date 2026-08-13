@@ -80,16 +80,16 @@ octet. `npm run rollback:check` rend ce contrôle reproductible. Le tag annoté
 
 - [x] Création visuelle, moteur live et CRUD sur desktop et mobile aux Lots 24–26.
 - [x] Intégration accueil, mixes d’une même scène et non-régression 0.3 sur desktop et mobile au Lot 27.
-- [ ] Écoute continue d’au moins dix minutes en alternant plusieurs mixes.
-- [ ] Parcours 1.0 au clavier et avec lecteurs d’écran desktop/mobile.
-- [ ] Zoom 200 %, texte agrandi, contraste élevé et mouvement réduit sur `/compose`.
-- [ ] Candidate 1.0 sur Chrome Android et Safari iOS réels.
+- [x] Écoute continue d’au moins dix minutes en alternant plusieurs mixes.
+- [x] Parcours 1.0 au clavier et avec lecteurs d’écran desktop/mobile.
+- [x] Zoom 200 %, texte agrandi, contraste élevé et mouvement réduit sur `/compose`.
+- [x] Candidate 1.0 sur Chrome Android et Safari iOS réels.
 - [ ] Risque Safari macOS réel réévalué et accepté ou couvert extérieurement.
 
 ## Contrôles restants avant Gate E
 
 - [ ] Obtenir une CI verte sur la pull request `mvp-1.0` vers `main`.
-- [ ] Terminer la recette réelle ci-dessus et confirmer l’absence de défaut majeur.
+- [ ] Réévaluer le risque Safari macOS et confirmer l’absence de défaut majeur.
 - [ ] Fusionner uniquement après autorisation explicite du responsable du projet.
 - [ ] Vérifier le smoke et Lighthouse HTTPS sur les six routes après déploiement.
 - [ ] Approuver explicitement la Gate E et autoriser le tag `v1.0.0`.
