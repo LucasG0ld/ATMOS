@@ -721,4 +721,5 @@ Le responsable du projet valide le 2026-08-13 la candidate sur desktop et
 mobile : écoute longue multi-mixes, clavier, toucher, lecteurs d’écran, zoom
 200 %, texte agrandi, contraste élevé, mouvement réduit, Chrome Android et
 Safari iOS réels sont conformes. Aucun défaut n’est signalé. Le risque Safari
-macOS reste à réévaluer explicitement avant la décision Gate E.
+macOS lié à l’absence d’appareil réel est réévalué et accepté explicitement par
+LucasG0ld le 2026-08-13 pour la version 1.0.

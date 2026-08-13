@@ -84,12 +84,12 @@ octet. `npm run rollback:check` rend ce contrôle reproductible. Le tag annoté
 - [x] Parcours 1.0 au clavier et avec lecteurs d’écran desktop/mobile.
 - [x] Zoom 200 %, texte agrandi, contraste élevé et mouvement réduit sur `/compose`.
 - [x] Candidate 1.0 sur Chrome Android et Safari iOS réels.
-- [ ] Risque Safari macOS réel réévalué et accepté ou couvert extérieurement.
+- [x] Risque Safari macOS réel réévalué et accepté par LucasG0ld le 2026-08-13.
 
 ## Contrôles restants avant Gate E
 
 - [ ] Obtenir une CI verte sur la pull request `mvp-1.0` vers `main`.
-- [ ] Réévaluer le risque Safari macOS et confirmer l’absence de défaut majeur.
+- [x] Risque Safari macOS accepté et absence de défaut majeur confirmée.
 - [ ] Fusionner uniquement après autorisation explicite du responsable du projet.
 - [ ] Vérifier le smoke et Lighthouse HTTPS sur les six routes après déploiement.
 - [ ] Approuver explicitement la Gate E et autoriser le tag `v1.0.0`.

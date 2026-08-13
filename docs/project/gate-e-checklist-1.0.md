@@ -31,7 +31,7 @@
 - [x] Dialogues, confirmations et erreurs restaurent correctement le focus.
 - [x] Zoom 200 %, texte agrandi, contraste élevé et mouvement réduit validés.
 - [x] Chrome Android et Safari iOS réels validés.
-- [ ] Risque Safari macOS réel réévalué explicitement.
+- [x] Risque Safari macOS réel réévalué explicitement.
 
 ## Qualité et livraison
 
