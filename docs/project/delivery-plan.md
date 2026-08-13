@@ -682,7 +682,7 @@ deux mixes d’une même scène, navigation et fonctions historiques sont confor
 
 ## Lot 28 — Stabilisation 1.0
 
-**Statut : candidate locale en préparation depuis le 2026-08-13 ; Gate E en attente.**
+**Statut : terminé le 2026-08-13 ; Gate E approuvée et tag `v1.0.0` autorisé.**
 
 ### Livrables
 
@@ -730,4 +730,8 @@ consolidé réussit après adaptation de son assertion au slash canonique ajout�
 par Pages sur `/compose/`. Les douze audits de production obtiennent 100 en
 accessibilité, bonnes pratiques et SEO ; la performance vaut 96–100, tous les
 LCP mobiles restent entre 1,66 s et 2,11 s et tous les CLS sont nuls. Seules
-l’approbation de la Gate E et l’autorisation du tag `v1.0.0` restent requises.
+l’approbation de la Gate E et l’autorisation du tag `v1.0.0` restaient requises.
+
+LucasG0ld approuve explicitement la Gate E, autorise la fusion Squash de la PR
+de clôture et la création du tag annoté `v1.0.0` le 2026-08-13. Le Lot 28 et le
+cycle de livraison 1.0 sont clos sans défaut critique ou majeur.

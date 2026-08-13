@@ -32,7 +32,7 @@
 | R-26 | Migration V2 perd préférences ou mixes                |   3 |   5 | favoris absents, snapshot écrasé ou rollback destructif    | migration pure, validation atomique, fixtures V1 et test de rollback       | front-end    | mitigé ; rollback réel validé au Lot 28  |
 | R-27 | Mixes multi-ambiances saturent mémoire ou réseau      |   4 |   4 | décodages simultanés, chauffe, buffers non libérés         | quatre couches, cache borné, aucun preload bibliothèque et stress test     | audio        | mitigé automatiquement au Lot 27         |
 | R-28 | Brouillon local perdu sans avertissement              |   3 |   4 | navigation interne après modification non sauvegardée      | état dirty, confirmation interne et sauvegarde explicite                   | design       | mitigé automatiquement au Lot 26         |
-| R-29 | Travail 1.0 modifie directement la production 0.3     |   3 |   5 | changement incomplet sur `main`                            | branche `mvp-1.0`, PR, contrôle strict et Gate E avant fusion              | projet       | mitigé par branche et ruleset actifs     |
+| R-29 | Travail 1.0 modifie directement la production 0.3     |   3 |   5 | changement incomplet sur `main`                            | branche `mvp-1.0`, PR, contrôle strict et Gate E avant fusion              | projet       | clos par Gate E et release 1.0           |
 
 ## Règle d’escalade
 

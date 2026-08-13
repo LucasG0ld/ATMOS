@@ -40,14 +40,16 @@
 - [x] Budgets JS, stockage, audio, mémoire et réseau respectés.
 - [x] Lighthouse et smoke HTTPS production réussis.
 - [x] Aucun défaut critique ou majeur ouvert.
-- [ ] Documentation, changelog, rollback et tag `v1.0.0` approuvés.
+- [x] Documentation, changelog, rollback et tag `v1.0.0` approuvés.
 
 ## Décision
 
-Gate E n’est validée qu’après recette réelle, vérifications de production,
-acceptation explicite des risques résiduels et autorisation du tag `v1.0.0` par
-le responsable du projet.
+**Gate E approuvée par LucasG0ld le 2026-08-13. Le tag annoté `v1.0.0` est
+explicitement autorisé.**
+
+La recette réelle, les vérifications de production et l’acceptation du risque
+résiduel Safari macOS sont consignées. Aucun défaut critique ou majeur n’est
+ouvert.
 
 Les preuves automatisées, mesures et contrôles restant manuels sont détaillés
-dans la [candidate de release 1.0](release-candidate-1.0.md). Une case cochée ici
-n’implique ni fusion, ni validation de production, ni approbation de la Gate E.
+dans la [candidate de release 1.0](release-candidate-1.0.md).

@@ -2,8 +2,8 @@
 
 ## État
 
-**Candidate fusionnée par Squash et déployée le 2026-08-13. La Gate E et le tag
-`v1.0.0` ne sont pas encore approuvés.**
+**Candidate fusionnée par Squash et déployée le 2026-08-13. Gate E approuvée et
+tag annoté `v1.0.0` autorisé explicitement par LucasG0ld.**
 
 La PR #6 est fusionnée sur `main` au commit `dc6cad8`. Les workflows `Quality`,
 build et déploiement GitHub Pages sont verts sur ce commit.
@@ -118,7 +118,7 @@ face à la production 0.3 mesurée à 2,21 s ; aucune régression stable supéri
 - [x] Risque Safari macOS accepté et absence de défaut majeur confirmée.
 - [x] Fusionner uniquement après autorisation explicite du responsable du projet.
 - [x] Vérifier le smoke et Lighthouse HTTPS sur les six routes après déploiement.
-- [ ] Approuver explicitement la Gate E et autoriser le tag `v1.0.0`.
+- [x] Approuver explicitement la Gate E et autoriser le tag `v1.0.0`.
 
 Après le premier déploiement 1.0, GitHub Pages a correctement servi
 `/compose/?scene=deep-forest`. Le smoke attendait uniquement la forme locale sans

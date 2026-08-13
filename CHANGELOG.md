@@ -4,6 +4,8 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 
 ## Non publié
 
+## [1.0.0] — 2026-08-13
+
 ### Ajouté
 
 - Cadrage de la version 1.0 : composition locale à partir des couches licenciées,
