@@ -31,6 +31,12 @@ l’[UX de session personnelle](../design/personal-session-ux-0.3.md),
 l’[ADR-0003 accepté](../architecture/decisions/0003-local-preferences-timer-and-focus.md)
 et la [Gate D](gate-d-checklist-0.3.md).
 
+Pour la version 1.0, composition, bibliothèque, stockage V2 et mixes sauvegardés
+sont précisés par la [spécification 1.0](../product/mvp-requirements-1.0.md),
+l’[UX de composition](../design/composition-ux-1.0.md),
+l’[ADR-0005 accepté](../architecture/decisions/0005-local-composition-and-saved-mixes.md)
+et la [Gate E](gate-e-checklist-1.0.md).
+
 ## Éléments ajoutés pour rendre le projet maintenable
 
 Le brief n’explicite pas entièrement certains besoins de livraison. Ils sont couverts par :
@@ -49,4 +55,5 @@ Le brief n’explicite pas entièrement certains besoins de livraison. Ils sont 
 - Préchargement et performance : implémentation de l’ADR-0002 au Lot 14, avec une cible bornée, politique réseau, cache compressé, annulation et mesures reproductibles.
 - Licence du code source : code propriétaire `UNLICENSED`, copyright LucasG0ld et licences des médias conservées séparément.
 - Analytics : absentes par défaut, décision de confidentialité préalable obligatoire.
-- Reprise du timer, synchronisation multi-onglets et mixes : explicitement exclus du MVP 0.3 ; réévaluation seulement après usage démontré.
+- Reprise du timer et synchronisation multi-onglets : toujours exclues ; les mixes
+  sont cadrés pour 1.0 sans import, compte, cloud ou partage.

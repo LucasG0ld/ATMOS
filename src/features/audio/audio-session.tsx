@@ -39,6 +39,12 @@ type AudioSessionSnapshot = {
   unavailableLayerIds: ReadonlySet<string>;
 };
 
+function soundSetKey(atmosphere: Atmosphere): string {
+  return atmosphere.sounds
+    .map(({ id, src }) => `${id}\u0000${src}`)
+    .join("\u0001");
+}
+
 type AudioSessionController = AudioSessionSnapshot & {
   cancelTimer(): void;
   preloadAtmosphere(atmosphere: Atmosphere): void;
@@ -112,6 +118,7 @@ export function AudioSessionProvider({
   timerFadeMs = 5_000,
 }: AudioSessionProviderProps) {
   const activeAtmosphereIdRef = useRef<string | undefined>(undefined);
+  const activeSoundSetKeyRef = useRef<string | undefined>(undefined);
   const currentAtmosphereRef = useRef<Atmosphere | undefined>(undefined);
   const engineRef = useRef<AudioEngineController | undefined>(undefined);
   const hasActivatedAudioRef = useRef(false);
@@ -292,7 +299,39 @@ export function AudioSessionProvider({
   const selectAtmosphere = useCallback(
     (atmosphere: Atmosphere) => {
       const previousAtmosphere = currentAtmosphereRef.current;
-      if (previousAtmosphere?.id === atmosphere.id) return;
+      if (previousAtmosphere?.id === atmosphere.id) {
+        currentAtmosphereRef.current = atmosphere;
+        const layersAreUnchanged =
+          previousAtmosphere.sounds.length === atmosphere.sounds.length &&
+          previousAtmosphere.sounds.every(
+            (sound, index) =>
+              sound.id === atmosphere.sounds[index]?.id &&
+              sound.src === atmosphere.sounds[index]?.src,
+          );
+        if (
+          layersAreUnchanged ||
+          !intentPlayingRef.current ||
+          !engineRef.current
+        ) {
+          return;
+        }
+
+        const operation = ++operationRef.current;
+        setSnapshot((current) => ({
+          ...current,
+          statusMessage: "Updating the live mix…",
+          unavailableLayerIds: EMPTY_LAYERS,
+        }));
+        void engineRef.current
+          .syncLayers(atmosphere.sounds)
+          .then((result) => {
+            if (operation !== operationRef.current) return;
+            activeSoundSetKeyRef.current = soundSetKey(atmosphere);
+            applyResult(result);
+          })
+          .catch((error: unknown) => reportFailure(operation, error));
+        return;
+      }
       currentAtmosphereRef.current = atmosphere;
       visualPreloaderRef.current?.cancel();
 
@@ -338,6 +377,7 @@ export function AudioSessionProvider({
         .then((result) => {
           if (operation !== operationRef.current) return;
           activeAtmosphereIdRef.current = atmosphere.id;
+          activeSoundSetKeyRef.current = soundSetKey(atmosphere);
           applyResult(result);
         })
         .catch((error: unknown) => reportFailure(operation, error));
@@ -397,11 +437,14 @@ export function AudioSessionProvider({
           engine.setLayerVolume(sound.id, (volumes[sound.id] ?? 0) / 100);
         }
 
+        const requestedSoundSetKey = soundSetKey(atmosphere);
         const result = activeAtmosphereIdRef.current
           ? activeAtmosphereIdRef.current === atmosphere.id
-            ? {
-                unavailableLayerIds: unavailableLayerIdsRef.current,
-              }
+            ? activeSoundSetKeyRef.current === requestedSoundSetKey
+              ? {
+                  unavailableLayerIds: unavailableLayerIdsRef.current,
+                }
+              : await engine.syncLayers(atmosphere.sounds)
             : await engine.transition(atmosphere.sounds)
           : await engine.load(atmosphere.sounds);
         if (operation !== operationRef.current) return;
@@ -409,6 +452,7 @@ export function AudioSessionProvider({
         if (operation !== operationRef.current) return;
 
         activeAtmosphereIdRef.current = atmosphere.id;
+        activeSoundSetKeyRef.current = requestedSoundSetKey;
         hasActivatedAudioRef.current = true;
         intentPlayingRef.current = true;
         armTimerFade();

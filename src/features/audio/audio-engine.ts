@@ -5,12 +5,14 @@ const MASTER_RAMP_SECONDS = 0.35;
 const CROSSFADE_SECONDS = 1.8;
 const TRANSITION_SETTLE_MS = 80;
 const RESUME_TIMEOUT_MS = 5_000;
+const MAX_ACTIVE_LAYERS = 4;
 
 export type AudioLoadResult = {
   unavailableLayerIds: readonly string[];
 };
 
 export type AudioEngineController = {
+  addLayer(layer: SoundLayer): Promise<AudioLoadResult>;
   cancelTimerFade(): void;
   load(layers: readonly SoundLayer[]): Promise<AudioLoadResult>;
   preload(layers: readonly SoundLayer[]): Promise<void>;
@@ -19,6 +21,7 @@ export type AudioEngineController = {
   play(): Promise<void>;
   pause(): void;
   setLayerVolume(layerId: string, volume: number): void;
+  syncLayers(layers: readonly SoundLayer[]): Promise<AudioLoadResult>;
   setPageHidden(hidden: boolean): Promise<void>;
   destroy(): Promise<void>;
   fadeOutForTimer(durationSeconds: number): number;
@@ -50,6 +53,11 @@ type PendingPreload = {
   promise: Promise<CompressedAudio>;
 };
 
+type PendingLayerLoad = {
+  abortController: AbortController;
+  promise: Promise<AudioLoadResult>;
+};
+
 function layersKey(layers: readonly SoundLayer[]): string {
   return layers.map(({ src }) => src).join("\u0000");
 }
@@ -57,6 +65,15 @@ function layersKey(layers: readonly SoundLayer[]): string {
 function clampVolume(value: number): number {
   if (!Number.isFinite(value)) return 0;
   return Math.min(1, Math.max(0, value));
+}
+
+function assertValidLayerSet(layers: readonly SoundLayer[]) {
+  if (layers.length < 1 || layers.length > MAX_ACTIVE_LAYERS) {
+    throw new Error("An audio mix must contain between one and four layers.");
+  }
+  if (new Set(layers.map(({ id }) => id)).size !== layers.length) {
+    throw new Error("An audio mix cannot contain duplicate layers.");
+  }
 }
 
 function rampGain(
@@ -85,6 +102,8 @@ export class WebAudioEngine implements AudioEngineController {
   private destroyPromise?: Promise<void>;
   private destroyed = false;
   private layerVolumes = new Map<string, number>();
+  private layerLoads = new Map<string, PendingLayerLoad>();
+  private layerRemovalTimers = new Map<string, ReturnType<typeof setTimeout>>();
   private loadAbortController?: AbortController;
   private loadPromise?: Promise<AudioLoadResult>;
   private masterGain?: GainNode;
@@ -98,8 +117,161 @@ export class WebAudioEngine implements AudioEngineController {
 
   constructor(private readonly dependencies: AudioEngineDependencies) {}
 
+  addLayer(layer: SoundLayer): Promise<AudioLoadResult> {
+    this.assertAvailable();
+    const bus = this.activeBus;
+    const context = this.context;
+    if (!bus || !context) {
+      throw new Error("Audio must be loaded before adding a layer.");
+    }
+
+    const pendingRemoval = this.layerRemovalTimers.get(layer.id);
+    if (pendingRemoval !== undefined && bus.layerGains.has(layer.id)) {
+      clearTimeout(pendingRemoval);
+      this.layerRemovalTimers.delete(layer.id);
+      rampGain(
+        bus.layerGains.get(layer.id)!.gain,
+        this.layerVolumes.get(layer.id) ?? layer.defaultVolume,
+        context.currentTime,
+        LAYER_RAMP_SECONDS,
+      );
+      return Promise.resolve({ unavailableLayerIds: [] });
+    }
+    if (bus.buffers.has(layer.id)) {
+      return Promise.resolve({ unavailableLayerIds: [] });
+    }
+    const pendingLoad = this.layerLoads.get(layer.id);
+    if (pendingLoad) return pendingLoad.promise;
+    if (
+      this.layerRemovalTimers.size === 0 &&
+      bus.buffers.size + this.layerLoads.size >= MAX_ACTIVE_LAYERS
+    ) {
+      throw new Error("An audio mix cannot exceed four active layers.");
+    }
+
+    const abortController = new AbortController();
+    const promise = this.loadLayerIntoBus(
+      layer,
+      bus,
+      context,
+      abortController,
+    ).finally(() => {
+      if (this.layerLoads.get(layer.id)?.abortController === abortController) {
+        this.layerLoads.delete(layer.id);
+      }
+    });
+    this.layerLoads.set(layer.id, { abortController, promise });
+    return promise;
+  }
+
+  private async loadLayerIntoBus(
+    layer: SoundLayer,
+    bus: AudioBus,
+    context: AudioContext,
+    abortController: AbortController,
+  ): Promise<AudioLoadResult> {
+    try {
+      const response = await this.dependencies.fetch(layer.src, {
+        signal: abortController.signal,
+      });
+      if (!response.ok) {
+        throw new Error(`Unable to load ${layer.id}: HTTP ${response.status}`);
+      }
+      const encodedAudio = await response.arrayBuffer();
+      const buffer = await context.decodeAudioData(encodedAudio.slice(0));
+      if (
+        abortController.signal.aborted ||
+        this.activeBus !== bus ||
+        this.destroyed
+      ) {
+        throw abortError();
+      }
+
+      const gain = context.createGain();
+      gain.gain.value = 0;
+      gain.connect(bus.gain);
+      const source = context.createBufferSource();
+      source.buffer = buffer;
+      source.loop = true;
+      source.connect(gain);
+      source.start();
+      bus.buffers.set(layer.id, buffer);
+      bus.layerGains.set(layer.id, gain);
+      bus.sources.set(layer.id, source);
+      rampGain(
+        gain.gain,
+        this.layerVolumes.get(layer.id) ?? layer.defaultVolume,
+        context.currentTime,
+        LAYER_RAMP_SECONDS,
+      );
+      return { unavailableLayerIds: [] };
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        throw error;
+      }
+      return { unavailableLayerIds: [layer.id] };
+    }
+  }
+
+  async syncLayers(layers: readonly SoundLayer[]): Promise<AudioLoadResult> {
+    this.assertAvailable();
+    assertValidLayerSet(layers);
+    const bus = this.activeBus;
+    if (!bus) throw new Error("Audio must be loaded before changing layers.");
+
+    const desiredIds = new Set(layers.map(({ id }) => id));
+    for (const layerId of bus.buffers.keys()) {
+      if (!desiredIds.has(layerId)) this.removeLayer(layerId);
+    }
+    for (const [layerId, pendingLoad] of this.layerLoads) {
+      if (!desiredIds.has(layerId)) {
+        pendingLoad.abortController.abort();
+        this.layerLoads.delete(layerId);
+      }
+    }
+
+    const results = await Promise.all(
+      layers.map((layer) => this.addLayer(layer)),
+    );
+    return {
+      unavailableLayerIds: results.flatMap(
+        ({ unavailableLayerIds }) => unavailableLayerIds,
+      ),
+    };
+  }
+
+  private removeLayer(layerId: string): void {
+    const bus = this.activeBus;
+    const context = this.context;
+    this.layerLoads.get(layerId)?.abortController.abort();
+    this.layerLoads.delete(layerId);
+    if (!bus || !context || this.layerRemovalTimers.has(layerId)) return;
+    const gain = bus.layerGains.get(layerId);
+    if (!gain) return;
+
+    rampGain(gain.gain, 0, context.currentTime, LAYER_RAMP_SECONDS);
+    const timer = setTimeout(() => {
+      this.layerRemovalTimers.delete(layerId);
+      const source = bus.sources.get(layerId);
+      if (source) {
+        try {
+          source.stop();
+        } catch {
+          // The source may already have been stopped by graph cleanup.
+        }
+        source.disconnect();
+      }
+      gain.disconnect();
+      bus.sources.delete(layerId);
+      bus.layerGains.delete(layerId);
+      bus.buffers.delete(layerId);
+    }, LAYER_RAMP_SECONDS * 1_000);
+    this.layerRemovalTimers.set(layerId, timer);
+  }
+
   load(layers: readonly SoundLayer[]): Promise<AudioLoadResult> {
     this.assertAvailable();
+    assertValidLayerSet(layers);
     if (this.loadPromise) return this.loadPromise;
     if (this.activeBus) {
       return Promise.resolve({ unavailableLayerIds: [] });
@@ -123,6 +295,7 @@ export class WebAudioEngine implements AudioEngineController {
 
   preload(layers: readonly SoundLayer[]): Promise<void> {
     this.assertAvailable();
+    assertValidLayerSet(layers);
     const key = layersKey(layers);
     if (this.compressedPreload?.key === key) return Promise.resolve();
     if (this.pendingPreload?.key === key) {
@@ -159,6 +332,7 @@ export class WebAudioEngine implements AudioEngineController {
 
   async transition(layers: readonly SoundLayer[]): Promise<AudioLoadResult> {
     this.assertAvailable();
+    assertValidLayerSet(layers);
     if (!this.activeBus) return this.load(layers);
 
     const operation = ++this.operationId;
@@ -608,6 +782,12 @@ export class WebAudioEngine implements AudioEngineController {
     this.transitionAbortController?.abort();
     this.loadAbortController = undefined;
     this.transitionAbortController = undefined;
+    for (const pendingLoad of this.layerLoads.values()) {
+      pendingLoad.abortController.abort();
+    }
+    this.layerLoads.clear();
+    for (const timer of this.layerRemovalTimers.values()) clearTimeout(timer);
+    this.layerRemovalTimers.clear();
     if (this.retiringTimer) clearTimeout(this.retiringTimer);
     this.retiringTimer = undefined;
 

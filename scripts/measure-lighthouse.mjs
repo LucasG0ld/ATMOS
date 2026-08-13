@@ -9,6 +9,9 @@ const outputDirectory = resolve(projectRoot, ".cache", "lighthouse");
 const port = 3114;
 const chromePort = 9224;
 const origin = `http://127.0.0.1:${port}`;
+const productionOrigin = process.env.ATMOS_LIGHTHOUSE_URL
+  ? new URL(process.env.ATMOS_LIGHTHOUSE_URL.replace(/\/?$/, "/"))
+  : undefined;
 const npmExecPath = process.env.npm_execpath;
 if (!npmExecPath) {
   throw new Error(
@@ -22,6 +25,7 @@ const allRoutes = [
   ["quiet-coffee-shop", "/atmosphere/quiet-coffee-shop"],
   ["deep-forest", "/atmosphere/deep-forest"],
   ["fireplace", "/atmosphere/fireplace"],
+  ["composer", "/compose"],
 ];
 const requestedRoute = process.argv[2];
 const requestedProfile = process.argv[3];
@@ -83,18 +87,20 @@ function metric(report, auditId) {
 }
 
 await mkdir(outputDirectory, { recursive: true });
-const server = spawn(
-  process.execPath,
-  [
-    "node_modules/next/dist/bin/next",
-    "start",
-    "--hostname",
-    "127.0.0.1",
-    "--port",
-    String(port),
-  ],
-  { cwd: projectRoot, stdio: "ignore" },
-);
+const server = productionOrigin
+  ? undefined
+  : spawn(
+      process.execPath,
+      [
+        "node_modules/next/dist/bin/next",
+        "start",
+        "--hostname",
+        "127.0.0.1",
+        "--port",
+        String(port),
+      ],
+      { cwd: projectRoot, stdio: "ignore" },
+    );
 const chrome = spawn(
   chromium.executablePath(),
   [
@@ -108,7 +114,7 @@ const chrome = spawn(
 
 const summary = [];
 try {
-  await waitForServer();
+  if (!productionOrigin) await waitForServer();
   await waitForChrome();
   for (const [label, path] of routes) {
     for (const profile of profiles) {
@@ -116,7 +122,9 @@ try {
       const args = [
         "--yes",
         "lighthouse@13.4.1",
-        `${origin}${path}`,
+        productionOrigin
+          ? new URL(path.replace(/^\//, ""), productionOrigin).href
+          : `${origin}${path}`,
         "--quiet",
         `--port=${chromePort}`,
         "--output=json",
@@ -146,7 +154,7 @@ try {
   }
 } finally {
   chrome.kill();
-  server.kill();
+  server?.kill();
 }
 
 await writeFile(

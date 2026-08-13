@@ -190,6 +190,69 @@ attente `load` trop large sur un test de navigation : l’attente
 réduire les contrôles de médias couverts ailleurs. Le smoke 0.3 ajoute favoris,
 volume, timer et Focus Mode au parcours de quatre routes, transition audio et 404.
 
+Le Lot 23 porte la suite à 132 tests unitaires/composants sur 24 fichiers. Les
+nouveaux scénarios couvrent les douze références sonores globales, migration V1
+vers V2, absence de réécriture V2, version inconnue intacte, corruption, quota,
+limites de noms/couches/collection/snapshot et CRUD coalescé du provider. Les
+tests confirment aussi qu’un 21e mix est refusé et que lecture ou migration du
+stockage ne crée ni requête réseau ni contexte audio. Un parcours E2E migre une
+V1 réelle sur les cinq profils, restaure favori et volume et confirme la V2 sans
+audio. La matrice atteint 95 cas : 91 réussissent et les quatre skips WebKit
+historiques restent inchangés. Un `page.goto` Firefox de lecture en arrière-plan
+attend désormais `DOMContentLoaded` plutôt que tous les médias ; les assertions
+fonctionnelles explicites restent identiques et l’exécution consolidée est verte.
+
+Le Lot 24 porte la suite à 136 tests unitaires/composants sur 25 fichiers et la
+matrice à 100 cas. Les tests du compositeur vérifient la scène d’origine, les
+volumes restaurés, l’ajout et le retrait, les bornes d’une à quatre couches, les
+libellés accessibles, le focus du dialogue et le repli d’une scène inconnue.
+Le parcours navigateur traverse `Create a mix`, construit un brouillon de quatre
+sons, contrôle axe et confirme l’absence de requête audio ou d’`AudioContext`.
+Le scénario responsive couvre aussi `/compose` à 320 px avec mouvement réduit.
+L’exécution consolidée compte 96 réussites et les quatre reports WebKit
+historiques documentés.
+
+Le Lot 25 porte la suite à 144 tests unitaires/composants sur 25 fichiers et la
+matrice à 110 cas. Le moteur est vérifié sur ajout/retrait différentiel, rampes,
+échec partiel, partage d’une requête concurrente, ensembles invalides et dix
+cycles revenant à trois sources avec un contexte unique. La session couvre la
+synchronisation d’un mix dont l’identifiant reste stable. Le compositeur couvre
+Play/Pause, volume par référence globale, ajout/retrait sans Pause, timer et
+Focus Mode avec restauration du focus.
+
+Deux parcours navigateur chargent seulement les trois sons initiaux puis le son
+ajouté, ou provoquent l’échec de ce seul ajout tout en conservant le mix courant.
+Ils passent sur les cinq profils avec axe. L’exécution consolidée compte 106
+réussites ; quatre skips WebKit historiques
+restent réservés au décodage MP3 et à la politique de tabulation Safari. La
+recette réelle doit encore écouter les fondus, l’absence de son résiduel et la
+continuité timer/Focus/arrière-plan sur desktop et mobile.
+
+Le Lot 26 porte la suite à 149 tests unitaires/composants sur 25 fichiers et la
+matrice à 115 cas. Les tests couvrent nom vide ou trop long, collection de 20,
+stockage indisponible, noms identiques, ID stable, CRUD, ordre, ouverture en
+pause, confirmation d’abandon, suppression active et reset global confirmé. Le
+parcours navigateur effectue une écriture réelle, recharge `/compose`, rouvre le
+mix, modifie le volume, renomme sous le même ID puis supprime sans requête audio.
+Il passe sur les cinq profils. L’exécution consolidée compte 111 réussites et les
+quatre skips WebKit historiques restent inchangés.
+
+Le Lot 27 porte la suite à 151 tests unitaires/composants. Les nouveaux cas
+couvrent l’entrée `Your mixes` conditionnelle de l’accueil et la reprise d’un
+mix de même scène mais de couches différentes après Pause. Le parcours CRUD E2E
+traverse désormais l’accueil avant réouverture. La matrice reste à 115 cas : 111
+réussissent et les quatre skips WebKit historiques sont inchangés. Le smoke local
+ajoute sauvegarde, entrée d’accueil, réouverture et lecture d’un mix au parcours
+0.1–1.0.
+
+Au Lot 28, la candidate `1.0.0` reproduit ces résultats après `npm ci` : 151
+tests sur 25 fichiers et 115 cas Playwright sur les cinq profils, dont 111
+réussites et les quatre reports WebKit historiques. La passe complète utilise
+deux workers comme la CI afin d’éviter la contention locale observée avec cinq
+moteurs simultanés. Le contrôle de rollback injecte en plus un snapshot V2 dans
+la production 0.3 et vérifie sa conservation exacte, l’absence d’audio et
+l’absence d’erreur d’exécution.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

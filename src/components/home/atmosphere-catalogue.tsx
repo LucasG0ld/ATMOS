@@ -76,6 +76,14 @@ export function AtmosphereCatalogue({ atmospheres }: AtmosphereCatalogueProps) {
         <header className={styles.header}>
           <Wordmark />
           <div className={styles.headerMeta}>
+            {preferences?.isHydrated && preferences.savedMixes.length > 0 ? (
+              <Link
+                className={`text-label ${styles.mixesLink}`}
+                href="/compose"
+              >
+                Your mixes
+              </Link>
+            ) : null}
             <PreferencesDialog />
             <p className={`text-label ${styles.context}`}>
               Four places

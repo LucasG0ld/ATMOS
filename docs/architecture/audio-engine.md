@@ -122,6 +122,35 @@ Une couche cible en échec est désactivée sans bloquer les autres. Un échec t
 ferme le master, conserve l’URL et la scène demandées, annonce l’erreur et expose
 Retry. Quitter `/atmosphere/*` détruit le contexte et tous les bus.
 
+## Composition live 1.0
+
+Le Lot 25 étend le contrôleur existant sans second moteur. Un mix personnalisé
+est un bus ordinaire contenant une à quatre couches identifiées par leur
+référence globale `atmosphereId:layerId`. `syncLayers()` compare l’ensemble
+désiré au bus courant : les couches conservées ne redémarrent pas, chaque ajout
+charge et décode uniquement son propre fichier, et chaque retrait descend son
+gain à zéro en 50 ms avant arrêt et déconnexion.
+
+Le même `AudioContext` et le même master servent le catalogue, le compositeur,
+le timer et le Focus Mode. Deux demandes concurrentes d’une même couche partagent
+leur fetch ; une demande devenue obsolète est annulée. Une réintroduction pendant
+le fade de retrait réutilise la source encore vivante. Le plafond stable est de
+quatre sources ; un retrait suivi immédiatement d’un ajout peut atteindre cinq
+sources durant 50 ms, sous le plafond transitoire de huit fixé par l’ADR-0005.
+
+Un ajout impossible renvoie uniquement la référence indisponible. Le bus courant
+reste audible, les autres contrôles restent actifs et Retry peut resynchroniser
+le mix. La validation refuse avant création du contexte un ensemble vide, une
+référence dupliquée ou plus de quatre couches. Au nettoyage, les chargements
+live, délais de retrait, sources, gains et buffers sont libérés de façon
+idempotente.
+
+Depuis le Lot 27, la session mémorise aussi la signature `id`/`src` de l’ensemble
+réellement actif. Une reprise après ouverture en pause ne se contente pas de
+l’ID visuel de la scène : si les couches ont changé, `syncLayers()` prépare le
+nouvel ensemble avant de rouvrir le master. Deux mixes de la même scène ne
+peuvent donc plus partager par erreur un ancien graphe sous un nouveau nom.
+
 ## Fin de timer 0.3
 
 Le contrôleur de session, pas le moteur, possède l’échéance murale du timer. Dès

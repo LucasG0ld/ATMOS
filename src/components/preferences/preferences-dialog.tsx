@@ -10,13 +10,18 @@ import styles from "./preferences-dialog.module.css";
 export function PreferencesDialog() {
   const preferences = useOptionalPreferences();
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const resetDialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const resetTriggerRef = useRef<HTMLButtonElement>(null);
   const titleId = useId();
   const descriptionId = useId();
+  const resetTitleId = useId();
+  const resetDescriptionId = useId();
   const [resetMessage, setResetMessage] = useState("");
   const hasSavedPreferences =
     Boolean(preferences?.favoriteAtmosphereIds.length) ||
-    Boolean(preferences && Object.keys(preferences.layerVolumes).length > 0);
+    Boolean(preferences && Object.keys(preferences.layerVolumes).length > 0) ||
+    Boolean(preferences?.savedMixes.length);
 
   const openDialog = () => {
     setResetMessage("");
@@ -28,6 +33,7 @@ export function PreferencesDialog() {
   const resetPreferences = () => {
     preferences?.resetPreferences();
     setResetMessage("Saved preferences reset.");
+    resetDialogRef.current?.close();
   };
 
   if (!preferences) return null;
@@ -67,7 +73,7 @@ export function PreferencesDialog() {
 
           <div className={styles.content}>
             <p className="text-body" id={descriptionId}>
-              Favorites and volumes are saved on this device.
+              Favorites, volumes and mixes are saved on this device.
             </p>
             <p className={`text-label ${styles.summary}`}>
               {hasSavedPreferences ? "Saved preferences" : "Nothing saved yet"}
@@ -83,7 +89,8 @@ export function PreferencesDialog() {
           <div className={styles.footer}>
             <button
               className={`text-label ${styles.resetButton}`}
-              onClick={resetPreferences}
+              onClick={() => resetDialogRef.current?.showModal()}
+              ref={resetTriggerRef}
               type="button"
             >
               Reset saved preferences
@@ -91,6 +98,40 @@ export function PreferencesDialog() {
             <p aria-live="polite" className={styles.resetStatus}>
               {resetMessage}
             </p>
+          </div>
+        </div>
+      </dialog>
+
+      <dialog
+        aria-describedby={resetDescriptionId}
+        aria-labelledby={resetTitleId}
+        className={styles.dialog}
+        onClose={() => resetTriggerRef.current?.focus()}
+        ref={resetDialogRef}
+      >
+        <div className={styles.panel}>
+          <h2 className={`font-normal ${styles.title}`} id={resetTitleId}>
+            Reset saved preferences?
+          </h2>
+          <p className="text-body" id={resetDescriptionId}>
+            This removes favorites, saved volumes and all mixes from this
+            device. Catalogue sounds are not deleted.
+          </p>
+          <div className={styles.footer}>
+            <button
+              className={`text-label ${styles.resetButton}`}
+              onClick={() => resetDialogRef.current?.close()}
+              type="button"
+            >
+              Cancel
+            </button>
+            <button
+              className={`text-label ${styles.resetButton}`}
+              onClick={resetPreferences}
+              type="button"
+            >
+              Reset everything
+            </button>
           </div>
         </div>
       </dialog>

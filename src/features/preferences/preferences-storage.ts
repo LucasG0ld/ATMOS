@@ -1,6 +1,13 @@
+import type { SavedMix } from "../../types/mix";
+
 export const PREFERENCES_STORAGE_KEY = "atmos.preferences";
-export const PREFERENCES_STORAGE_VERSION = 1 as const;
-export const PREFERENCES_MAX_SERIALIZED_LENGTH = 32 * 1024;
+export const PREFERENCES_LEGACY_STORAGE_VERSION = 1 as const;
+export const PREFERENCES_STORAGE_VERSION = 2 as const;
+export const PREFERENCES_MAX_SERIALIZED_LENGTH = 128 * 1024;
+export const MAX_SAVED_MIXES = 20;
+export const MAX_MIX_LAYERS = 4;
+export const MAX_MIX_NAME_LENGTH = 40;
+export const MAX_MIX_ID_LENGTH = 128;
 
 export type PreferenceCatalogueEntry = {
   atmosphereId: string;
@@ -10,12 +17,20 @@ export type PreferenceCatalogueEntry = {
 export type PreferencesSnapshot = {
   favoriteAtmosphereIds: readonly string[];
   layerVolumes: Readonly<Record<string, Readonly<Record<string, number>>>>;
+  savedMixes: readonly SavedMix[];
 };
 
 export type StoredPreferencesV1 = {
+  version: typeof PREFERENCES_LEGACY_STORAGE_VERSION;
+  favoriteAtmosphereIds: string[];
+  layerVolumes: Record<string, Record<string, number>>;
+};
+
+export type StoredPreferencesV2 = {
   version: typeof PREFERENCES_STORAGE_VERSION;
   favoriteAtmosphereIds: string[];
   layerVolumes: Record<string, Record<string, number>>;
+  savedMixes: SavedMix[];
 };
 
 export type PreferencesReadResult = {
@@ -39,6 +54,7 @@ export function createEmptyPreferences(): PreferencesSnapshot {
   return {
     favoriteAtmosphereIds: [],
     layerVolumes: {},
+    savedMixes: [],
   };
 }
 
@@ -53,15 +69,10 @@ function createCatalogueMap(
   );
 }
 
-export function validateStoredPreferences(
-  value: unknown,
-  catalogue: readonly PreferenceCatalogueEntry[],
-): PreferencesSnapshot {
-  if (!isRecord(value) || value.version !== PREFERENCES_STORAGE_VERSION) {
-    return createEmptyPreferences();
-  }
-
-  const catalogueMap = createCatalogueMap(catalogue);
+function validateCommonPreferences(
+  value: Record<string, unknown>,
+  catalogueMap: ReadonlyMap<string, ReadonlySet<string>>,
+): Pick<PreferencesSnapshot, "favoriteAtmosphereIds" | "layerVolumes"> {
   const favoriteAtmosphereIds: string[] = [];
   const seenFavorites = new Set<string>();
   if (Array.isArray(value.favoriteAtmosphereIds)) {
@@ -104,10 +115,123 @@ export function validateStoredPreferences(
   return { favoriteAtmosphereIds, layerVolumes };
 }
 
+function validateSavedMixWithMap(
+  value: unknown,
+  catalogueMap: ReadonlyMap<string, ReadonlySet<string>>,
+): SavedMix | null {
+  if (!isRecord(value)) return null;
+  if (
+    typeof value.id !== "string" ||
+    value.id.length === 0 ||
+    value.id.length > MAX_MIX_ID_LENGTH ||
+    value.id.trim() !== value.id
+  ) {
+    return null;
+  }
+
+  if (typeof value.name !== "string") return null;
+  const name = value.name.trim();
+  if (name.length === 0 || Array.from(name).length > MAX_MIX_NAME_LENGTH) {
+    return null;
+  }
+
+  if (
+    typeof value.sceneAtmosphereId !== "string" ||
+    !catalogueMap.has(value.sceneAtmosphereId) ||
+    !Array.isArray(value.layers)
+  ) {
+    return null;
+  }
+
+  const layers: SavedMix["layers"][number][] = [];
+  const seenLayers = new Set<string>();
+  for (const layer of value.layers) {
+    if (layers.length === MAX_MIX_LAYERS) break;
+    if (!isRecord(layer) || !isRecord(layer.sound)) continue;
+
+    const { atmosphereId, layerId } = layer.sound;
+    if (
+      typeof atmosphereId !== "string" ||
+      typeof layerId !== "string" ||
+      !catalogueMap.get(atmosphereId)?.has(layerId) ||
+      typeof layer.volume !== "number" ||
+      !Number.isFinite(layer.volume) ||
+      layer.volume < 0 ||
+      layer.volume > 1
+    ) {
+      continue;
+    }
+
+    const referenceKey = `${atmosphereId}:${layerId}`;
+    if (seenLayers.has(referenceKey)) continue;
+    seenLayers.add(referenceKey);
+    layers.push({
+      sound: { atmosphereId, layerId },
+      volume: layer.volume,
+    });
+  }
+
+  if (layers.length === 0) return null;
+  return {
+    id: value.id,
+    name,
+    sceneAtmosphereId: value.sceneAtmosphereId,
+    layers,
+  };
+}
+
+export function validateSavedMix(
+  value: unknown,
+  catalogue: readonly PreferenceCatalogueEntry[],
+): SavedMix | null {
+  return validateSavedMixWithMap(value, createCatalogueMap(catalogue));
+}
+
+function validateSavedMixes(
+  value: unknown,
+  catalogueMap: ReadonlyMap<string, ReadonlySet<string>>,
+): SavedMix[] {
+  if (!Array.isArray(value)) return [];
+
+  const savedMixes: SavedMix[] = [];
+  const seenIds = new Set<string>();
+  for (const candidate of value) {
+    if (savedMixes.length === MAX_SAVED_MIXES) break;
+    const mix = validateSavedMixWithMap(candidate, catalogueMap);
+    if (!mix || seenIds.has(mix.id)) continue;
+    seenIds.add(mix.id);
+    savedMixes.push(mix);
+  }
+  return savedMixes;
+}
+
+export function validateStoredPreferences(
+  value: unknown,
+  catalogue: readonly PreferenceCatalogueEntry[],
+): PreferencesSnapshot {
+  if (
+    !isRecord(value) ||
+    (value.version !== PREFERENCES_LEGACY_STORAGE_VERSION &&
+      value.version !== PREFERENCES_STORAGE_VERSION)
+  ) {
+    return createEmptyPreferences();
+  }
+
+  const catalogueMap = createCatalogueMap(catalogue);
+  const common = validateCommonPreferences(value, catalogueMap);
+  return {
+    ...common,
+    savedMixes:
+      value.version === PREFERENCES_STORAGE_VERSION
+        ? validateSavedMixes(value.savedMixes, catalogueMap)
+        : [],
+  };
+}
+
 function toStoredPreferences(
   preferences: PreferencesSnapshot,
   catalogue: readonly PreferenceCatalogueEntry[],
-): StoredPreferencesV1 {
+): StoredPreferencesV2 {
   const validated = validateStoredPreferences(
     { version: PREFERENCES_STORAGE_VERSION, ...preferences },
     catalogue,
@@ -121,7 +245,45 @@ function toStoredPreferences(
         { ...volumes },
       ]),
     ),
+    savedMixes: validated.savedMixes.map((mix) => ({
+      ...mix,
+      layers: mix.layers.map((layer) => ({
+        sound: { ...layer.sound },
+        volume: layer.volume,
+      })),
+    })),
   };
+}
+
+export function fitsPreferencesStorageBudget(
+  preferences: PreferencesSnapshot,
+  catalogue: readonly PreferenceCatalogueEntry[],
+): boolean {
+  try {
+    return (
+      JSON.stringify(toStoredPreferences(preferences, catalogue)).length <=
+      PREFERENCES_MAX_SERIALIZED_LENGTH
+    );
+  } catch {
+    return false;
+  }
+}
+
+export function migrateStoredPreferences(
+  value: unknown,
+  catalogue: readonly PreferenceCatalogueEntry[],
+): StoredPreferencesV2 | null {
+  if (
+    !isRecord(value) ||
+    (value.version !== PREFERENCES_LEGACY_STORAGE_VERSION &&
+      value.version !== PREFERENCES_STORAGE_VERSION)
+  ) {
+    return null;
+  }
+  return toStoredPreferences(
+    validateStoredPreferences(value, catalogue),
+    catalogue,
+  );
 }
 
 export function createPreferencesStorageAdapter(
@@ -167,20 +329,46 @@ export function createPreferencesStorageAdapter(
           storageAvailable: true,
         };
       }
+
+      let parsed: unknown;
       try {
-        return {
-          preferences: validateStoredPreferences(
-            JSON.parse(serialized) as unknown,
-            catalogue,
-          ),
-          storageAvailable: true,
-        };
+        parsed = JSON.parse(serialized) as unknown;
       } catch {
         return {
           preferences: createEmptyPreferences(),
           storageAvailable: true,
         };
       }
+
+      const migrated = migrateStoredPreferences(parsed, catalogue);
+      if (!migrated) {
+        return {
+          preferences: createEmptyPreferences(),
+          storageAvailable: true,
+        };
+      }
+
+      let storageAvailable = true;
+      if (
+        isRecord(parsed) &&
+        parsed.version === PREFERENCES_LEGACY_STORAGE_VERSION
+      ) {
+        try {
+          const migratedSerialized = JSON.stringify(migrated);
+          if (migratedSerialized.length > PREFERENCES_MAX_SERIALIZED_LENGTH) {
+            storageAvailable = false;
+          } else {
+            storage.setItem(PREFERENCES_STORAGE_KEY, migratedSerialized);
+          }
+        } catch {
+          storageAvailable = false;
+        }
+      }
+
+      return {
+        preferences: validateStoredPreferences(migrated, catalogue),
+        storageAvailable,
+      };
     },
 
     reset() {

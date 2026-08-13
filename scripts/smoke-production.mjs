@@ -121,6 +121,36 @@ try {
   await expect.poll(() => new Set(audioRequests).size).toBe(6);
   await page.getByRole("button", { name: "Pause Deep Forest" }).click();
 
+  const audioRequestsBeforeComposition = audioRequests.length;
+  await page.getByRole("link", { name: "Create a mix" }).click();
+  await expect(page).toHaveURL(/\/compose\?scene=deep-forest$/);
+  await page.getByRole("button", { name: "Add sound" }).click();
+  await page
+    .getByRole("button", { name: "Add Rain from Rainy Apartment" })
+    .click();
+  await page.getByRole("button", { name: "Save mix" }).click();
+  const nameDialog = page.getByRole("dialog", { name: "Name your mix" });
+  await nameDialog.getByRole("textbox", { name: "Mix name" }).fill("Smoke mix");
+  await nameDialog.getByRole("button", { name: "Save" }).click();
+  await expect(page.getByRole("heading", { name: "Smoke mix" })).toBeVisible();
+  expect(audioRequests).toHaveLength(audioRequestsBeforeComposition);
+
+  await page.getByRole("link", { name: "ATMOS — Home" }).click();
+  await expect(page.getByRole("link", { name: "Your mixes" })).toBeVisible();
+  await page.getByRole("link", { name: "Your mixes" }).click();
+  await page.getByRole("button", { name: "Your mixes" }).click();
+  await page.getByRole("button", { name: "Open Smoke mix" }).click();
+  await expect(
+    page.getByRole("button", { name: "Play Smoke mix" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Play Smoke mix" }).click();
+  await expect(
+    page.getByRole("button", { name: "Pause Smoke mix" }),
+  ).toBeVisible({
+    timeout: 15_000,
+  });
+  await page.getByRole("button", { name: "Pause Smoke mix" }).click();
+
   expect(runtimeErrors).toEqual([]);
   expect(failedRequests).toEqual([]);
   expect(unexpectedResponses).toEqual([]);
@@ -136,7 +166,7 @@ try {
   ).toBeVisible();
 
   console.log(
-    `Production smoke passed: ${productionUrl.href} (cache disabled, 4 routes, local preferences, timer, Focus Mode, audio transition, custom 404).`,
+    `Production smoke passed: ${productionUrl.href} (cache disabled, 4 routes, local preferences, timer, Focus Mode, audio transition, saved mix, custom 404).`,
   );
 } finally {
   await context.close();

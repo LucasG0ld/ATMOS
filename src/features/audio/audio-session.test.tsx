@@ -19,6 +19,7 @@ import { AudioSessionProvider, useAudioSession } from "./audio-session";
 
 function createMockEngine(): AudioEngineController {
   return {
+    addLayer: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
     cancelPreload: vi.fn(),
     cancelTimerFade: vi.fn(),
     destroy: vi.fn().mockResolvedValue(undefined),
@@ -30,6 +31,7 @@ function createMockEngine(): AudioEngineController {
     setLayerVolume: vi.fn(),
     setPageHidden: vi.fn().mockResolvedValue(undefined),
     scheduleTimerFade: vi.fn().mockReturnValue(true),
+    syncLayers: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
     transition: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
   };
 }
@@ -150,6 +152,56 @@ describe("AudioSessionProvider", () => {
     ).toBeTruthy();
     view.unmount();
     expect(engine.destroy).toHaveBeenCalledTimes(1);
+  });
+
+  it("synchronizes changed layers in place for a live custom mix", async () => {
+    const user = userEvent.setup();
+    const engine = createMockEngine();
+    const view = render(
+      <Session atmosphere={rainyApartment} createEngine={() => engine} />,
+    );
+    await user.click(screen.getByRole("button", { name: /Play Rainy/ }));
+    await screen.findByRole("button", { name: /Pause Rainy/ });
+
+    const expandedMix: Atmosphere = {
+      ...rainyApartment,
+      sounds: [...rainyApartment.sounds, fireplace.sounds[0]],
+    };
+    view.rerender(
+      <Session atmosphere={expandedMix} createEngine={() => engine} />,
+    );
+
+    await waitFor(() =>
+      expect(engine.syncLayers).toHaveBeenCalledWith(expandedMix.sounds),
+    );
+    expect(engine.transition).not.toHaveBeenCalled();
+    await screen.findByRole("button", { name: /Pause Rainy/ });
+  });
+
+  it("synchronizes a changed same-scene mix before resuming from Pause", async () => {
+    const user = userEvent.setup();
+    const engine = createMockEngine();
+    const view = render(
+      <Session atmosphere={rainyApartment} createEngine={() => engine} />,
+    );
+    await user.click(screen.getByRole("button", { name: /Play Rainy/ }));
+    await user.click(
+      await screen.findByRole("button", { name: /Pause Rainy/ }),
+    );
+
+    const reducedMix: Atmosphere = {
+      ...rainyApartment,
+      sounds: rainyApartment.sounds.slice(0, 2),
+    };
+    view.rerender(
+      <Session atmosphere={reducedMix} createEngine={() => engine} />,
+    );
+    expect(engine.syncLayers).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole("button", { name: /Play Rainy/ }));
+    await screen.findByRole("button", { name: /Pause Rainy/ });
+    expect(engine.syncLayers).toHaveBeenCalledWith(reducedMix.sounds);
+    expect(engine.transition).not.toHaveBeenCalled();
   });
 
   it("keeps Pause available while a slow target is loading", async () => {

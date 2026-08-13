@@ -4,6 +4,37 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
 
 ## Non publié
 
+### Ajouté
+
+- Cadrage de la version 1.0 : composition locale à partir des couches licenciées,
+  bibliothèque bornée, mixes sauvegardés et Gate E.
+- ADR-0005 proposé, modèle de stockage V2, budgets, risques et Lots 22 à 28.
+- Registre dérivé des douze sons avec résolution par référence globale
+  `atmosphereId`/`layerId`.
+- Stockage V2 avec migration atomique de V1, validation des mixes, limites de
+  quatre couches, 20 mixes et 128 Kio.
+- Opérations locales de création, mise à jour et suppression des mixes dans le
+  provider de préférences, sans effet audio ou réseau.
+- Route statique `/compose` partageant la session des players et entrée
+  `Create a mix` depuis chaque ambiance.
+- Brouillon visuel d’une à quatre couches avec volumes, origine de chaque son,
+  bibliothèque accessible, annonces et restauration du focus.
+- États explicites du compositeur avant moteur live et sauvegarde, sans requête
+  audio, ainsi que couverture multi-navigateurs et responsive à 320 px.
+- Composition audio live d’une à quatre couches dans un contexte unique, avec
+  ajout/retrait différentiel, volumes par référence globale et rampes anti-clic.
+- Dégradation locale d’un ajout audio en échec, requêtes concurrentes partagées,
+  nettoyage borné et conservation de Play/Pause, timer, Focus Mode et arrière-plan.
+- Nommage et sauvegarde locale des mixes avec ID stable, état non enregistré et
+  limites explicites de 20 mixes et 128 Kio.
+- Vue `Your mixes` pour ouvrir en pause, renommer et supprimer, avec confirmations
+  de perte, reset global étendu et repli mémoire si le stockage est indisponible.
+- Entrée `Your mixes` conditionnelle sur l’accueil et smoke consolidé jusqu’à la
+  lecture d’un mix sauvegardé.
+- Mesure bornée de dix changements de mix, signature de couches vérifiée à la
+  reprise et audits Lighthouse du compositeur en mobile et desktop.
+- Candidate 1.0, contrôle reproductible du rollback vers 0.3 et dossier Gate E.
+
 ## [0.3.0] — 2026-08-11
 
 ### Ajouté

@@ -13,6 +13,7 @@ function renderDialog(storageAvailable = true) {
       preferences: {
         favoriteAtmosphereIds: ["rainy-apartment"],
         layerVolumes: { "rainy-apartment": { rain: 0.42 } },
+        savedMixes: [],
       },
       storageAvailable,
     }),
@@ -28,16 +29,19 @@ function renderDialog(storageAvailable = true) {
     </PreferencesProvider>,
   );
 
-  const dialog = screen.getByRole("dialog", { hidden: true });
-  Object.defineProperty(dialog, "showModal", {
-    value: vi.fn(() => dialog.setAttribute("open", "")),
-  });
-  Object.defineProperty(dialog, "close", {
-    value: vi.fn(() => {
-      dialog.removeAttribute("open");
-      fireEvent(dialog, new Event("close"));
-    }),
-  });
+  const dialogs = screen.getAllByRole("dialog", { hidden: true });
+  for (const dialog of dialogs) {
+    Object.defineProperty(dialog, "showModal", {
+      value: vi.fn(() => dialog.setAttribute("open", "")),
+    });
+    Object.defineProperty(dialog, "close", {
+      value: vi.fn(() => {
+        dialog.removeAttribute("open");
+        fireEvent(dialog, new Event("close"));
+      }),
+    });
+  }
+  const dialog = dialogs[0]!;
   return { adapter, dialog };
 }
 
@@ -49,13 +53,20 @@ describe("PreferencesDialog", () => {
 
     await user.click(trigger);
     expect(
-      screen.getByText("Favorites and volumes are saved on this device."),
+      screen.getByText(
+        "Favorites, volumes and mixes are saved on this device.",
+      ),
     ).toBeVisible();
     expect(screen.getByText("Saved preferences")).toBeVisible();
 
     await user.click(
       screen.getByRole("button", { name: "Reset saved preferences" }),
     );
+    expect(
+      screen.getByRole("heading", { name: "Reset saved preferences?" }),
+    ).toBeVisible();
+    expect(adapter.reset).not.toHaveBeenCalled();
+    await user.click(screen.getByRole("button", { name: "Reset everything" }));
     expect(adapter.reset).toHaveBeenCalledTimes(1);
     expect(screen.getByText("Nothing saved yet")).toBeVisible();
     expect(screen.getByText("Saved preferences reset.")).toBeVisible();

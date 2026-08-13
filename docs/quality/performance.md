@@ -346,3 +346,116 @@ accessibilité, bonnes pratiques et SEO.
 
 Tous les LCP mobiles sont inférieurs à 2,21 s et aucune régression stable de plus
 de 10 % n’est observée face à la production 0.2.
+
+## Budgets de cadrage — version 1.0
+
+Les budgets 0.3 restent bloquants sur l’accueil et les players. Le compositeur
+ajoute les limites suivantes, à mesurer depuis un build de production :
+
+| Ressource ou état                                          |                        Budget 1.0 |
+| ---------------------------------------------------------- | --------------------------------: |
+| JavaScript applicatif initial de `/compose` hors framework |                  180 Kio gzip max |
+| CSS de `/compose`                                          |                   70 Kio gzip max |
+| Audio avant Play                                           |                           0 octet |
+| Couches décodées stables                                   |                         4 maximum |
+| Couches pendant une transition                             | 8 maximum, retour à 4 obligatoire |
+| Snapshot `atmos.preferences` V2                            |                   128 Kio maximum |
+| Mixes sauvegardés                                          |                        20 maximum |
+
+La bibliothèque ne précharge aucun des douze sons. Après dix changements de mix,
+le nombre d’`AudioContext`, de listeners et de nœuds actifs doit revenir à sa
+ligne de base ; une croissance mémoire stable supérieure à 10 % face au même
+parcours 0.3 bloque la Gate E sans exception explicite.
+
+### Mesure du registre et du stockage V2 — Lot 23
+
+Le build mesure 12,5 Kio de JavaScript applicatif gzip sur l’accueil et 60,4 Kio
+sur le player, soit +0,8 Kio par route face à la candidate 0.3. Le CSS reste à
+6,8 Kio sur l’accueil et 9,1 Kio sur le player ; les fonts restent à 29,4 Kio.
+Les plafonds historiques sont respectés.
+
+Le snapshot V2 est refusé au-delà de 128 Kio. Validation et provider appliquent
+les limites de quatre couches et 20 mixes avant `setItem`, avec une seule
+écriture coalescée. Ce lot n’ajoute ni route, média, package, requête réseau,
+timer, listener ou création d’`AudioContext`.
+
+### Mesure des fondations visuelles — Lot 24
+
+Le build de production mesure 20,9 Kio de JavaScript applicatif gzip et 9,2 Kio
+de CSS sur `/compose`, pour des budgets respectifs de 180 et 70 Kio. L’accueil
+reste à 12,6 Kio de JavaScript et le player à 60,5 Kio ; les fonts restent à
+29,4 Kio. Le script de budget résout désormais les manifests du route group
+`(session)` et bloque aussi explicitement les plafonds du compositeur.
+
+La bibliothèque lit uniquement le registre en mémoire. Les tests navigateur
+confirment zéro requête `/audio/` pendant l’ouverture, l’ajout, le retrait et le
+réglage visuel d’un brouillon ; le décodage et le graphe live restent hors du Lot 24.
+
+### Mesure du moteur de composition live — Lot 25
+
+Le build mesure 23,4 Kio de JavaScript applicatif gzip et 9,3 Kio de CSS sur
+`/compose`, soit respectivement +2,5 et +0,1 Kio depuis le Lot 24, très sous les
+budgets de 180 et 70 Kio. L’accueil reste à 12,6 Kio, le player à 61,5 Kio et les
+fonts à 29,4 Kio.
+
+Le compositeur ne demande toujours aucun octet audio avant Play. Le premier Play
+charge les trois couches du brouillon ; un ajout ultérieur ne demande que son
+fichier et un retrait ne recharge rien. Les tests de dix cycles confirment un
+seul `AudioContext` et un retour au nombre initial de sources. Le plafond stable
+est de quatre couches et le bref chevauchement retrait/ajout reste inférieur au
+plafond transitoire de huit.
+
+### Mesure de la gestion locale des mixes — Lot 26
+
+Le build mesure 25,5 Kio de JavaScript applicatif gzip et 9,7 Kio de CSS sur
+`/compose`, soit +2,1 et +0,4 Kio depuis le Lot 25. L’accueil mesure 12,9 Kio,
+le player 61,8 Kio et les fonts 29,4 Kio ; tous les budgets restent largement
+respectés. Les dialogues CRUD n’ajoutent aucun package, média ou requête réseau.
+
+Le snapshot est validé et mesuré avant commit, plafonné à 20 mixes et 128 Kio.
+Les écritures restent coalescées à 250 ms et un rechargement n’initialise ni
+audio ni lecture. Le parcours CRUD multi-navigateurs confirme zéro requête
+`/audio/` tant que Play n’est pas activé.
+
+### Mesure d’intégration 1.0 — Lot 27
+
+Le build conserve 12,9 Kio de JavaScript gzip sur l’accueil, 61,9 Kio sur le
+player et 25,6 Kio sur `/compose`. Le CSS partagé mesure 9,7 Kio et les fonts
+29,4 Kio. Le lien conditionnel d’accueil n’ajoute aucun média, fetch ou package.
+
+`npm run performance:composer` injecte quatre mixes valides puis en effectue dix
+changements pendant la lecture. La mesure bloque au-delà d’un contexte, quatre
+sources stables, huit transitoires, douze URL/12 Mio transférés, une variation de
+listeners ou 1,5 Mo de croissance du tas après collecte. Résultat du 2026-08-12 :
+
+| Mesure                            |  Résultat |
+| --------------------------------- | --------: |
+| `AudioContext`                    |         1 |
+| Sources finales / pic transitoire |     2 / 7 |
+| Listeners ciblés avant / après    |     8 / 8 |
+| Requêtes / URL audio uniques      |    33 / 9 |
+| Octets audio transférés           | 4 628 969 |
+| Delta de tas après GC             |   575 933 |
+| Delta catalogue 0.3, même build   | 1 334 668 |
+
+Les douze audits Lighthouse locaux couvrent désormais accueil, quatre players
+et compositeur en mobile/desktop. Toutes les routes obtiennent 100 en
+accessibilité, bonnes pratiques et SEO. Le compositeur obtient 99 en performance
+mobile avec FCP 0,90 s, LCP 2,10 s, TBT 26 ms et CLS 0 ; en desktop, il obtient
+100 avec LCP 0,45 s, TBT 0 et CLS 0. L’accueil mobile reste à 92/LCP 3,33 s,
+mesure locale historique qui sera recontrôlée en HTTPS au Lot 28.
+
+### Mesure de candidate 1.0 — Lot 28
+
+Après installation verrouillée et build `1.0.0`, les bundles restent à 12,9 Kio
+pour l’accueil, 61,9 Kio pour le player et 25,6 Kio pour le compositeur. Le
+parcours catalogue mesure 1 208 560 octets de croissance du tas après dix
+transitions. Le compositeur mesure 573 305 octets après dix changements, avec un
+contexte, deux sources finales, un pic à sept, huit listeners inchangés et
+4 628 969 octets audio transférés.
+
+Le mode local Lighthouse du compositeur desktop obtient 100 dans les quatre
+catégories et un LCP de 0,57 s. Le nouveau mode HTTPS externe, activé par
+`ATMOS_LIGHTHOUSE_URL`, obtient également 100 dans les quatre catégories sur
+l’accueil 0.3 actuellement en production. Les douze mesures de la candidate 1.0
+sur l’URL officielle restent à rejouer après sa fusion et son déploiement.

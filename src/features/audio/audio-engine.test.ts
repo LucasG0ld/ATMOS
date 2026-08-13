@@ -159,6 +159,135 @@ describe("WebAudioEngine", () => {
     expect(fake.sources).toHaveLength(2);
   });
 
+  it("adds and removes one live layer with short ramps and bounded sources", async () => {
+    vi.useFakeTimers();
+    const fake = createFakeContext();
+    const fetchAudio = vi.fn(async () => successfulResponse());
+    const engine = new WebAudioEngine({
+      createContext: () => fake.context,
+      fetch: fetchAudio as typeof fetch,
+    });
+    const addedLayer = fireplace.sounds[0];
+
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    engine.setLayerVolume(addedLayer.id, 0.28);
+    await expect(engine.addLayer(addedLayer)).resolves.toEqual({
+      unavailableLayerIds: [],
+    });
+
+    expect(fetchAudio).toHaveBeenCalledTimes(4);
+    expect(fake.sources).toHaveLength(4);
+    expect(
+      fake.gains.at(-1)?.gain.linearRampToValueAtTime,
+    ).toHaveBeenCalledWith(0.28, 4.05);
+
+    await engine.syncLayers(rainyApartment.sounds);
+    await vi.advanceTimersByTimeAsync(50);
+    expect(fake.sources.at(-1)?.stop).toHaveBeenCalledTimes(1);
+    expect(
+      fake.sources.filter(({ stop }) => stop.mock.calls.length === 0),
+    ).toHaveLength(3);
+    vi.useRealTimers();
+  });
+
+  it("keeps the live mix playing when one added layer fails", async () => {
+    const fake = createFakeContext();
+    const fetchAudio = vi.fn(async (input: RequestInfo | URL) => {
+      if (String(input).includes("fire.mp3")) throw new Error("offline");
+      return successfulResponse();
+    });
+    const engine = new WebAudioEngine({
+      createContext: () => fake.context,
+      fetch: fetchAudio as typeof fetch,
+    });
+
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    await expect(engine.addLayer(fireplace.sounds[0])).resolves.toEqual({
+      unavailableLayerIds: ["fire"],
+    });
+    expect(fake.sources).toHaveLength(3);
+    expect(fake.rawContext.close).not.toHaveBeenCalled();
+  });
+
+  it("shares a pending incremental layer request", async () => {
+    const fake = createFakeContext();
+    let releaseResponse!: () => void;
+    const fetchAudio = vi.fn(async () => successfulResponse());
+    const engine = new WebAudioEngine({
+      createContext: () => fake.context,
+      fetch: fetchAudio as typeof fetch,
+    });
+
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    fetchAudio.mockClear();
+    fetchAudio.mockImplementation(async () => {
+      await new Promise<void>((resolve) => {
+        releaseResponse = resolve;
+      });
+      return successfulResponse();
+    });
+
+    const firstAddition = engine.addLayer(fireplace.sounds[0]);
+    const secondAddition = engine.addLayer(fireplace.sounds[0]);
+    expect(firstAddition).toBe(secondAddition);
+    expect(fetchAudio).toHaveBeenCalledTimes(1);
+    releaseResponse();
+    await expect(firstAddition).resolves.toEqual({ unavailableLayerIds: [] });
+  });
+
+  it("rejects invalid live sets before creating audio resources", async () => {
+    const fake = createFakeContext();
+    const createContext = vi.fn(() => fake.context);
+    const engine = new WebAudioEngine({
+      createContext,
+      fetch: vi.fn(async () => successfulResponse()) as typeof fetch,
+    });
+
+    expect(() => engine.load([])).toThrow("between one and four");
+    expect(() =>
+      engine.load([
+        ...rainyApartment.sounds,
+        fireplace.sounds[0],
+        fireplace.sounds[1],
+      ]),
+    ).toThrow("between one and four");
+    expect(() =>
+      engine.load([rainyApartment.sounds[0], rainyApartment.sounds[0]]),
+    ).toThrow("duplicate");
+    expect(createContext).not.toHaveBeenCalled();
+  });
+
+  it("returns to three live sources after ten incremental add-remove cycles", async () => {
+    vi.useFakeTimers();
+    const fake = createFakeContext();
+    const createContext = vi.fn(() => fake.context);
+    const engine = new WebAudioEngine({
+      createContext,
+      fetch: vi.fn(async () => successfulResponse()) as typeof fetch,
+    });
+    const expanded = [...rainyApartment.sounds, fireplace.sounds[0]];
+
+    await engine.load(rainyApartment.sounds);
+    await engine.play();
+    for (let index = 0; index < 10; index += 1) {
+      await engine.syncLayers(expanded);
+      await engine.syncLayers(rainyApartment.sounds);
+      await vi.advanceTimersByTimeAsync(50);
+    }
+
+    expect(createContext).toHaveBeenCalledTimes(1);
+    expect(
+      fake.sources.filter(({ stop }) => stop.mock.calls.length === 0),
+    ).toHaveLength(3);
+    expect(
+      fake.sources.filter(({ stop }) => stop.mock.calls.length === 1),
+    ).toHaveLength(10);
+    vi.useRealTimers();
+  });
+
   it("fails cleanly when a suspended audio context cannot resume", async () => {
     const fake = createFakeContext();
     fake.rawContext.resume.mockImplementation(() => new Promise(() => {}));

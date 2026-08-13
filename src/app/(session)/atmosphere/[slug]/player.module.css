@@ -74,6 +74,19 @@
   color: var(--atmos-muted);
 }
 
+.composeLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  margin-top: var(--space-6);
+  color: var(--atmos-accent);
+  transition: color var(--duration-control) var(--ease-out);
+}
+
+.composeLink:is(:hover, :focus-visible) {
+  color: var(--atmos-foreground);
+}
+
 .controlsColumn {
   align-self: end;
   padding-bottom: clamp(0.25rem, 1vw, 1rem);
@@ -136,7 +149,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .backLink {
+  .backLink,
+  .composeLink {
     transition-duration: 0ms;
   }
 }

@@ -197,3 +197,52 @@ inconnus, valeurs non finies et volumes hors de `[0, 1]`. JSON invalide et
 version inconnue donnent un snapshot vide sans réécriture automatique. L’accès
 refusé, le quota et une suppression impossible basculent le provider en état
 `unavailable`, tout en conservant les changements de la session en mémoire.
+
+## Composition 1.0 acceptée
+
+L’ADR-0005 retient une référence de couche par ambiance et ID local,
+sans recopier son nom, son chemin ou sa licence dans les données utilisateur :
+
+```ts
+type SoundReference = {
+  atmosphereId: AtmosphereId;
+  layerId: SoundLayerId;
+};
+
+type SavedMixV1 = {
+  id: string;
+  name: string;
+  sceneAtmosphereId: AtmosphereId;
+  layers: Array<{
+    sound: SoundReference;
+    volume: number;
+  }>;
+};
+
+type StoredPreferencesV2 = {
+  version: 2;
+  favoriteAtmosphereIds: AtmosphereId[];
+  layerVolumes: Record<AtmosphereId, Record<SoundLayerId, number>>;
+  savedMixes: SavedMixV1[];
+};
+```
+
+Un mix valide contient une scène connue, un ID opaque, un nom de 1 à 40
+caractères et de une à quatre références distinctes dont les volumes sont finis
+et bornés. La collection contient au plus 20 mixes et le snapshot complet reste
+sous 128 Kio. Ces contrats sont acceptés par l’ADR-0005.
+
+Le Lot 23 implémente ces contrats dans `types/mix.ts`, le registre dérivé dans
+`data/sounds/index.ts` et la validation dans l’adaptateur de préférences. Une
+lecture V1 reconstruit un snapshot V2 validé, conserve favoris et volumes, puis
+tente une unique écriture atomique. Un échec d’écriture conserve le résultat en
+mémoire et signale le stockage indisponible. Une V2 existante n’est pas réécrite
+au chargement ; une version inconnue reste intacte et donne les défauts sûrs.
+
+Depuis le Lot 26, le provider applique les limites de collection et de taille
+avant toute mutation persistante. La création génère l’ID côté client puis ajoute
+le mix en fin de collection ; mise à jour et renommage remplacent l’objet au même
+index et avec le même ID. La suppression filtre uniquement cet ID. Les noms ne
+sont jamais une clé et peuvent donc être identiques. Les écritures restent
+regroupées ; si `localStorage` refuse l’écriture, le snapshot courant demeure
+utilisable en mémoire et le statut `unavailable` devient visible.

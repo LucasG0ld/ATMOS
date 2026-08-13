@@ -88,11 +88,12 @@ Ne pas créer tous les dossiers à vide. Une frontière apparaît lorsqu’un pr
 
 ### État
 
-Depuis le Lot 13, un Context ciblé dans `app/atmosphere/layout.tsx` conserve
-l’intention de lecture et l’orchestrateur audio pendant les changements de slug.
-Il est détruit dès que l’utilisateur quitte les routes du player. Zustand n’est
-introduit que si les interactions futures rendent ce Context objectivement
-difficile à maintenir.
+Depuis le Lot 24, le route group `app/(session)/layout.tsx` porte le Context de
+session pour les players et `/compose`. Il conserve l’intention de lecture et
+l’orchestrateur audio pendant les changements internes, puis les détruit lorsque
+l’utilisateur quitte cette frontière. Le compositeur reste un client ciblé sous
+une page statique ; Zustand n’est introduit que si les interactions futures
+rendent ce Context objectivement difficile à maintenir.
 
 Le Lot 14 isole les décisions d’anticipation dans
 `features/preloading/media-preloader.ts`. L’accueil ne prépare qu’un visuel
@@ -106,7 +107,8 @@ capacités réseau annoncées.
 - état de contrôle : volumes demandés, play/pause ;
 - état moteur : idle, loading, ready, playing, paused, error ;
 - état UI : valeur révélée, menu ouvert ;
-- préférences persistées : favoris et volumes uniquement à partir de 0.3.
+- préférences persistées : favoris et volumes à partir de 0.3, puis mixes locaux
+  bornés à partir du Lot 23.
 
 ## Frontière serveur/client
 
@@ -201,3 +203,11 @@ seul timeout métier vise un `endsAt` absolu et les réveils de page recalculent
 l’échéance depuis `Date.now()`. Le rendu du compte à rebours possède son propre
 rafraîchissement borné uniquement pendant un timer actif. Le moteur ne connaît ni
 l’horloge ni React : il sait seulement automatiser ou refuser un fade de fin.
+
+Depuis le Lot 25, le même provider accepte aussi une sélection personnalisée
+éphémère. Si son identifiant reste stable mais que sa liste de sons change, la
+session demande au moteur une synchronisation différentielle au lieu d’un
+crossfade de scène complet. L’UI du compositeur ne possède donc ni contexte
+audio, ni timer, ni politique de visibilité parallèles. Les références globales
+évitent les collisions entre couches provenant d’ambiances différentes ; la
+persistance du brouillon demeure hors de cette tranche.

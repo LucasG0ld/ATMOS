@@ -136,6 +136,48 @@ test("invalid local preferences stay isolated from the existing experience", asy
   expect(runtimeErrors).toEqual([]);
 });
 
+test("V1 preferences migrate to V2 without starting audio", async ({
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) audioRequests.push(request.url());
+  });
+  await page.addInitScript((storageKey) => {
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        version: 1,
+        favoriteAtmosphereIds: ["rainy-apartment"],
+        layerVolumes: { "rainy-apartment": { rain: 0.44 } },
+      }),
+    );
+  }, PREFERENCES_STORAGE_KEY);
+
+  await page.goto("/atmosphere/rainy-apartment");
+  await expect(
+    page.getByRole("slider", { name: "Rain", exact: true }),
+  ).toHaveValue("44");
+  await expect(
+    page.getByRole("button", { name: "Remove from favorites" }),
+  ).toHaveAttribute("aria-pressed", "true");
+
+  expect(
+    await page.evaluate((storageKey) => {
+      const serialized = localStorage.getItem(storageKey);
+      return serialized ? JSON.parse(serialized) : null;
+    }, PREFERENCES_STORAGE_KEY),
+  ).toEqual({
+    version: 2,
+    favoriteAtmosphereIds: ["rainy-apartment"],
+    layerVolumes: { "rainy-apartment": { rain: 0.44 } },
+    savedMixes: [],
+  });
+  expect(audioRequests).toEqual([]);
+  expect(runtimeErrors).toEqual([]);
+});
+
 test("favorites and volumes persist locally and reset to catalogue defaults", async ({
   page,
 }) => {
@@ -185,6 +227,11 @@ test("favorites and volumes persist locally and reset to catalogue defaults", as
   await expect(dialog).toBeVisible();
   await expectNoSeriousAccessibilityViolation(page);
   await dialog.getByRole("button", { name: "Reset saved preferences" }).click();
+  const resetDialog = page.getByRole("dialog", {
+    name: "Reset saved preferences?",
+  });
+  await expect(resetDialog).toContainText("all mixes from this device");
+  await resetDialog.getByRole("button", { name: "Reset everything" }).click();
   await expect(dialog.getByText("Saved preferences reset.")).toBeVisible();
   await expect(dialog.getByText("Nothing saved yet")).toBeVisible();
   expect(
@@ -472,7 +519,9 @@ test("one unavailable layer keeps the remaining mix playable", async ({
 test("routes expose metadata, security headers and a useful 404", async ({
   page,
 }) => {
-  const response = await page.goto("/atmosphere/rainy-apartment");
+  const response = await page.goto("/atmosphere/rainy-apartment", {
+    waitUntil: "domcontentloaded",
+  });
   expect(response?.status()).toBe(200);
   expect(response?.headers()["content-security-policy"]).toContain(
     "default-src 'self'",
@@ -486,7 +535,9 @@ test("routes expose metadata, security headers and a useful 404", async ({
   expect(audioResponse.headers()["content-type"]).toContain("audio/mpeg");
   expect(audioResponse.headers()["cache-control"]).toContain("max-age=86400");
 
-  const notFoundResponse = await page.goto("/atmosphere/unknown");
+  const notFoundResponse = await page.goto("/atmosphere/unknown", {
+    waitUntil: "domcontentloaded",
+  });
   expect(notFoundResponse?.status()).toBe(404);
   await expect(
     page.getByRole("heading", { name: "This atmosphere does not exist." }),
@@ -538,6 +589,8 @@ test("keyboard order follows the visual reading order", async ({
   await expect(
     page.getByRole("link", { name: "Back to atmospheres" }),
   ).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Create a mix" })).toBeFocused();
 
   for (const name of ["Rain", "Window Rain", "Distant Thunder"]) {
     await page.keyboard.press("Tab");
@@ -570,11 +623,23 @@ test("catalog previews and player navigation keep URLs and audio coherent", asyn
     if (request.url().includes("/audio/")) audioRequests.push(request.url());
   });
 
-  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.goto("/");
   const destinations = page.getByRole("navigation", { name: "Atmospheres" });
   await expect(destinations.getByRole("link")).toHaveCount(4);
 
-  await destinations.getByRole("link", { name: /Deep Forest/ }).focus();
+  const deepForestDestination = destinations.getByRole("link", {
+    name: /Deep Forest/,
+  });
+  await expect
+    .poll(
+      async () => {
+        await deepForestDestination.blur();
+        await deepForestDestination.focus();
+        return page.locator('[data-atmosphere="deep-forest"]').count();
+      },
+      { timeout: 10_000 },
+    )
+    .toBe(1);
   await expect(page.locator('[data-atmosphere="deep-forest"]')).toBeVisible();
   expect(audioRequests).toEqual([]);
 
@@ -910,4 +975,276 @@ test("catalog and player remain usable at narrow width with reduced motion", asy
       document.documentElement.clientWidth,
   );
   expect(hasHorizontalOverflow).toBe(false);
+
+  await page.goto("/compose?scene=rainy-apartment");
+  await expect(
+    page.getByRole("heading", { name: "Untitled mix" }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth <=
+        document.documentElement.clientWidth,
+    ),
+  ).toBe(true);
+});
+
+test("visual composer builds a four-sound draft without loading audio", async ({
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) audioRequests.push(request.url());
+  });
+
+  await page.goto("/atmosphere/deep-forest");
+  await page.getByRole("link", { name: "Create a mix" }).click();
+  await expect(page).toHaveURL(/\/compose\?scene=deep-forest$/);
+  await expect(
+    page.getByRole("heading", { name: "Untitled mix" }),
+  ).toBeVisible();
+  await expect(page.getByRole("slider")).toHaveCount(3);
+  await expect(
+    page.getByRole("slider", { name: "Forest Air from Deep Forest" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Play Untitled mix" }),
+  ).toBeEnabled();
+  await expect(page.getByRole("button", { name: "Save mix" })).toBeEnabled();
+
+  await page.getByRole("button", { name: "Add sound" }).click();
+  await page
+    .getByRole("button", { name: "Add Rain from Rainy Apartment" })
+    .click();
+  await expect(page.getByRole("slider")).toHaveCount(4);
+  await expect(
+    page.getByRole("button", { name: "Mix full · 4 sounds" }),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "Mix full · 4 sounds" }).click();
+  await expect(page.getByText(/already has four sounds/i)).toBeVisible();
+  await expect(
+    page.getByRole("button", {
+      name: "Add Window Rain from Rainy Apartment",
+    }),
+  ).toBeDisabled();
+  await page.getByRole("button", { name: "Close sound library" }).click();
+  await page.getByRole("button", { name: "Remove Rain" }).click();
+  await expect(page.getByRole("slider")).toHaveCount(3);
+
+  expect(audioRequests).toEqual([]);
+  expect(runtimeErrors).toEqual([]);
+  await expectNoSeriousAccessibilityViolation(page);
+});
+
+test("live composer changes one layer without loading the whole library", async ({
+  browserName,
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) {
+      audioRequests.push(new URL(request.url()).pathname);
+    }
+  });
+
+  await page.goto("/compose?scene=deep-forest");
+  expect(audioRequests).toEqual([]);
+  await page.getByRole("button", { name: "Play Untitled mix" }).click();
+  const playbackOutcome = page.getByRole("button", {
+    name: /^(Pause|Retry) Untitled mix$/,
+  });
+  await expect(playbackOutcome).toBeVisible({ timeout: 15_000 });
+  if ((await playbackOutcome.getAttribute("aria-label"))?.startsWith("Retry")) {
+    expect(usesExpectedAudioFallback(browserName)).toBe(true);
+    expect(runtimeErrors).toEqual([]);
+    return;
+  }
+
+  await expect.poll(() => audioRequests.length).toBe(3);
+  await page.getByRole("button", { name: "Add sound" }).click();
+  await page.getByRole("button", { name: "Add Fire from Fireplace" }).click();
+  await expect.poll(() => audioRequests.length).toBe(4);
+  await expect(
+    page.getByRole("button", { name: "Pause Untitled mix" }),
+  ).toBeVisible();
+  await page.getByRole("slider", { name: "Fire from Fireplace" }).fill("36");
+  await page.getByRole("button", { name: "Remove Fire" }).click();
+  await expect(page.getByRole("slider")).toHaveCount(3);
+  expect(audioRequests).toHaveLength(4);
+
+  await page.getByRole("button", { name: "Focus" }).click();
+  await expect(page.getByRole("button", { name: "Exit focus" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Pause Untitled mix" }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Timer" })).toBeVisible();
+  await page.getByRole("button", { name: "Exit focus" }).click();
+  await page.getByRole("button", { name: "Pause Untitled mix" }).click();
+  await expect(
+    page.getByRole("button", { name: "Play Untitled mix" }),
+  ).toBeVisible();
+
+  expect(runtimeErrors).toEqual([]);
+});
+
+test("one failed live addition leaves the custom mix playable", async ({
+  browserName,
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  await page.route("**/audio/fire.mp3", (route) => route.abort("failed"));
+  await page.goto("/compose?scene=deep-forest");
+  await page.getByRole("button", { name: "Play Untitled mix" }).click();
+  const playbackOutcome = page.getByRole("button", {
+    name: /^(Pause|Retry) Untitled mix$/,
+  });
+  await expect(playbackOutcome).toBeVisible({ timeout: 15_000 });
+  if ((await playbackOutcome.getAttribute("aria-label"))?.startsWith("Retry")) {
+    expect(usesExpectedAudioFallback(browserName)).toBe(true);
+    expect(runtimeErrors).toEqual([]);
+    return;
+  }
+
+  await page.getByRole("button", { name: "Add sound" }).click();
+  await page.getByRole("button", { name: "Add Fire from Fireplace" }).click();
+  await expect(page.getByRole("status")).toContainText(
+    "One sound layer is unavailable",
+  );
+  await expect(
+    page.getByRole("slider", { name: "Fire from Fireplace" }),
+  ).toBeDisabled();
+  await expect(
+    page.getByRole("button", { name: "Pause Untitled mix" }),
+  ).toBeVisible();
+  expect(
+    runtimeErrors.filter(
+      (message) => !message.includes("Failed to load resource"),
+    ),
+  ).toEqual([]);
+});
+
+test("a local mix survives reload, updates by stable ID and deletes safely", async ({
+  page,
+}) => {
+  const runtimeErrors = monitorRuntimeErrors(page);
+  const audioRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/audio/")) audioRequests.push(request.url());
+  });
+
+  await page.goto("/compose?scene=deep-forest");
+  await page.getByRole("button", { name: "Save mix" }).click();
+  const nameDialog = page.getByRole("dialog", { name: "Name your mix" });
+  await expect(
+    nameDialog.getByRole("textbox", { name: "Mix name" }),
+  ).toBeFocused();
+  await expectNoSeriousAccessibilityViolation(page);
+  await nameDialog
+    .getByRole("textbox", { name: "Mix name" })
+    .fill("Forest rest");
+  await nameDialog.getByRole("button", { name: "Save", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Forest rest" }),
+  ).toBeVisible();
+  await expect(page.getByText("Mix saved on this device.")).toBeVisible();
+  await expect
+    .poll(async () =>
+      page.evaluate(() => {
+        const value = localStorage.getItem("atmos.preferences");
+        if (!value) return null;
+        const parsed = JSON.parse(value) as {
+          savedMixes?: Array<{ id: string; name: string }>;
+        };
+        return parsed.savedMixes?.[0] ?? null;
+      }),
+    )
+    .toMatchObject({ name: "Forest rest" });
+  const firstId = await page.evaluate(() => {
+    const parsed = JSON.parse(localStorage.getItem("atmos.preferences")!) as {
+      savedMixes: Array<{ id: string }>;
+    };
+    return parsed.savedMixes[0]!.id;
+  });
+
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "Untitled mix" }),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "ATMOS — Home" }).click();
+  await expect(
+    page.getByRole("heading", { name: /What atmosphere/ }),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "Your mixes" })).toBeVisible();
+  await page.getByRole("link", { name: "Your mixes" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Untitled mix" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Your mixes" }).click();
+  await page.getByRole("button", { name: "Open Forest rest" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Forest rest" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Play Forest rest" }),
+  ).toBeVisible();
+
+  await page
+    .getByRole("slider", { name: "Forest Air from Deep Forest" })
+    .fill("31");
+  await expect(
+    page.getByText("Unsaved changes", { exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Save changes" }).click();
+  await page.getByRole("button", { name: "Your mixes" }).click();
+  await page.getByRole("button", { name: "Rename Forest rest" }).click();
+  const renameDialog = page.getByRole("dialog", { name: "Rename mix" });
+  await renameDialog
+    .getByRole("textbox", { name: "Mix name" })
+    .fill("Forest rest renamed");
+  await renameDialog.getByRole("button", { name: "Save name" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Forest rest renamed" }),
+  ).toBeVisible();
+  await expect
+    .poll(async () =>
+      page.evaluate(() => {
+        const parsed = JSON.parse(
+          localStorage.getItem("atmos.preferences")!,
+        ) as {
+          savedMixes: Array<{ id: string; name: string }>;
+        };
+        return parsed.savedMixes[0];
+      }),
+    )
+    .toMatchObject({ id: firstId, name: "Forest rest renamed" });
+
+  await page
+    .getByRole("button", { name: "Delete Forest rest renamed" })
+    .click();
+  const deleteDialog = page.getByRole("dialog", {
+    name: "Delete “Forest rest renamed”?",
+  });
+  await expect(deleteDialog).toContainText("No catalogue sounds are deleted.");
+  await expectNoSeriousAccessibilityViolation(page);
+  await deleteDialog.getByRole("button", { name: "Delete mix" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Untitled mix" }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Your mixes" })).toHaveCount(0);
+  await expect
+    .poll(async () =>
+      page.evaluate(() => {
+        const value = localStorage.getItem("atmos.preferences");
+        if (!value) return -1;
+        return (JSON.parse(value) as { savedMixes: unknown[] }).savedMixes
+          .length;
+      }),
+    )
+    .toBe(0);
+  expect(audioRequests).toEqual([]);
+  expect(runtimeErrors).toEqual([]);
+  await expectNoSeriousAccessibilityViolation(page);
 });

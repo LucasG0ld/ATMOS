@@ -20,6 +20,7 @@ import { VisualControls } from "./visual-controls";
 
 function createMockEngine(): AudioEngineController {
   return {
+    addLayer: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
     cancelPreload: vi.fn(),
     cancelTimerFade: vi.fn(),
     destroy: vi.fn().mockResolvedValue(undefined),
@@ -31,6 +32,7 @@ function createMockEngine(): AudioEngineController {
     setLayerVolume: vi.fn(),
     setPageHidden: vi.fn().mockResolvedValue(undefined),
     scheduleTimerFade: vi.fn().mockReturnValue(true),
+    syncLayers: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
     transition: vi.fn().mockResolvedValue({ unavailableLayerIds: [] }),
   };
 }
@@ -60,7 +62,11 @@ function renderPersistentControls(
   engine = createMockEngine(),
   adapter: PreferencesStorageAdapter = {
     read: vi.fn().mockReturnValue({
-      preferences: { favoriteAtmosphereIds: [], layerVolumes: {} },
+      preferences: {
+        favoriteAtmosphereIds: [],
+        layerVolumes: {},
+        savedMixes: [],
+      },
       storageAvailable: true,
     }),
     reset: vi.fn().mockReturnValue(true),
@@ -152,6 +158,7 @@ describe("VisualControls", () => {
         preferences: {
           favoriteAtmosphereIds: [],
           layerVolumes: { [rainyApartment.id]: { rain: 0.31 } },
+          savedMixes: [],
         },
         storageAvailable: true,
       }),
@@ -352,7 +359,11 @@ describe("VisualControls", () => {
         ]}
         storageAdapter={{
           read: vi.fn().mockReturnValue({
-            preferences: { favoriteAtmosphereIds: [], layerVolumes: {} },
+            preferences: {
+              favoriteAtmosphereIds: [],
+              layerVolumes: {},
+              savedMixes: [],
+            },
             storageAvailable: true,
           }),
           reset: vi.fn().mockReturnValue(true),

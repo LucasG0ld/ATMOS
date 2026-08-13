@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 
-import { atmospheres } from "@/data/atmospheres";
+import { preferenceCatalogue } from "@/data/sounds";
 import { PreferencesProvider } from "@/features/preferences/preferences-provider";
 
 import "./globals.css";
@@ -49,11 +49,6 @@ export const viewport: Viewport = {
   colorScheme: "dark",
   themeColor: "#0d141c",
 };
-
-const preferenceCatalogue = atmospheres.map(({ id, sounds }) => ({
-  atmosphereId: id,
-  soundLayerIds: sounds.map(({ id: soundLayerId }) => soundLayerId),
-}));
 
 export default function RootLayout({
   children,
