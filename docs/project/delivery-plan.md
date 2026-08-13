@@ -714,8 +714,8 @@ Le rollback réel vers la production 0.3 ignore et préserve sans erreur un
 snapshot V2 contenant un mix. Le contrôle est reproductible par
 `npm run rollback:check`. Lighthouse accepte désormais une racine HTTPS externe
 via `ATMOS_LIGHTHOUSE_URL`; son mode local et son mode production ont été
-contrôlés. La recette réelle, la PR, le déploiement, le smoke/Lighthouse HTTPS et
-l’autorisation du tag restent requis avant de terminer ce lot.
+contrôlés. À ce stade de la candidate locale, la recette réelle, la PR, le
+déploiement, le smoke/Lighthouse HTTPS et l’autorisation du tag restaient requis.
 
 Le responsable du projet valide le 2026-08-13 la candidate sur desktop et
 mobile : écoute longue multi-mixes, clavier, toucher, lecteurs d’écran, zoom
@@ -723,3 +723,11 @@ mobile : écoute longue multi-mixes, clavier, toucher, lecteurs d’écran, zoom
 Safari iOS réels sont conformes. Aucun défaut n’est signalé. Le risque Safari
 macOS lié à l’absence d’appareil réel est réévalué et accepté explicitement par
 LucasG0ld le 2026-08-13 pour la version 1.0.
+
+La PR #6 est fusionnée par Squash sur `main` au commit `dc6cad8` après autorisation
+explicite. Les workflows `Quality` et GitHub Pages sont verts. Le smoke HTTPS
+consolidé réussit après adaptation de son assertion au slash canonique ajouté
+par Pages sur `/compose/`. Les douze audits de production obtiennent 100 en
+accessibilité, bonnes pratiques et SEO ; la performance vaut 96–100, tous les
+LCP mobiles restent entre 1,66 s et 2,11 s et tous les CLS sont nuls. Seules
+l’approbation de la Gate E et l’autorisation du tag `v1.0.0` restent requises.

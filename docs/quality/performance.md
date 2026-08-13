@@ -459,3 +459,10 @@ catégories et un LCP de 0,57 s. Le nouveau mode HTTPS externe, activé par
 `ATMOS_LIGHTHOUSE_URL`, obtient également 100 dans les quatre catégories sur
 l’accueil 0.3 actuellement en production. Les douze mesures de la candidate 1.0
 sur l’URL officielle restent à rejouer après sa fusion et son déploiement.
+
+Après déploiement, les douze audits HTTPS obtiennent 100 en accessibilité, bonnes
+pratiques et SEO. La performance mobile vaut 98 sur l’accueil, 99 sur Rainy
+Apartment, 100 sur Quiet Coffee Shop et Deep Forest, 99 sur Fireplace et 96 sur
+le compositeur ; toutes les routes desktop obtiennent 100. Les LCP mobiles vont
+de 1,66 s à 2,11 s et tous les CLS sont nuls. Aucun écart stable supérieur à 10 %
+n’est observé face à la production 0.3.

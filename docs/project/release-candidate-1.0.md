@@ -2,8 +2,11 @@
 
 ## État
 
-**Candidate locale en préparation sur `mvp-1.0` depuis le 2026-08-13. La Gate E,
-la fusion, les contrôles HTTPS et le tag `v1.0.0` ne sont pas encore approuvés.**
+**Candidate fusionnée par Squash et déployée le 2026-08-13. La Gate E et le tag
+`v1.0.0` ne sont pas encore approuvés.**
+
+La PR #6 est fusionnée sur `main` au commit `dc6cad8`. Les workflows `Quality`,
+build et déploiement GitHub Pages sont verts sur ce commit.
 
 Le périmètre est celui accepté au Lot 22 : composition locale d’une à quatre
 couches licenciées, lecture live, sauvegarde de 20 mixes maximum et stockage V2.
@@ -76,6 +79,29 @@ sans erreur ni audio, n’a pas exposé le mix et a conservé le JSON V2 octet p
 octet. `npm run rollback:check` rend ce contrôle reproductible. Le tag annoté
 `v0.3.0`, commit `1b481e1`, reste le point de retour de la candidate 1.0.
 
+## Lighthouse et smoke de production
+
+Le smoke HTTPS avec cache désactivé valide l’URL officielle, les quatre players,
+préférences, timer, Focus Mode, transition audio, création, sauvegarde et lecture
+d’un mix, ainsi que la 404. Le premier passage a uniquement révélé que GitHub
+Pages normalise `/compose` en `/compose/` ; l’assertion accepte désormais les
+deux formes et le parcours complet réussit.
+
+Les douze audits HTTPS obtiennent 100 en accessibilité, bonnes pratiques et SEO.
+
+| Route             | Performance mobile | LCP mobile | Performance desktop | LCP desktop |
+| ----------------- | -----------------: | ---------: | ------------------: | ----------: |
+| Accueil           |                 98 |     2,11 s |                 100 |      0,41 s |
+| Rainy Apartment   |                 99 |     1,81 s |                 100 |      0,41 s |
+| Quiet Coffee Shop |                100 |     1,66 s |                 100 |      0,42 s |
+| Deep Forest       |                100 |     1,66 s |                 100 |      0,57 s |
+| Fireplace         |                 99 |     1,66 s |                 100 |      0,45 s |
+| Compositeur       |                 96 |     1,66 s |                 100 |      0,41 s |
+
+Tous les CLS sont nuls et aucun LCP mobile ne dépasse 2,11 s. L’accueil progresse
+face à la production 0.3 mesurée à 2,21 s ; aucune régression stable supérieure
+à 10 % n’est observée.
+
 ## Recettes déjà confirmées
 
 - [x] Création visuelle, moteur live et CRUD sur desktop et mobile aux Lots 24–26.
@@ -88,11 +114,17 @@ octet. `npm run rollback:check` rend ce contrôle reproductible. Le tag annoté
 
 ## Contrôles restants avant Gate E
 
-- [ ] Obtenir une CI verte sur la pull request `mvp-1.0` vers `main`.
+- [x] CI verte et fusion Squash de la pull request `mvp-1.0` vers `main`.
 - [x] Risque Safari macOS accepté et absence de défaut majeur confirmée.
-- [ ] Fusionner uniquement après autorisation explicite du responsable du projet.
-- [ ] Vérifier le smoke et Lighthouse HTTPS sur les six routes après déploiement.
+- [x] Fusionner uniquement après autorisation explicite du responsable du projet.
+- [x] Vérifier le smoke et Lighthouse HTTPS sur les six routes après déploiement.
 - [ ] Approuver explicitement la Gate E et autoriser le tag `v1.0.0`.
+
+Après le premier déploiement 1.0, GitHub Pages a correctement servi
+`/compose/?scene=deep-forest`. Le smoke attendait uniquement la forme locale sans
+slash et a donc échoué après chargement réussi du compositeur. Son assertion a
+été rendue compatible avec les deux formes canoniques ; aucun défaut applicatif
+n’a été observé.
 
 ## Commandes de candidate
 

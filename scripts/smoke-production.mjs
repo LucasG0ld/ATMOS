@@ -123,7 +123,7 @@ try {
 
   const audioRequestsBeforeComposition = audioRequests.length;
   await page.getByRole("link", { name: "Create a mix" }).click();
-  await expect(page).toHaveURL(/\/compose\?scene=deep-forest$/);
+  await expect(page).toHaveURL(/\/compose\/?\?scene=deep-forest$/);
   await page.getByRole("button", { name: "Add sound" }).click();
   await page
     .getByRole("button", { name: "Add Rain from Rainy Apartment" })
