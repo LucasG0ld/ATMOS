@@ -38,7 +38,7 @@
 - [x] Formatage, lint, types, tests, build, audits médias et dépendances réussis.
 - [x] Matrice Playwright des parcours 0.1 à 1.0 réussie ou écarts documentés.
 - [x] Budgets JS, stockage, audio, mémoire et réseau respectés.
-- [ ] Lighthouse et smoke HTTPS production réussis.
+- [x] Lighthouse et smoke HTTPS production réussis.
 - [x] Aucun défaut critique ou majeur ouvert.
 - [ ] Documentation, changelog, rollback et tag `v1.0.0` approuvés.
 
