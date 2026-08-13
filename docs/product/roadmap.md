@@ -70,7 +70,7 @@ et volumes sont persistés ; aucune donnée n’est synchronisée ou transmise.
 
 ## Version 1 — Composition
 
-**Statut : cadrage et ADR-0005 approuvés ; Lots 23–27 validés et Lot 28 en stabilisation depuis le 2026-08-13.**
+**Statut : version 1.0 validée par la Gate E le 2026-08-13.**
 
 **Résultat :** l’utilisateur crée et sauvegarde localement ses propres mixes.
 
