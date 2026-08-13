@@ -637,7 +637,7 @@ responsable du projet.
 
 ## Lot 27 — Intégration et performance 1.0
 
-**Statut : implémenté le 2026-08-12 ; recette d’intégration desktop/mobile en attente.**
+**Statut : terminé et validé sur desktop et mobile le 2026-08-13.**
 
 ### Livrables
 
@@ -676,9 +676,13 @@ obtiennent 100 en accessibilité, bonnes pratiques et SEO. Le compositeur obtien
 atteint 151 tests unitaires/composants ; la matrice consolidée reste à 115 cas,
 111 réussites et quatre skips WebKit historiques.
 
+La recette d’intégration est validée par le responsable du projet sur desktop
+et mobile le 2026-08-13 : entrée conditionnelle, ouverture et lecture d’un mix,
+deux mixes d’une même scène, navigation et fonctions historiques sont conformes.
+
 ## Lot 28 — Stabilisation 1.0
 
-**Statut : planifié.**
+**Statut : candidate locale en préparation depuis le 2026-08-13 ; Gate E en attente.**
 
 ### Livrables
 
@@ -691,3 +695,24 @@ atteint 151 tests unitaires/composants ; la matrice consolidée reste à 115 cas
 - Gate E approuvée sans défaut critique ou majeur.
 - Production HTTPS vérifiée après fusion.
 - Tag `v1.0.0` autorisé explicitement.
+
+La candidate locale est préparée en version `1.0.0`, sans nouvelle dépendance.
+Une installation verrouillée de 483 paquets, format, lint, types, 151 tests,
+build statique, audits médias/dépendances et budgets réussissent. Le smoke local
+couvre le parcours consolidé jusqu’à la lecture d’un mix sauvegardé. La matrice
+Playwright rejouée avec les deux workers de CI compte 111 réussites et quatre
+reports WebKit historiques sur 115 cas.
+
+Les mesures de candidate confirment un seul `AudioContext`. Après dix changements
+de mix, deux sources restent actives, le pic transitoire atteint sept sur huit,
+les huit listeners restent stables et le delta de tas après GC est de 573 305
+octets, contre 1 208 560 sur le parcours catalogue du même build. Les bundles
+restent à 12,9 Kio pour l’accueil, 61,9 Kio pour le player et 25,6 Kio pour le
+compositeur.
+
+Le rollback réel vers la production 0.3 ignore et préserve sans erreur un
+snapshot V2 contenant un mix. Le contrôle est reproductible par
+`npm run rollback:check`. Lighthouse accepte désormais une racine HTTPS externe
+via `ATMOS_LIGHTHOUSE_URL`; son mode local et son mode production ont été
+contrôlés. La recette réelle, la PR, le déploiement, le smoke/Lighthouse HTTPS et
+l’autorisation du tag restent requis avant de terminer ce lot.

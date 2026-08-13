@@ -52,6 +52,9 @@ en profils mobile et desktop ; une route et un profil peuvent être ciblés, par
 exemple `npm run performance:lighthouse -- home mobile`. Les rapports temporaires
 sont écrits sous `.cache/`.
 
+Après déploiement, définir `ATMOS_LIGHTHOUSE_URL` avec la racine HTTPS officielle
+pour auditer directement la production sans démarrer de serveur local.
+
 `npm run smoke:local` construit et sert automatiquement la candidate sur un port
 isolé, puis exécute le même parcours que le smoke de production. Il ne remplace
 pas le contrôle HTTPS après déploiement.
@@ -87,23 +90,26 @@ capacité best effort de la plateforme, pas une garantie produit.
 
 ## Rollback
 
-Le dernier point de retour validé est le tag annoté `v0.2.0`, commit
-`4c9d186`. Pour un défaut critique pendant le développement ou après publication
-de 0.3 :
+Le dernier point de retour validé est le tag annoté `v0.3.0`, commit
+`1b481e1`. Pour un défaut critique pendant le développement ou après publication
+de 1.0 :
 
 1. suspendre toute nouvelle fusion ou exécution du workflow Pages ;
-2. relancer `Deploy GitHub Pages` avec la référence `v0.2.0` via
+2. relancer `Deploy GitHub Pages` avec la référence `v0.3.0` via
    `workflow_dispatch`, puis vérifier l’URL officielle avec un cache vide ;
-3. confirmer le catalogue, les quatre players, les transitions audio et la 404
-   avec le parcours compatible 0.2 ;
+3. confirmer le catalogue, les quatre players, préférences, timer, Focus Mode,
+   transitions audio et 404 avec le parcours compatible 0.3 ;
 4. ouvrir un correctif ou un revert revu vers `main` afin que son prochain
-   déploiement ne réintroduise pas 0.3 par inadvertance ;
+   déploiement ne réintroduise pas la 1.0 défectueuse par inadvertance ;
 5. consigner le défaut, son impact, l’heure du rollback et la décision de
    republication.
 
 Ne pas modifier manuellement les fichiers servis par Pages et ne pas déplacer le
-tag `v0.2.0`. La version 0.2 ignore la clé `atmos.preferences` créée par 0.3 ; le
-rollback ne doit ni la lire, ni planter, ni tenter une migration descendante.
+tag `v0.3.0`. La version 0.3 ignore un snapshot V2, revient temporairement aux
+préférences par défaut et conserve la valeur sans migration descendante. Cette
+compatibilité se vérifie tant que la production sert 0.3 avec
+`npm run rollback:check` ; une republication 1.0 la rendrait non probante sans
+redéployer d’abord `v0.3.0` sur une URL de contrôle via `ATMOS_ROLLBACK_URL`.
 
 ## Mises à jour
 

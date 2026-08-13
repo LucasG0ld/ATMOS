@@ -245,6 +245,14 @@ réussissent et les quatre skips WebKit historiques sont inchangés. Le smoke lo
 ajoute sauvegarde, entrée d’accueil, réouverture et lecture d’un mix au parcours
 0.1–1.0.
 
+Au Lot 28, la candidate `1.0.0` reproduit ces résultats après `npm ci` : 151
+tests sur 25 fichiers et 115 cas Playwright sur les cinq profils, dont 111
+réussites et les quatre reports WebKit historiques. La passe complète utilise
+deux workers comme la CI afin d’éviter la contention locale observée avec cinq
+moteurs simultanés. Le contrôle de rollback injecte en plus un snapshot V2 dans
+la production 0.3 et vérifie sa conservation exacte, l’absence d’audio et
+l’absence d’erreur d’exécution.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

@@ -444,3 +444,18 @@ accessibilité, bonnes pratiques et SEO. Le compositeur obtient 99 en performanc
 mobile avec FCP 0,90 s, LCP 2,10 s, TBT 26 ms et CLS 0 ; en desktop, il obtient
 100 avec LCP 0,45 s, TBT 0 et CLS 0. L’accueil mobile reste à 92/LCP 3,33 s,
 mesure locale historique qui sera recontrôlée en HTTPS au Lot 28.
+
+### Mesure de candidate 1.0 — Lot 28
+
+Après installation verrouillée et build `1.0.0`, les bundles restent à 12,9 Kio
+pour l’accueil, 61,9 Kio pour le player et 25,6 Kio pour le compositeur. Le
+parcours catalogue mesure 1 208 560 octets de croissance du tas après dix
+transitions. Le compositeur mesure 573 305 octets après dix changements, avec un
+contexte, deux sources finales, un pic à sept, huit listeners inchangés et
+4 628 969 octets audio transférés.
+
+Le mode local Lighthouse du compositeur desktop obtient 100 dans les quatre
+catégories et un LCP de 0,57 s. Le nouveau mode HTTPS externe, activé par
+`ATMOS_LIGHTHOUSE_URL`, obtient également 100 dans les quatre catégories sur
+l’accueil 0.3 actuellement en production. Les douze mesures de la candidate 1.0
+sur l’URL officielle restent à rejouer après sa fusion et son déploiement.

@@ -33,6 +33,7 @@ Tous les changements notables du projet sont consignés ici. Le format s’inspi
   lecture d’un mix sauvegardé.
 - Mesure bornée de dix changements de mix, signature de couches vérifiée à la
   reprise et audits Lighthouse du compositeur en mobile et desktop.
+- Candidate 1.0, contrôle reproductible du rollback vers 0.3 et dossier Gate E.
 
 ## [0.3.0] — 2026-08-11
 
