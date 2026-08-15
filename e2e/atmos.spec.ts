@@ -1045,13 +1045,30 @@ test("catalog and player remain usable at narrow width with reduced motion", asy
   await expect(
     page.getByRole("heading", { name: "Untitled mix" }),
   ).toBeVisible();
-  expect(
-    await page.evaluate(
-      () =>
-        document.documentElement.scrollWidth <=
-        document.documentElement.clientWidth,
-    ),
-  ).toBe(true);
+  const assertComposerFitsViewport = async () => {
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth <=
+          document.documentElement.clientWidth,
+      ),
+    ).toBe(true);
+    for (const locator of [
+      page.locator("header"),
+      page.getByRole("heading", { name: "Untitled mix" }),
+      page.getByRole("button", { name: "Play Untitled mix" }),
+      page.getByRole("slider"),
+      page.getByRole("button", { name: "Add sound" }),
+      page.getByRole("button", { name: "Save mix" }),
+    ]) {
+      await expectNoHorizontalClipping(page, locator);
+    }
+  };
+
+  await assertComposerFitsViewport();
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.reload();
+  await assertComposerFitsViewport();
 });
 
 test("visual composer builds a four-sound draft without loading audio", async ({
@@ -1070,9 +1087,8 @@ test("visual composer builds a four-sound draft without loading audio", async ({
     page.getByRole("heading", { name: "Untitled mix" }),
   ).toBeVisible();
   await expect(page.getByRole("slider")).toHaveCount(3);
-  await expect(
-    page.getByRole("slider", { name: "Forest Air from Deep Forest" }),
-  ).toBeVisible();
+  await expect(page.getByRole("slider", { name: "Forest Air" })).toBeVisible();
+  await expect(page.locator("[data-layer-origin]")).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "Play Untitled mix" }),
   ).toBeEnabled();
@@ -1083,6 +1099,7 @@ test("visual composer builds a four-sound draft without loading audio", async ({
     .getByRole("button", { name: "Add Rain from Rainy Apartment" })
     .click();
   await expect(page.getByRole("slider")).toHaveCount(4);
+  await expect(page.locator("[data-layer-origin]")).toHaveCount(4);
   await expect(
     page.getByRole("button", { name: "Mix full · 4 sounds" }),
   ).toBeVisible();
@@ -1256,9 +1273,7 @@ test("a local mix survives reload, updates by stable ID and deletes safely", asy
     page.getByRole("button", { name: "Play Forest rest" }),
   ).toBeVisible();
 
-  await page
-    .getByRole("slider", { name: "Forest Air from Deep Forest" })
-    .fill("31");
+  await page.getByRole("slider", { name: "Forest Air" }).fill("31");
   await expect(
     page.getByText("Unsaved changes", { exact: true }),
   ).toBeVisible();

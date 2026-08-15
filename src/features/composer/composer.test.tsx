@@ -135,9 +135,10 @@ describe("Composer", () => {
       screen.getByRole("link", { name: "Back to Deep Forest" }),
     ).toHaveAttribute("href", "/atmosphere/deep-forest");
     expect(screen.getAllByRole("slider")).toHaveLength(3);
-    expect(
-      screen.getByRole("slider", { name: "Forest Air from Deep Forest" }),
-    ).toHaveValue("41");
+    expect(screen.getByRole("slider", { name: "Forest Air" })).toHaveValue(
+      "41",
+    );
+    expect(document.querySelectorAll("[data-layer-origin]")).toHaveLength(0);
     expect(
       screen.getByRole("button", { name: "Play Untitled mix" }),
     ).toBeEnabled();
@@ -174,6 +175,13 @@ describe("Composer", () => {
     expect(
       screen.getByRole("slider", { name: "Rain from Rainy Apartment" }),
     ).toHaveValue("65");
+    expect(document.querySelectorAll("[data-layer-origin]")).toHaveLength(4);
+    expect(
+      document.querySelectorAll('[data-layer-origin=""]')[0],
+    ).toHaveTextContent("Deep Forest");
+    expect(
+      document.querySelectorAll('[data-layer-origin=""]')[3],
+    ).toHaveTextContent("Rainy Apartment");
     expect(screen.getByText("Rain added to the mix.")).toBeVisible();
     expect(trigger).toHaveFocus();
 
@@ -195,7 +203,7 @@ describe("Composer", () => {
     expect(audioContextSpy).not.toHaveBeenCalled();
   });
 
-  it("keeps one layer, exposes origins and marks changes as unsaved", async () => {
+  it("keeps one layer, hides redundant origins and marks changes as unsaved", async () => {
     const user = userEvent.setup();
     window.history.replaceState({}, "", "/compose?scene=rainy-apartment");
     renderComposer();
@@ -210,10 +218,10 @@ describe("Composer", () => {
     expect(screen.getAllByRole("slider")).toHaveLength(1);
     expect(screen.getByText("A mix needs at least one sound.")).toBeVisible();
     expect(screen.getByRole("button", { name: "Remove Rain" })).toBeDisabled();
-    fireEvent.change(
-      screen.getByRole("slider", { name: "Rain from Rainy Apartment" }),
-      { target: { value: "37" } },
-    );
+    expect(document.querySelectorAll("[data-layer-origin]")).toHaveLength(0);
+    fireEvent.change(screen.getByRole("slider", { name: "Rain" }), {
+      target: { value: "37" },
+    });
     expect(screen.getByText("Unsaved changes")).toBeVisible();
   });
 
@@ -333,10 +341,9 @@ describe("Composer", () => {
       vi.mocked(adapter.write).mock.calls.at(-1)?.[0].savedMixes[0]?.id,
     ).toBe("stable-mix-id");
 
-    fireEvent.change(
-      screen.getByRole("slider", { name: "Forest Air from Deep Forest" }),
-      { target: { value: "29" } },
-    );
+    fireEvent.change(screen.getByRole("slider", { name: "Forest Air" }), {
+      target: { value: "29" },
+    });
     expect(screen.getByText("Unsaved changes")).toBeVisible();
     await user.click(screen.getByRole("button", { name: "Save changes" }));
     expect(screen.getByText("Saved on this device")).toBeVisible();
@@ -407,17 +414,14 @@ describe("Composer", () => {
       name: "Open Shared name",
     });
     await user.click(openButtons[0]!);
-    expect(
-      screen.getByRole("slider", { name: "Rain from Rainy Apartment" }),
-    ).toHaveValue("33");
+    expect(screen.getByRole("slider", { name: "Rain" })).toHaveValue("33");
     expect(
       screen.getByRole("button", { name: "Play Shared name" }),
     ).toBeVisible();
 
-    fireEvent.change(
-      screen.getByRole("slider", { name: "Rain from Rainy Apartment" }),
-      { target: { value: "21" } },
-    );
+    fireEvent.change(screen.getByRole("slider", { name: "Rain" }), {
+      target: { value: "21" },
+    });
     await user.click(screen.getByRole("button", { name: "Your mixes" }));
     await user.click(
       screen.getAllByRole("button", { name: "Open Shared name" })[1]!,
@@ -426,9 +430,9 @@ describe("Composer", () => {
       screen.getByRole("heading", { name: "Discard unsaved changes?" }),
     ).toBeVisible();
     await user.click(screen.getByRole("button", { name: "Discard changes" }));
-    expect(
-      screen.getByRole("slider", { name: "Forest Air from Deep Forest" }),
-    ).toHaveValue("44");
+    expect(screen.getByRole("slider", { name: "Forest Air" })).toHaveValue(
+      "44",
+    );
     expect(
       screen.getByRole("button", { name: "Play Shared name" }),
     ).toBeVisible();

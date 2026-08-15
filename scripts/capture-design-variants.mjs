@@ -8,6 +8,7 @@ const projectRoot = resolve(import.meta.dirname, "..");
 const outputDirectory = resolve(projectRoot, "docs", "design", "variants");
 const port = 3111;
 const baseURL = `http://127.0.0.1:${port}`;
+const composerCaptureName = process.env.ATMOS_COMPOSER_CAPTURE ?? "composer-b3";
 
 async function waitForServer() {
   for (let attempt = 0; attempt < 80; attempt += 1) {
@@ -40,6 +41,25 @@ async function capture(browser, suffix, options) {
     animations: "disabled",
     fullPage: true,
     path: resolve(outputDirectory, `home-b2-${suffix}.png`),
+  });
+  await page.goto(`${baseURL}/compose?scene=rainy-apartment`);
+  await page.waitForTimeout(800);
+  await page.screenshot({
+    animations: "disabled",
+    fullPage: true,
+    path: resolve(outputDirectory, `${composerCaptureName}-${suffix}.png`),
+  });
+  await page.getByRole("button", { name: "Add sound" }).click();
+  await page
+    .getByRole("button", { name: "Add Forest Air from Deep Forest" })
+    .click();
+  await page.screenshot({
+    animations: "disabled",
+    fullPage: true,
+    path: resolve(
+      outputDirectory,
+      `${composerCaptureName}-mixed-${suffix}.png`,
+    ),
   });
   await context.close();
 }

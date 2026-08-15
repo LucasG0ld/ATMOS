@@ -60,7 +60,7 @@
   align-self: center;
   display: grid;
   grid-template-columns: minmax(18rem, 1fr) minmax(20rem, 28rem);
-  gap: clamp(3rem, 8vw, 9rem);
+  gap: clamp(3rem, 6vw, 6rem);
   width: min(100%, 82rem);
   margin-inline: auto;
 }
@@ -194,13 +194,13 @@
 }
 
 .layer {
-  padding-block: var(--space-4);
+  padding-block: var(--space-3);
   border-bottom: 1px solid
     color-mix(in srgb, var(--atmos-muted) 24%, transparent);
 }
 
 .origin {
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-2);
 }
 
 .layerControls {
@@ -222,7 +222,7 @@
   padding: 0;
   color: var(--atmos-muted);
   cursor: pointer;
-  background: transparent;
+  background: color-mix(in srgb, var(--atmos-surface) 52%, transparent);
   border: 0;
   border-radius: 999px;
   transition:
@@ -246,8 +246,9 @@
 }
 
 .actions {
+  flex-wrap: wrap;
   justify-content: space-between;
-  margin-top: var(--space-6);
+  margin-top: var(--space-4);
   gap: var(--space-4);
 }
 
@@ -266,12 +267,31 @@
 }
 
 .saveButton {
+  padding-inline: var(--space-4);
   color: var(--atmos-accent);
+  border: 1px solid color-mix(in srgb, var(--atmos-accent) 52%, transparent);
+  border-radius: 999px;
+  transition:
+    color var(--duration-control) var(--ease-out),
+    background-color var(--duration-control) var(--ease-out),
+    border-color var(--duration-control) var(--ease-out);
+}
+
+.saveButton:is(:hover, :focus-visible) {
+  color: var(--atmos-background);
+  background: var(--atmos-accent);
+  border-color: var(--atmos-accent);
 }
 
 .saveButton:disabled {
   cursor: not-allowed;
   opacity: 0.55;
+}
+
+.saveButton:disabled:hover {
+  color: var(--atmos-accent);
+  background: transparent;
+  border-color: color-mix(in srgb, var(--atmos-accent) 52%, transparent);
 }
 
 .announcement {
@@ -483,7 +503,7 @@
   .stage {
     align-self: end;
     grid-template-columns: 1fr;
-    gap: var(--space-12);
+    gap: var(--space-8);
   }
 
   .title {
@@ -521,11 +541,6 @@
     max-width: 7rem;
   }
 
-  .actions {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
   .savedMix {
     grid-template-columns: 1fr;
   }
@@ -548,7 +563,8 @@
 @media (prefers-reduced-motion: reduce) {
   .backLink,
   .removeButton,
-  .closeButton {
+  .closeButton,
+  .saveButton {
     transition-duration: 0ms;
   }
 

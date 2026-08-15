@@ -181,6 +181,8 @@ export function Composer() {
   const activeSoundKeys = new Set(
     layers.map(({ sound }) => getSoundReferenceKey(sound)),
   );
+  const hasMultipleOrigins =
+    new Set(layers.map(({ sound }) => sound.atmosphereId)).size > 1;
   const isFull = layers.length >= MAX_LAYERS;
   const isHydrated = preferences?.isHydrated ?? true;
   const playbackState = session?.playbackState ?? "idle";
@@ -474,7 +476,7 @@ export function Composer() {
                   ref={backLinkRef}
                 >
                   <ArrowLeft aria-hidden="true" size={16} />
-                  <span>Back to scene</span>
+                  <span>Scene</span>
                 </Link>
               </div>
             </header>
@@ -579,10 +581,18 @@ export function Composer() {
                     const isOnlyLayer = layers.length === 1;
                     return (
                       <li className={styles.layer} key={soundKey}>
-                        <p className={styles.origin}>{entry.atmosphereName}</p>
+                        {hasMultipleOrigins ? (
+                          <p className={styles.origin} data-layer-origin="">
+                            {entry.atmosphereName}
+                          </p>
+                        ) : null}
                         <div className={styles.layerControls}>
                           <AtmosSlider
-                            accessibleLabel={`${entry.sound.name} from ${entry.atmosphereName}`}
+                            accessibleLabel={
+                              hasMultipleOrigins
+                                ? `${entry.sound.name} from ${entry.atmosphereName}`
+                                : entry.sound.name
+                            }
                             disabled={
                               !isHydrated ||
                               session?.unavailableLayerIds.has(soundKey)
