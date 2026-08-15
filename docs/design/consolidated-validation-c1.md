@@ -1,6 +1,6 @@
 # C1 — Validation consolidée de la révision
 
-**Statut :** contrôles automatisés validés, recette manuelle à confirmer
+**Statut :** validé et clôturé le 15 août 2026
 
 **Branche :** `design/revision-foundations`
 
@@ -50,9 +50,10 @@ Résultats du 15 août 2026 :
   WebKit historiques attendus ;
 - aucun défaut critique ou majeur relevé par la revue consolidée.
 
-## Recette manuelle restante
+## Recette manuelle
 
-À confirmer sur un navigateur desktop et un mobile réel :
+La recette a été validée par le responsable du dépôt sur desktop et mobile réel
+le 15 août 2026. Elle couvrait :
 
 1. Accueil → Rainy Apartment → Play → Timer → retour à l'accueil.
 2. Accueil → Create a mix → ajout d'un son → sauvegarde → renommage → suppression.
@@ -64,6 +65,6 @@ Résultats du 15 août 2026 :
 
 ## Critère de clôture
 
-C1 peut être validée lorsque la matrice automatisée est verte, que la recette
-manuelle ci-dessus est confirmée et qu'aucun défaut majeur n'est ouvert. La
-suite est alors la clôture documentaire puis la PR de la branche vers `main`.
+La matrice automatisée est verte, la recette manuelle est confirmée et aucun
+défaut majeur n'est ouvert. C1 est clôturée ; la révision peut passer à la
+clôture documentaire puis à la PR de la branche vers `main`.

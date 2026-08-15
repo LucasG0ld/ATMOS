@@ -426,7 +426,7 @@ une scène complète ni théâtraliser l'erreur.
 4. Dialogues : [B4 — Quiet Dialogues](dialog-system-variant-b4.md) validé et
    promu en baseline.
 
-### Étape C — Validation consolidée avant intégration
+### Étape C — Validation consolidée avant intégration (réalisée le 15 août 2026)
 
 Comparer les quatre baselines retenues sur les mêmes contenus et viewports,
 puis effectuer une recette transversale desktop, mobile, zoom 200 %, contraste
@@ -435,7 +435,9 @@ la respiration mobile sans réduire la lisibilité, supprimer une fonction ou
 transformer ATMOS en lecteur musical classique.
 
 Le suivi de cette étape est consigné dans
-[C1 — Validation consolidée](consolidated-validation-c1.md).
+[C1 — Validation consolidée](consolidated-validation-c1.md). La matrice
+automatisée et la recette réelle desktop/mobile sont validées sans défaut majeur
+ouvert.
 
 ## Hors périmètre de cet audit
 
