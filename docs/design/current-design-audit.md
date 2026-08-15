@@ -421,8 +421,8 @@ une scène complète ni théâtraliser l'erreur.
 
 1. Player : [B1 — Immediate Play](player-variant-b1.md) validé et promu en baseline.
 2. Accueil mobile : [B2 — Breathing Index](home-variant-b2.md) validé et promu en baseline.
-3. Compositeur : candidat [B3 — Quiet Layers](composer-variant-b3.md) en cours
-   de validation.
+3. Compositeur : [B3 — Quiet Layers](composer-variant-b3.md) validé et promu en
+   baseline.
 4. Dialogues : système explicite centré / panneau / plein écran.
 
 ### Étape C — Validation avant implémentation

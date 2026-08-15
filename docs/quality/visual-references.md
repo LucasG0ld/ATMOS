@@ -23,6 +23,17 @@ npm run visual:capture
 
 Une différence n’est acceptée qu’après vérification desktop/mobile. Ces fichiers servent de référence de revue ; les contrôles comportementaux restent dans Playwright afin d’éviter une dépendance excessive aux différences de rastérisation entre systèmes.
 
+## Compositeur — Baseline B3
+
+Les deux états figent la règle d'origine conditionnelle : aucune répétition pour
+un mix mono-scène, puis une origine visible sur chaque couche lorsqu'un second
+lieu est ajouté.
+
+| État         | Desktop 1440 × 900                                 | Mobile 375 × 812                                  |
+| ------------ | -------------------------------------------------- | ------------------------------------------------- |
+| Mono-scène   | [référence](references/composer-desktop.png)       | [référence](references/composer-mobile.png)       |
+| Multi-scènes | [référence](references/composer-mixed-desktop.png) | [référence](references/composer-mixed-mobile.png) |
+
 ## Identités 1.0
 
 Les captures suivantes figent les visuels générés, leurs recadrages responsive,

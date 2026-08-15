@@ -1,6 +1,6 @@
 # Variante Compositeur B3 — Quiet Layers
 
-**Statut :** candidat à valider, non approuvé comme baseline
+**Statut :** validé comme nouvelle baseline du compositeur
 
 **Branche :** `design/revision-foundations`
 
@@ -37,8 +37,9 @@ composition doivent former un rythme lisible sans ressembler à une barre d'outi
 | Baseline mixte      | [capture](variants/composer-baseline-mixed-desktop.png) | [capture](variants/composer-baseline-mixed-mobile.png) |
 | B3 mixte            | [capture](variants/composer-b3-mixed-desktop.png)       | [capture](variants/composer-b3-mixed-mobile.png)       |
 
-Les captures B3 se régénèrent avec `npm run design:variant:capture`. Les états
-baseline restent séparés jusqu'à validation explicite.
+Les captures B3 se régénèrent avec `npm run design:variant:capture`. La variante
+a été validée manuellement sur desktop et mobile, puis promue dans les références
+visuelles courantes le 15 août 2026.
 
 ## Critères de décision
 
@@ -49,7 +50,8 @@ baseline restent séparés jusqu'à validation explicite.
 5. Aucun contrôle ne déborde à 320 ou 375 px et le zoom 200 % reste utilisable.
 6. Le compositeur paraît plus intégré à la scène, sans devenir une DAW.
 
-## Suite si la variante est validée
+## Décision
 
-Promouvoir B3 dans la baseline de révision, mettre à jour la règle d'origine
-dans la spécification UX, puis poursuivre avec le système de dialogues B4.
+B3 remplace la composition 1.0 comme référence de la révision. Les états
+mono-scène et multi-scènes rejoignent la baseline visuelle officielle. La
+prochaine exploration porte sur le système de dialogues B4.

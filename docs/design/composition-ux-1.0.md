@@ -1,8 +1,8 @@
 # Spécification UX de la composition — ATMOS 1.0
 
-## Candidat B3 — Quiet Layers
+## Baseline B3 — Quiet Layers
 
-La révision visuelle testée le 15 août 2026 conserve toutes les limites et
+La révision visuelle validée le 15 août 2026 conserve toutes les limites et
 interactions de la version 1.0. Elle masque l'origine répétée lorsqu'un mix ne
 contient qu'une seule scène, puis la rétablit sur chaque ligne dès que deux
 scènes sont réunies. Les actions Add et Save forment un groupe plus compact,

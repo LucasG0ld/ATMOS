@@ -47,6 +47,23 @@ async function capture(browser, name, options) {
     });
   }
 
+  await page.goto(`${baseURL}/compose?scene=rainy-apartment`);
+  await page.waitForTimeout(800);
+  await page.screenshot({
+    animations: "disabled",
+    fullPage: true,
+    path: resolve(outputDirectory, `composer-${name}.png`),
+  });
+  await page.getByRole("button", { name: "Add sound" }).click();
+  await page
+    .getByRole("button", { name: "Add Forest Air from Deep Forest" })
+    .click();
+  await page.screenshot({
+    animations: "disabled",
+    fullPage: true,
+    path: resolve(outputDirectory, `composer-mixed-${name}.png`),
+  });
+
   await context.close();
 }
 
