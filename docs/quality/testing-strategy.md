@@ -253,6 +253,14 @@ moteurs simultanés. Le contrôle de rollback injecte en plus un snapshot V2 dan
 la production 0.3 et vérifie sa conservation exacte, l’absence d’audio et
 l’absence d’erreur d’exécution.
 
+La validation consolidée C1 de la révision visuelle porte la suite à 153 tests
+sur 25 fichiers et 120 cas Playwright : 116 réussites et les quatre reports
+WebKit historiques. Le nouveau parcours vérifie les baselines B1 à B4 à
+720 × 450, équivalent CSS d'un desktop 1440 × 900 zoomé à 200 %, avec mouvement
+réduit, contraste renforcé, géométrie sans débordement et axe sur Timer, nommage
+et bibliothèque. Le contrôle reste complémentaire à la recette réelle du zoom,
+du texte agrandi, du contraste élevé et des lecteurs d'écran.
+
 ## CI attendue
 
 Sur toute pull request : install verrouillée, lint, typecheck, tests unitaires/composants et build. Les E2E critiques s’exécutent avant fusion dès leur mise en place. Les audits lourds ou multi-navigateurs peuvent être programmés et sont obligatoires avant release.

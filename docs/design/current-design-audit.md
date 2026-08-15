@@ -434,6 +434,9 @@ puis effectuer une recette transversale desktop, mobile, zoom 200 %, contraste
 la respiration mobile sans réduire la lisibilité, supprimer une fonction ou
 transformer ATMOS en lecteur musical classique.
 
+Le suivi de cette étape est consigné dans
+[C1 — Validation consolidée](consolidated-validation-c1.md).
+
 ## Hors périmètre de cet audit
 
 - aucune modification visuelle n'est approuvée par ce document ;

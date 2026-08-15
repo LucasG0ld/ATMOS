@@ -958,6 +958,58 @@ test("home and player have no serious automated accessibility violation", async 
   }
 });
 
+test("validated design baselines reflow at a desktop 200 percent equivalent", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 720, height: 450 });
+  await page.emulateMedia({ contrast: "more", reducedMotion: "reduce" });
+
+  const expectDocumentToFit = async () => {
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth <=
+          document.documentElement.clientWidth,
+      ),
+    ).toBe(true);
+  };
+
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", {
+      name: "What atmosphere do you need today?",
+    }),
+  ).toBeVisible();
+  await expectDocumentToFit();
+
+  await page.goto("/atmosphere/rainy-apartment");
+  await expect(
+    page.getByRole("button", { name: "Play Rainy Apartment" }),
+  ).toBeVisible();
+  await expectDocumentToFit();
+  await page.getByRole("button", { name: "Timer" }).click();
+  const timerDialog = page.getByRole("dialog", { name: "Set a timer" });
+  await expectNoHorizontalClipping(page, timerDialog);
+  await expectNoSeriousAccessibilityViolation(page);
+  await page.keyboard.press("Escape");
+
+  await page.goto("/compose?scene=rainy-apartment");
+  await expect(
+    page.getByRole("heading", { name: "Untitled mix" }),
+  ).toBeVisible();
+  await expectDocumentToFit();
+  await page.getByRole("button", { name: "Save mix" }).click();
+  const nameDialog = page.getByRole("dialog", { name: "Name your mix" });
+  await expectNoHorizontalClipping(page, nameDialog);
+  await expectNoSeriousAccessibilityViolation(page);
+  await page.keyboard.press("Escape");
+
+  await page.getByRole("button", { name: "Add sound" }).click();
+  const libraryDialog = page.getByRole("dialog", { name: "Add a sound" });
+  await expectNoHorizontalClipping(page, libraryDialog);
+  await expectNoSeriousAccessibilityViolation(page);
+});
+
 test("catalog and player remain usable at narrow width with reduced motion", async ({
   page,
 }) => {
