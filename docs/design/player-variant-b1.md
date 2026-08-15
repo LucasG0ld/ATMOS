@@ -1,6 +1,6 @@
 # Variante Player B1 — Immediate Play
 
-**Statut :** candidat à valider, non approuvé pour `main`  
+**Statut :** validé comme nouvelle baseline du player  
 **Branche :** `design/revision-foundations`  
 **Date :** 15 août 2026  
 **Périmètre :** player catalogue, sans modification du moteur audio
@@ -49,8 +49,9 @@ et les trois couches sonores restent visibles.
 | Baseline 1.0 | [capture](../quality/references/player-desktop.png) | [capture](../quality/references/player-mobile.png) |
 | Candidat B1  | [capture](variants/player-b1-desktop.png)           | [capture](variants/player-b1-mobile.png)           |
 
-Les captures B1 se régénèrent avec `npm run design:variant:capture`. Elles ne
-remplacent pas la baseline avant validation explicite.
+Les captures B1 se régénèrent avec `npm run design:variant:capture`. La variante
+a été validée manuellement sur desktop et mobile, puis promue dans les références
+visuelles courantes le 15 août 2026.
 
 ## Critères de décision
 
@@ -63,8 +64,8 @@ La variante est retenue si :
 5. les trois couches restent faciles à découvrir et à ajuster ;
 6. la navigation simplifiée ne rend pas le retour à l'accueil ambigu.
 
-## Suite si la variante est validée
+## Décision
 
-Mettre à jour la spécification UX et la baseline visuelle, puis poursuivre avec
-la variante ciblée de l'accueil mobile. Un rejet restaure la composition 1.0
-sans impact sur les données, l'audio ou la persistance.
+B1 remplace la composition du player 1.0 comme référence de la révision. La
+spécification UX et la baseline visuelle sont alignées. La prochaine exploration
+porte sur la respiration de l'accueil mobile.

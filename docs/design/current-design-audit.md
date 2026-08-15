@@ -24,7 +24,7 @@ respiration mobile et la cohérence des couches secondaires.
 | Identité              | Fort                      | Cinématographique, calme et distincte d'un dashboard.                                        |
 | Immersion             | Fort                      | La scène demeure le premier matériau, particulièrement en Focus Mode.                        |
 | Hiérarchie            | Bon mais inégal           | Très éditoriale sur l'accueil ; plus dispersée dans le player et le compositeur.             |
-| Action principale     | À renforcer               | Play est parfois moins visible que le titre, l'horloge ou les contrôles.                     |
+| Action principale     | Renforcée sur le player   | B1 place Play avant les réglages et lui donne le seul traitement plein.                      |
 | Mobile                | Fonctionnel mais comprimé | Le parcours tient ; le débordement masqué du player relevé pendant l'audit a été corrigé.    |
 | Système de composants | À consolider              | Les dialogues sont proches visuellement, mais leur placement et leurs espacements divergent. |
 | Accessibilité         | Fondations solides        | Sémantique, focus, réduction du mouvement et cibles tactiles sont déjà traités.              |
@@ -419,7 +419,7 @@ une scène complète ni théâtraliser l'erreur.
 
 ### Étape B — Variantes ciblées
 
-1. Player : candidat [B1 — Immediate Play](player-variant-b1.md) en cours de validation.
+1. Player : [B1 — Immediate Play](player-variant-b1.md) validé et promu en baseline.
 2. Accueil mobile : index plus respirant avec scène plus présente.
 3. Compositeur : lignes plus calmes, origine conditionnelle et actions mieux
    rythmées.
