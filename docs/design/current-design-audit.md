@@ -1,6 +1,6 @@
 # Audit du design actuel face au corpus de références
 
-**Statut :** audit initial ; assainissement visuel P0 réalisé, sans décision de redesign  
+**Statut :** assainissement validé ; variantes ciblées en cours
 **Date :** 15 août 2026  
 **Version observée :** ATMOS 1.0.0, branche `design/revision-foundations`  
 **Corpus :** [moodboard multi-sources](reference-moodboard.md)
@@ -415,11 +415,11 @@ une scène complète ni théâtraliser l'erreur.
 2. Le débordement du player mobile est corrigé et couvert par une assertion géométrique.
 3. Les captures de référence 1.0 sont rafraîchies.
 4. Les contrôles automatisés couvrent 320 px, 375 px et la réduction du mouvement ;
-   le contrôle manuel à 200 % et en contraste élevé reste à confirmer avant le redesign.
+   le contrôle manuel à 200 % et en contraste élevé a été validé le 15 août 2026.
 
 ### Étape B — Variantes ciblées
 
-1. Player : dominance de Play, horloge secondaire et navigation simplifiée.
+1. Player : candidat [B1 — Immediate Play](player-variant-b1.md) en cours de validation.
 2. Accueil mobile : index plus respirant avec scène plus présente.
 3. Compositeur : lignes plus calmes, origine conditionnelle et actions mieux
    rythmées.

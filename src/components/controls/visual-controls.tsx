@@ -191,6 +191,59 @@ export function VisualControls({
       className={styles.controls}
       data-focus-controls={focusMode?.isFocusMode ? "true" : "false"}
     >
+      <div className={styles.actions}>
+        <MotionConfig reducedMotion="user">
+          <button
+            aria-busy={currentPlaybackState === "loading"}
+            aria-describedby={currentStatusMessage ? statusId : undefined}
+            aria-label={
+              hasSounds
+                ? `${action} ${atmosphereName}`
+                : `Audio unavailable for ${atmosphereName}`
+            }
+            className={styles.playButton}
+            data-focus-playback=""
+            disabled={!hasSounds || currentPlaybackState === "loading"}
+            data-playing={isPlaying ? "true" : "false"}
+            onClick={() => void togglePlayback()}
+            type="button"
+          >
+            <span className={styles.buttonContent}>
+              <AnimatePresence initial={false} mode="wait">
+                <motion.span
+                  animate={{ opacity: 1, scale: 1 }}
+                  aria-hidden="true"
+                  exit={{ opacity: 0, scale: 0.92 }}
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  className={`${styles.buttonIcon} ${currentPlaybackState === "loading" ? styles.loadingIcon : ""}`}
+                  key={action}
+                  transition={{ duration: 0.16 }}
+                >
+                  <ActionIcon fill="currentColor" size={16} strokeWidth={1.5} />
+                </motion.span>
+              </AnimatePresence>
+              <span>{action}</span>
+            </span>
+          </button>
+        </MotionConfig>
+      </div>
+
+      {currentStatusMessage ? (
+        <p
+          className={`text-label ${styles.status}`}
+          id={statusId}
+          role={
+            currentPlaybackState === "error"
+              ? "alert"
+              : currentPlaybackState === "ending"
+                ? undefined
+                : "status"
+          }
+        >
+          {currentStatusMessage}
+        </p>
+      ) : null}
+
       {!focusMode?.isFocusMode ? (
         <fieldset className={styles.fieldset}>
           <legend className={`text-label ${styles.legend}`}>
@@ -259,63 +312,6 @@ export function VisualControls({
             </button>
           ) : null}
         </div>
-      ) : null}
-
-      <div className={styles.actions}>
-        <MotionConfig reducedMotion="user">
-          <button
-            aria-busy={currentPlaybackState === "loading"}
-            aria-describedby={currentStatusMessage ? statusId : undefined}
-            aria-label={
-              hasSounds
-                ? `${action} ${atmosphereName}`
-                : `Audio unavailable for ${atmosphereName}`
-            }
-            className={styles.playButton}
-            data-focus-playback=""
-            disabled={!hasSounds || currentPlaybackState === "loading"}
-            data-playing={isPlaying ? "true" : "false"}
-            onClick={() => void togglePlayback()}
-            type="button"
-          >
-            <span className={styles.buttonContent}>
-              <AnimatePresence initial={false} mode="wait">
-                <motion.span
-                  animate={{ opacity: 1, scale: 1 }}
-                  aria-hidden="true"
-                  exit={{ opacity: 0, scale: 0.92 }}
-                  initial={{ opacity: 0, scale: 0.92 }}
-                  className={`${styles.buttonIcon} ${currentPlaybackState === "loading" ? styles.loadingIcon : ""}`}
-                  key={action}
-                  transition={{ duration: 0.16 }}
-                >
-                  <ActionIcon fill="currentColor" size={16} strokeWidth={1.5} />
-                </motion.span>
-              </AnimatePresence>
-              <span>{action}</span>
-            </span>
-          </button>
-        </MotionConfig>
-
-        {!focusMode?.isFocusMode ? (
-          <span className={`text-label ${styles.mode}`}>Audio</span>
-        ) : null}
-      </div>
-
-      {currentStatusMessage ? (
-        <p
-          className={`text-label ${styles.status}`}
-          id={statusId}
-          role={
-            currentPlaybackState === "error"
-              ? "alert"
-              : currentPlaybackState === "ending"
-                ? undefined
-                : "status"
-          }
-        >
-          {currentStatusMessage}
-        </p>
       ) : null}
     </div>
   );

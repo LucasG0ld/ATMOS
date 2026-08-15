@@ -234,7 +234,7 @@ test("favorites and volumes persist locally and reset to catalogue defaults", as
       name: "Remove from favorites",
     }),
   ).toHaveAttribute("aria-pressed", "true");
-  await page.getByRole("link", { name: "Back to atmospheres" }).click();
+  await page.getByRole("link", { name: "ATMOS — Home" }).click();
   const rainyLink = page.locator('[data-atmosphere-link="rainy-apartment"]');
   await expect(rainyLink).toBeVisible();
   await expect(rainyLink.getByText("Saved")).toBeVisible();
@@ -400,11 +400,11 @@ test("Focus Mode keeps essentials, expires the timer and restores focus", async 
   await expectNoSeriousAccessibilityViolation(page);
 
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("button", { name: /Timer ·/ })).toBeFocused();
-  await page.keyboard.press("Tab");
   await expect(
     page.getByRole("button", { name: "Play Rainy Apartment" }),
   ).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: /Timer ·/ })).toBeFocused();
 
   await page.clock.fastForward("15:00");
   await expect(page.locator('p[role="status"]')).toHaveText("Timer finished.");
@@ -604,11 +604,12 @@ test("keyboard order follows the visual reading order", async ({
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Preferences" })).toBeFocused();
   await page.keyboard.press("Tab");
-  await expect(
-    page.getByRole("link", { name: "Back to atmospheres" }),
-  ).toBeFocused();
-  await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "Create a mix" })).toBeFocused();
+
+  await page.keyboard.press("Tab");
+  await expect(
+    page.getByRole("button", { name: "Play Rainy Apartment" }),
+  ).toBeFocused();
 
   for (const name of ["Rain", "Window Rain", "Distant Thunder"]) {
     await page.keyboard.press("Tab");
@@ -626,10 +627,6 @@ test("keyboard order follows the visual reading order", async ({
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("button", { name: "Focus", exact: true }),
-  ).toBeFocused();
-  await page.keyboard.press("Tab");
-  await expect(
-    page.getByRole("button", { name: "Play Rainy Apartment" }),
   ).toBeFocused();
 });
 
@@ -997,10 +994,8 @@ test("catalog and player remain usable at narrow width with reduced motion", asy
       ),
       page.getByRole("button", { name: "Atmospheres" }),
       page.getByRole("button", { name: "Preferences" }),
-      page.getByRole("link", { name: "Back to atmospheres" }),
       page.getByRole("slider"),
       page.getByRole("button", { name: "Play Rainy Apartment" }),
-      page.getByText("Audio", { exact: true }),
     ]) {
       await expectNoHorizontalClipping(page, locator);
     }

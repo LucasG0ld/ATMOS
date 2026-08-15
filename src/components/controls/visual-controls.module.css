@@ -5,7 +5,7 @@
 .fieldset {
   min-width: 0;
   padding: 0;
-  margin: 0;
+  margin: clamp(2rem, 4vh, 3rem) 0 0;
   border: 0;
 }
 
@@ -64,22 +64,20 @@
 .actions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-6);
-  margin-top: clamp(2rem, 4vh, 3rem);
+  justify-content: flex-start;
 }
 
 .playButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 7.5rem;
-  min-height: 2.75rem;
-  padding: var(--space-3) var(--space-4);
-  color: var(--atmos-foreground);
+  min-width: 9rem;
+  min-height: 3.5rem;
+  padding: var(--space-3) var(--space-6);
+  color: var(--atmos-background);
   cursor: pointer;
-  background: transparent;
-  border: 1px solid color-mix(in srgb, var(--atmos-foreground) 32%, transparent);
+  background: var(--atmos-foreground);
+  border: 1px solid var(--atmos-foreground);
   border-radius: 999px;
   transition:
     color var(--duration-control) var(--ease-out),
@@ -88,8 +86,8 @@
 }
 
 .playButton:is(:hover, :focus-visible) {
-  color: var(--atmos-background);
-  background: var(--atmos-foreground);
+  color: var(--atmos-foreground);
+  background: transparent;
   border-color: var(--atmos-foreground);
 }
 
@@ -103,9 +101,9 @@
 }
 
 .playButton:disabled:hover {
-  color: var(--atmos-foreground);
-  background: transparent;
-  border-color: color-mix(in srgb, var(--atmos-foreground) 32%, transparent);
+  color: var(--atmos-background);
+  background: var(--atmos-foreground);
+  border-color: var(--atmos-foreground);
 }
 
 .buttonContent {
@@ -113,6 +111,9 @@
   grid-template-columns: 1.25rem auto;
   align-items: center;
   gap: var(--space-3);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 
 .buttonIcon {
@@ -124,10 +125,6 @@
 
 .loadingIcon {
   animation: loadingSpin 1.1s linear infinite;
-}
-
-.mode {
-  color: var(--atmos-muted);
 }
 
 .status {
