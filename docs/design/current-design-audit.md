@@ -417,21 +417,22 @@ une scène complète ni théâtraliser l'erreur.
 4. Les contrôles automatisés couvrent 320 px, 375 px et la réduction du mouvement ;
    le contrôle manuel à 200 % et en contraste élevé a été validé le 15 août 2026.
 
-### Étape B — Variantes ciblées
+### Étape B — Variantes ciblées (réalisée le 15 août 2026)
 
 1. Player : [B1 — Immediate Play](player-variant-b1.md) validé et promu en baseline.
 2. Accueil mobile : [B2 — Breathing Index](home-variant-b2.md) validé et promu en baseline.
 3. Compositeur : [B3 — Quiet Layers](composer-variant-b3.md) validé et promu en
    baseline.
-4. Dialogues : candidat [B4 — Quiet Dialogues](dialog-system-variant-b4.md) en
-   cours de validation.
+4. Dialogues : [B4 — Quiet Dialogues](dialog-system-variant-b4.md) validé et
+   promu en baseline.
 
-### Étape C — Validation avant implémentation
+### Étape C — Validation consolidée avant intégration
 
-Comparer deux ou trois variantes sur les mêmes contenus et viewports. La
-direction retenue devra améliorer l'accès à Play et la respiration mobile sans
-réduire la lisibilité, supprimer une fonction ou transformer ATMOS en lecteur
-musical classique.
+Comparer les quatre baselines retenues sur les mêmes contenus et viewports,
+puis effectuer une recette transversale desktop, mobile, zoom 200 %, contraste
+élevé et mouvement réduit. La direction finale doit améliorer l'accès à Play et
+la respiration mobile sans réduire la lisibilité, supprimer une fonction ou
+transformer ATMOS en lecteur musical classique.
 
 ## Hors périmètre de cet audit
 

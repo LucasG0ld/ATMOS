@@ -77,6 +77,8 @@ async function capture(browser, suffix, options) {
   await page.goto(`${baseURL}/compose?scene=rainy-apartment`);
   await page.waitForTimeout(500);
   await page.getByRole("button", { name: "Save mix" }).click();
+  await page.getByRole("textbox", { name: "Mix name" }).waitFor();
+  await page.waitForTimeout(100);
   await captureDialog("name-mix");
   await page.getByRole("textbox", { name: "Mix name" }).fill("Rainy reading");
   await page.getByRole("button", { name: "Save", exact: true }).click();

@@ -1,6 +1,6 @@
 # Variante Dialogues B4 — Quiet Dialogues
 
-**Statut :** candidat à valider, non approuvé comme baseline
+**Statut :** validé comme nouvelle baseline des dialogues
 
 **Branche :** `design/revision-foundations`
 
@@ -54,7 +54,8 @@ Les captures se régénèrent avec `npm run design:variant:capture`.
 5. La grille Timer mobile paraît volontaire et conserve cinq grandes cibles.
 6. La scène reste perceptible derrière les formats non expansifs.
 
-## Suite si la variante est validée
+## Décision
 
-Promouvoir les six états dans les références visuelles officielles, inscrire la
-grammaire dans le design system, puis clôturer l'étape B de la révision.
+B4 a été validée manuellement le 15 août 2026. Les six états rejoignent les
+références visuelles officielles et la grammaire est inscrite dans le design
+system. Cette validation clôture l'étape B de la révision.

@@ -34,6 +34,20 @@ lieu est ajouté.
 | Mono-scène   | [référence](references/composer-desktop.png)       | [référence](references/composer-mobile.png)       |
 | Multi-scènes | [référence](references/composer-mixed-desktop.png) | [référence](references/composer-mixed-mobile.png) |
 
+## Dialogues — Baseline B4
+
+Les références couvrent les formats court, centré et étendu, ainsi que les
+états localement vide et enregistré de Preferences.
+
+| État            | Desktop 1440 × 900                                       | Mobile 375 × 812                                        |
+| --------------- | -------------------------------------------------------- | ------------------------------------------------------- |
+| Nommage         | [référence](references/dialog-name-mix-desktop.png)      | [référence](references/dialog-name-mix-mobile.png)      |
+| Liste des mixes | [référence](references/dialog-your-mixes-desktop.png)    | [référence](references/dialog-your-mixes-mobile.png)    |
+| Suppression     | [référence](references/dialog-delete-mix-desktop.png)    | [référence](references/dialog-delete-mix-mobile.png)    |
+| Bibliothèque    | [référence](references/dialog-sound-library-desktop.png) | [référence](references/dialog-sound-library-mobile.png) |
+| Preferences     | [référence](references/dialog-preferences-desktop.png)   | [référence](references/dialog-preferences-mobile.png)   |
+| Timer           | [référence](references/dialog-timer-desktop.png)         | [référence](references/dialog-timer-mobile.png)         |
+
 ## Identités 1.0
 
 Les captures suivantes figent les visuels générés, leurs recadrages responsive,
