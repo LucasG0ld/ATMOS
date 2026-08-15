@@ -8,6 +8,7 @@ export const quietCoffeeShop = defineAtmosphere({
   displayName: ["Quiet", "Coffee Shop"],
   description:
     "A slow morning held together by warm light and the quiet rhythm of the café.",
+  catalogueDescription: "Warm light and a distant café rhythm.",
   theme: {
     background: "#1b1510",
     foreground: "#f5ead8",

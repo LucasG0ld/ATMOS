@@ -34,6 +34,13 @@ async function capture(browser, suffix, options) {
     fullPage: true,
     path: resolve(outputDirectory, `player-b1-${suffix}.png`),
   });
+  await page.goto(baseURL);
+  await page.waitForTimeout(800);
+  await page.screenshot({
+    animations: "disabled",
+    fullPage: true,
+    path: resolve(outputDirectory, `home-b2-${suffix}.png`),
+  });
   await context.close();
 }
 

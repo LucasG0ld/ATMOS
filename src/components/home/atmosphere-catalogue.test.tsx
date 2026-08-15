@@ -18,6 +18,9 @@ describe("AtmosphereCatalogue", () => {
     expect(screen.getByText(/Four places/)).toHaveTextContent(
       "Four placesone quiet moment",
     );
+    expect(
+      screen.getByText("Rain on glass, city lights within."),
+    ).toBeInTheDocument();
     expect(document.querySelector('[data-atmosphere="rainy-apartment"]')).toBe(
       document.querySelector("[data-atmosphere]"),
     );

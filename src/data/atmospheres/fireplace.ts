@@ -8,6 +8,7 @@ export const fireplace = defineAtmosphere({
   displayName: ["Fireplace"],
   description:
     "A winter evening shaped by firelight, still rooms, and the weather beyond the window.",
+  catalogueDescription: "Firelight, quiet rooms, winter outside.",
   theme: {
     background: "#17100d",
     foreground: "#f7eee4",

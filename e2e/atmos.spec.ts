@@ -968,13 +968,39 @@ test("catalog and player remain usable at narrow width with reduced motion", asy
   await expect(
     page.getByRole("navigation", { name: "Atmospheres" }).getByRole("link"),
   ).toHaveCount(4);
-  expect(
-    await page.evaluate(
-      () =>
-        document.documentElement.scrollWidth <=
-        document.documentElement.clientWidth,
-    ),
-  ).toBe(true);
+  const assertHomeFitsViewport = async () => {
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth <=
+          document.documentElement.clientWidth,
+      ),
+    ).toBe(true);
+    await expect(page.getByText("01", { exact: true })).toBeVisible();
+    await expect(
+      page.getByText("Rain on glass, city lights within.", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(
+        "A quiet evening while the city disappears behind the rain.",
+        { exact: true },
+      ),
+    ).toBeHidden();
+    for (const locator of [
+      page.locator("header"),
+      page.getByRole("heading", {
+        name: "What atmosphere do you need today?",
+      }),
+      page.getByRole("navigation", { name: "Atmospheres" }).getByRole("link"),
+    ]) {
+      await expectNoHorizontalClipping(page, locator);
+    }
+  };
+
+  await assertHomeFitsViewport();
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.reload();
+  await assertHomeFitsViewport();
 
   await page.goto("/atmosphere/rainy-apartment");
 

@@ -53,13 +53,14 @@ type Atmosphere = {
   name: string;
   displayName: readonly string[];
   description: string;
+  catalogueDescription: string;
   theme: AtmosphereTheme;
   visuals: AtmosphereVisuals;
   sounds: readonly SoundLayer[];
 };
 ```
 
-`defaultVolume` est compris entre 0 et 1 dans le domaine audio. L’UI peut convertir en pourcentage. `displayName` autorise une composition visuelle sur plusieurs lignes sans altérer le nom accessible. `fallbackBackground` garantit une scène complète avant ou sans photographie. Pour une image purement atmosphérique sans information, `backgroundAlt` doit être vide ; le titre fournit alors le contexte.
+`defaultVolume` est compris entre 0 et 1 dans le domaine audio. L’UI peut convertir en pourcentage. `displayName` autorise une composition visuelle sur plusieurs lignes sans altérer le nom accessible. `catalogueDescription` fournit une formulation éditoriale de 64 caractères maximum pour les index contraints ; `description` reste le texte complet du player et du catalogue desktop. `fallbackBackground` garantit une scène complète avant ou sans photographie. Pour une image purement atmosphérique sans information, `backgroundAlt` doit être vide ; le titre fournit alors le contexte.
 
 `mobileBackgroundSrc` est une variante réellement recadrée, pas une miniature dupliquée. Elle exige `backgroundSrc` et peut disposer d’un point focal propre. `texture` réserve les effets décoratifs à l’ambiance qui les déclare ; aucune pluie ne doit apparaître implicitement sur les autres scènes.
 
@@ -72,6 +73,7 @@ const rainyApartment = {
   name: "Rainy Apartment",
   displayName: ["Rainy", "Apartment"],
   description: "A quiet evening while the city disappears behind the rain.",
+  catalogueDescription: "Rain on glass, city lights within.",
   theme: {
     background: "#0d141c",
     foreground: "#f4f0e8",

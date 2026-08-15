@@ -38,6 +38,13 @@ describe("atmosphere catalog", () => {
     expect(new Set(slugs).size).toBe(slugs.length);
   });
 
+  it("provides a concise mobile catalogue description", () => {
+    for (const atmosphere of atmospheres) {
+      expect(atmosphere.catalogueDescription.length).toBeGreaterThan(0);
+      expect(atmosphere.catalogueDescription.length).toBeLessThanOrEqual(64);
+    }
+  });
+
   it("provides paired responsive visuals for every atmosphere", () => {
     for (const atmosphere of atmospheres) {
       expect(atmosphere.visuals.backgroundSrc).toMatch(
