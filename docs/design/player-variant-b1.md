@@ -1,6 +1,6 @@
 # Variante Player B1 — Immediate Play
 
-**Statut :** validé comme nouvelle baseline du player  
+**Statut :** validé comme nouvelle baseline du player
 **Branche :** `design/revision-foundations`  
 **Date :** 15 août 2026  
 **Périmètre :** player catalogue, sans modification du moteur audio
