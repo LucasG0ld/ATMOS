@@ -9,6 +9,7 @@ const outputDirectory = resolve(projectRoot, "docs", "design", "variants");
 const port = 3111;
 const baseURL = `http://127.0.0.1:${port}`;
 const composerCaptureName = process.env.ATMOS_COMPOSER_CAPTURE ?? "composer-b3";
+const dialogCaptureName = process.env.ATMOS_DIALOG_CAPTURE ?? "dialog-b4";
 
 async function waitForServer() {
   for (let attempt = 0; attempt < 80; attempt += 1) {
@@ -61,6 +62,41 @@ async function capture(browser, suffix, options) {
       `${composerCaptureName}-mixed-${suffix}.png`,
     ),
   });
+
+  const captureDialog = async (state) => {
+    await page.screenshot({
+      animations: "disabled",
+      fullPage: false,
+      path: resolve(
+        outputDirectory,
+        `${dialogCaptureName}-${state}-${suffix}.png`,
+      ),
+    });
+  };
+
+  await page.goto(`${baseURL}/compose?scene=rainy-apartment`);
+  await page.waitForTimeout(500);
+  await page.getByRole("button", { name: "Save mix" }).click();
+  await captureDialog("name-mix");
+  await page.getByRole("textbox", { name: "Mix name" }).fill("Rainy reading");
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.getByRole("button", { name: "Your mixes" }).click();
+  await captureDialog("your-mixes");
+  await page.getByRole("button", { name: "Delete Rainy reading" }).click();
+  await captureDialog("delete-mix");
+
+  await page.goto(`${baseURL}/compose?scene=rainy-apartment`);
+  await page.waitForTimeout(500);
+  await page.getByRole("button", { name: "Add sound" }).click();
+  await captureDialog("sound-library");
+
+  await page.goto(`${baseURL}/atmosphere/rainy-apartment`);
+  await page.waitForTimeout(500);
+  await page.getByRole("button", { name: "Preferences" }).click();
+  await captureDialog("preferences");
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Timer" }).click();
+  await captureDialog("timer");
   await context.close();
 }
 

@@ -423,7 +423,8 @@ une scène complète ni théâtraliser l'erreur.
 2. Accueil mobile : [B2 — Breathing Index](home-variant-b2.md) validé et promu en baseline.
 3. Compositeur : [B3 — Quiet Layers](composer-variant-b3.md) validé et promu en
    baseline.
-4. Dialogues : système explicite centré / panneau / plein écran.
+4. Dialogues : candidat [B4 — Quiet Dialogues](dialog-system-variant-b4.md) en
+   cours de validation.
 
 ### Étape C — Validation avant implémentation
 

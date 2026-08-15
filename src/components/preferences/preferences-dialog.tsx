@@ -41,6 +41,7 @@ export function PreferencesDialog() {
   return (
     <>
       <button
+        aria-haspopup="dialog"
         className={`text-label ${styles.trigger}`}
         onClick={openDialog}
         ref={triggerRef}
@@ -86,26 +87,31 @@ export function PreferencesDialog() {
             ) : null}
           </div>
 
-          <div className={styles.footer}>
-            <button
-              className={`text-label ${styles.resetButton}`}
-              onClick={() => resetDialogRef.current?.showModal()}
-              ref={resetTriggerRef}
-              type="button"
-            >
-              Reset saved preferences
-            </button>
-            <p aria-live="polite" className={styles.resetStatus}>
-              {resetMessage}
-            </p>
-          </div>
+          {hasSavedPreferences || resetMessage ? (
+            <div className={styles.footer}>
+              {hasSavedPreferences ? (
+                <button
+                  aria-haspopup="dialog"
+                  className={`text-label ${styles.resetButton}`}
+                  onClick={() => resetDialogRef.current?.showModal()}
+                  ref={resetTriggerRef}
+                  type="button"
+                >
+                  Reset saved preferences
+                </button>
+              ) : null}
+              <p aria-live="polite" className={styles.resetStatus}>
+                {resetMessage}
+              </p>
+            </div>
+          ) : null}
         </div>
       </dialog>
 
       <dialog
         aria-describedby={resetDescriptionId}
         aria-labelledby={resetTitleId}
-        className={styles.dialog}
+        className={`${styles.dialog} ${styles.compactDialog}`}
         onClose={() => resetTriggerRef.current?.focus()}
         ref={resetDialogRef}
       >
@@ -117,7 +123,7 @@ export function PreferencesDialog() {
             This removes favorites, saved volumes and all mixes from this
             device. Catalogue sounds are not deleted.
           </p>
-          <div className={styles.footer}>
+          <div className={styles.confirmationActions}>
             <button
               className={`text-label ${styles.resetButton}`}
               onClick={() => resetDialogRef.current?.close()}

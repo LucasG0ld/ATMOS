@@ -1002,6 +1002,7 @@ test("catalog and player remain usable at narrow width with reduced motion", asy
   await page.reload();
   await assertHomeFitsViewport();
 
+  await page.setViewportSize({ width: 320, height: 568 });
   await page.goto("/atmosphere/rainy-apartment");
 
   await expect(
@@ -1028,6 +1029,14 @@ test("catalog and player remain usable at narrow width with reduced motion", asy
   };
 
   await assertPlayerFitsViewport();
+  await page.getByRole("button", { name: "Timer" }).click();
+  const narrowTimerDialog = page.getByRole("dialog", { name: "Set a timer" });
+  await expect(narrowTimerDialog).toBeVisible();
+  await expectNoHorizontalClipping(page, narrowTimerDialog);
+  await expect(
+    narrowTimerDialog.getByRole("button", { name: /minutes/ }),
+  ).toHaveCount(5);
+  await page.keyboard.press("Escape");
   await page.setViewportSize({ width: 375, height: 812 });
   await page.reload();
   await assertPlayerFitsViewport();
@@ -1069,6 +1078,30 @@ test("catalog and player remain usable at narrow width with reduced motion", asy
   await page.setViewportSize({ width: 320, height: 568 });
   await page.reload();
   await assertComposerFitsViewport();
+
+  await page.getByRole("button", { name: "Save mix" }).click();
+  const narrowNameDialog = page.getByRole("dialog", { name: "Name your mix" });
+  await expectNoHorizontalClipping(page, narrowNameDialog);
+  expect(
+    await narrowNameDialog.evaluate(
+      (element) => element.getBoundingClientRect().left,
+    ),
+  ).toBeGreaterThanOrEqual(15);
+  await page.keyboard.press("Escape");
+
+  await page.getByRole("button", { name: "Add sound" }).click();
+  const narrowLibraryDialog = page.getByRole("dialog", {
+    name: "Add a sound",
+  });
+  await expectNoHorizontalClipping(page, narrowLibraryDialog);
+  const libraryGeometry = await narrowLibraryDialog.evaluate((element) => {
+    const { left, right } = element.getBoundingClientRect();
+    return { left, right, viewportWidth: document.documentElement.clientWidth };
+  });
+  expect(libraryGeometry.left).toBeLessThanOrEqual(1);
+  expect(libraryGeometry.right).toBeGreaterThanOrEqual(
+    libraryGeometry.viewportWidth - 1,
+  );
 });
 
 test("visual composer builds a four-sound draft without loading audio", async ({

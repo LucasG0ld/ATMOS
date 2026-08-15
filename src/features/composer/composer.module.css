@@ -303,11 +303,16 @@
   width: min(calc(100% - 2rem), 42rem);
   max-height: min(46rem, calc(100dvh - 2rem));
   padding: 0;
+  margin: auto;
   color: var(--atmos-foreground);
   background: color-mix(in srgb, var(--atmos-background) 94%, black);
   border: 1px solid color-mix(in srgb, var(--atmos-muted) 32%, transparent);
   border-radius: var(--radius-medium);
   box-shadow: 0 2rem 6rem rgb(0 0 0 / 45%);
+}
+
+.compactDialog {
+  width: min(calc(100% - 2rem), 34rem);
 }
 
 .dialog::backdrop {
@@ -322,7 +327,7 @@
 }
 
 .compactPanel {
-  width: min(100%, 34rem);
+  width: 100%;
 }
 
 .dialogHeader {
@@ -459,8 +464,20 @@
 }
 
 .dangerButton {
-  padding: 0;
+  padding-inline: var(--space-6);
   color: var(--atmos-foreground);
+  border: 1px solid color-mix(in srgb, var(--atmos-foreground) 38%, transparent);
+  border-radius: 999px;
+  transition:
+    color var(--duration-control) var(--ease-out),
+    background-color var(--duration-control) var(--ease-out),
+    border-color var(--duration-control) var(--ease-out);
+}
+
+.dangerButton:is(:hover, :focus-visible) {
+  color: var(--atmos-background);
+  background: var(--atmos-foreground);
+  border-color: var(--atmos-foreground);
 }
 
 .savedMixList {
@@ -511,6 +528,11 @@
   }
 
   .dialog {
+    width: calc(100% - var(--safe-left) - var(--safe-right));
+    max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom));
+  }
+
+  .expansiveDialog {
     width: 100%;
     max-width: none;
     max-height: 100dvh;
@@ -519,7 +541,7 @@
     border-radius: 0;
   }
 
-  .dialogPanel {
+  .expansiveDialog .dialogPanel {
     min-height: 100dvh;
     padding-block: var(--safe-top) var(--safe-bottom);
     padding-inline: var(--safe-left) var(--safe-right);
@@ -564,7 +586,8 @@
   .backLink,
   .removeButton,
   .closeButton,
-  .saveButton {
+  .saveButton,
+  .dangerButton {
     transition-duration: 0ms;
   }
 

@@ -460,6 +460,7 @@ export function Composer() {
               <div className={styles.headerActions}>
                 {preferences?.savedMixes.length ? (
                   <button
+                    aria-haspopup="dialog"
                     className={`text-label ${styles.mixesButton}`}
                     onClick={openMixes}
                     ref={mixesTriggerRef}
@@ -633,6 +634,7 @@ export function Composer() {
 
                 <div className={styles.actions}>
                   <button
+                    aria-haspopup="dialog"
                     className={`text-label ${styles.addButton}`}
                     onClick={openLibrary}
                     ref={libraryTriggerRef}
@@ -643,6 +645,7 @@ export function Composer() {
                   </button>
                   <button
                     aria-describedby={saveNoteId}
+                    aria-haspopup={currentMixId ? undefined : "dialog"}
                     className={`text-label ${styles.saveButton}`}
                     disabled={
                       !preferences?.isHydrated ||
@@ -686,7 +689,7 @@ export function Composer() {
         <dialog
           aria-describedby={libraryDescriptionId}
           aria-labelledby={libraryTitleId}
-          className={styles.dialog}
+          className={`${styles.dialog} ${styles.expansiveDialog}`}
           onClose={() => libraryTriggerRef.current?.focus()}
           ref={libraryDialogRef}
         >
@@ -766,7 +769,7 @@ export function Composer() {
         <dialog
           aria-describedby={nameDescriptionId}
           aria-labelledby={nameTitleId}
-          className={styles.dialog}
+          className={`${styles.dialog} ${styles.compactDialog}`}
           onClose={() => nameTriggerRef.current?.focus()}
           ref={nameDialogRef}
         >
@@ -851,7 +854,7 @@ export function Composer() {
         <dialog
           aria-describedby={mixesDescriptionId}
           aria-labelledby={mixesTitleId}
-          className={styles.dialog}
+          className={`${styles.dialog} ${styles.expansiveDialog}`}
           onClose={() => mixesTriggerRef.current?.focus()}
           ref={mixesDialogRef}
         >
@@ -904,6 +907,7 @@ export function Composer() {
                       </button>
                       <button
                         aria-label={`Rename ${mix.name}`}
+                        aria-haspopup="dialog"
                         className="text-label"
                         onClick={(event) =>
                           openNameDialog(mix, event.currentTarget)
@@ -914,6 +918,7 @@ export function Composer() {
                       </button>
                       <button
                         aria-label={`Delete ${mix.name}`}
+                        aria-haspopup="dialog"
                         className="text-label"
                         onClick={(event) => {
                           confirmationTriggerRef.current = event.currentTarget;
@@ -939,7 +944,7 @@ export function Composer() {
         <dialog
           aria-describedby={confirmationDescriptionId}
           aria-labelledby={confirmationTitleId}
-          className={styles.dialog}
+          className={`${styles.dialog} ${styles.compactDialog}`}
           onClose={() => confirmationTriggerRef.current?.focus()}
           ref={confirmationDialogRef}
         >
