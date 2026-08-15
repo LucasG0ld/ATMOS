@@ -8,14 +8,14 @@ Le choix doit rester calme, lisible et immédiat.
 
 ## Accueil
 
-### Candidat B2 — Breathing Index
+### Baseline B2 — Breathing Index
 
-La révision mobile testée le 15 août 2026 conserve le registre et les interactions
-ci-dessous, mais emploie une micro-description déclarée dans chaque ambiance,
-réaffiche les index `01–04` et augmente la pause visuelle entre la question et la
-liste. Les descriptions complètes restent utilisées sur desktop et dans le
-player. B2 ne masque aucune destination et ne demande jamais une première
-pression de preview.
+La révision mobile validée le 15 août 2026 conserve le registre et les
+interactions ci-dessous, mais emploie une micro-description déclarée dans chaque
+ambiance, réaffiche les index `01–04` et augmente la pause visuelle entre la
+question et la liste. Les descriptions complètes restent utilisées sur desktop
+et dans le player. B2 ne masque aucune destination et ne demande jamais une
+première pression de preview.
 
 ### Composition
 

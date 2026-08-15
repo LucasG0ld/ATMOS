@@ -420,7 +420,7 @@ une scène complète ni théâtraliser l'erreur.
 ### Étape B — Variantes ciblées
 
 1. Player : [B1 — Immediate Play](player-variant-b1.md) validé et promu en baseline.
-2. Accueil mobile : candidat [B2 — Breathing Index](home-variant-b2.md) en cours de validation.
+2. Accueil mobile : [B2 — Breathing Index](home-variant-b2.md) validé et promu en baseline.
 3. Compositeur : lignes plus calmes, origine conditionnelle et actions mieux
    rythmées.
 4. Dialogues : système explicite centré / panneau / plein écran.

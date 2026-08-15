@@ -1,9 +1,9 @@
 # Références visuelles
 
-Ces captures figent la composition de référence après l'assainissement visuel
-et la validation de la variante Player B1 le 15 août 2026. Elles utilisent
-Chromium, une date fixe au 2026-08-10 à 20:07, le mouvement réduit et les actifs
-locaux.
+Ces captures figent la composition de référence après l'assainissement visuel,
+la validation du Player B1 et celle de l'Accueil mobile B2 le 15 août 2026. Elles
+utilisent Chromium, une date fixe au 2026-08-10 à 20:07, le mouvement réduit et
+les actifs locaux.
 
 ## Desktop — 1440 × 900
 

@@ -19,7 +19,7 @@ Cette documentation transforme le brief initial en documents opérationnels. En 
 - [Moodboard multi-sources](design/reference-moodboard.md) — références créatives et produit, principes à reprendre et contre-références.
 - [Audit du design actuel](design/current-design-audit.md) — confrontation écran par écran au corpus et priorités de révision.
 - [Variante Player B1](design/player-variant-b1.md) — « Immediate Play », validée comme baseline du player.
-- [Variante Accueil B2](design/home-variant-b2.md) — « Breathing Index », candidat mobile à comparer à la baseline.
+- [Variante Accueil B2](design/home-variant-b2.md) — « Breathing Index », validée comme baseline mobile.
 - [UX du catalogue 0.2](design/catalogue-ux-0.2.md) — accueil, previews et navigation interne.
 - [UX de la session personnelle 0.3](design/personal-session-ux-0.3.md) — favoris, timer, Focus Mode et préférences.
 - [UX de la composition 1.0](design/composition-ux-1.0.md) — compositeur, bibliothèque et gestion des mixes.

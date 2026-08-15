@@ -1,6 +1,6 @@
 # Variante Accueil B2 — Breathing Index
 
-**Statut :** candidat à valider, non approuvé comme baseline
+**Statut :** validé comme nouvelle baseline de l'accueil mobile
 
 **Branche :** `design/revision-foundations`
 
@@ -36,9 +36,9 @@ visuel ne changent pas.
 | Baseline    | [capture](../quality/references/home-desktop.png) | [capture](../quality/references/home-mobile.png) |
 | Candidat B2 | [capture](variants/home-b2-desktop.png)           | [capture](variants/home-b2-mobile.png)           |
 
-Les captures du candidat se régénèrent avec
-`npm run design:variant:capture`. Elles restent séparées de la baseline jusqu'à
-validation explicite.
+Les captures B2 se régénèrent avec `npm run design:variant:capture`. La variante
+a été validée manuellement, puis promue dans les références visuelles courantes
+le 15 août 2026.
 
 ## Critères de décision
 
@@ -49,7 +49,8 @@ validation explicite.
 5. L'ordre clavier, les favoris et les previews restent inchangés.
 6. Desktop ne subit aucun changement de composition.
 
-## Suite si la variante est validée
+## Décision
 
-Promouvoir B2 dans la baseline, marquer la description courte comme règle du
-catalogue mobile, puis poursuivre avec la variante du compositeur.
+B2 remplace la composition mobile de l'accueil comme référence de la révision.
+La description courte devient une règle du registre catalogue. La prochaine
+exploration porte sur le rythme et la densité du compositeur.
