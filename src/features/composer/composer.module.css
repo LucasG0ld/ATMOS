@@ -22,7 +22,7 @@
 .headerActions {
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: var(--space-5);
+  gap: var(--space-6);
 }
 
 .mixesButton {
@@ -127,8 +127,8 @@
 
 .sessionActions {
   flex-wrap: wrap;
-  gap: var(--space-5);
-  margin-top: var(--space-5);
+  gap: var(--space-6);
+  margin-top: var(--space-6);
 }
 
 .focusButton {
@@ -411,7 +411,7 @@
 
 .dialogActions {
   justify-content: flex-end;
-  gap: var(--space-5);
+  gap: var(--space-6);
   margin-top: var(--space-8);
 }
 
@@ -426,7 +426,7 @@
 }
 
 .primaryButton {
-  padding-inline: var(--space-5);
+  padding-inline: var(--space-6);
   color: var(--atmos-background);
   background: var(--atmos-foreground);
   border-radius: 999px;
@@ -453,9 +453,9 @@
 .savedMix {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--space-5);
+  gap: var(--space-6);
   align-items: center;
-  padding-block: var(--space-5);
+  padding-block: var(--space-6);
   border-bottom: 1px solid
     color-mix(in srgb, var(--atmos-muted) 24%, transparent);
 }

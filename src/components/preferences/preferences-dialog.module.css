@@ -73,7 +73,7 @@
 
 .content {
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-6);
   color: var(--atmos-muted);
 }
 
@@ -82,7 +82,7 @@
 }
 
 .notice {
-  padding-top: var(--space-5);
+  padding-top: var(--space-6);
   border-top: 1px solid
     color-mix(in srgb, var(--atmos-foreground) 20%, transparent);
 }

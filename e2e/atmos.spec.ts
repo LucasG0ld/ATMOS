@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 
 import { PREFERENCES_STORAGE_KEY } from "../src/features/preferences/preferences-storage";
 
@@ -27,6 +27,24 @@ async function expectNoSeriousAccessibilityViolation(page: Page) {
     ({ impact }) => impact === "critical" || impact === "serious",
   );
   expect(blockingViolations).toEqual([]);
+}
+
+async function expectNoHorizontalClipping(page: Page, locator: Locator) {
+  const viewportWidth = page.viewportSize()?.width;
+  expect(viewportWidth).toBeDefined();
+
+  const boxes = await locator.evaluateAll((elements) =>
+    elements.map((element) => {
+      const { left, right } = element.getBoundingClientRect();
+      return { left, right };
+    }),
+  );
+
+  expect(boxes.length).toBeGreaterThan(0);
+  for (const box of boxes) {
+    expect(box.left).toBeGreaterThanOrEqual(-1);
+    expect(box.right).toBeLessThanOrEqual((viewportWidth ?? 0) + 1);
+  }
 }
 
 test("critical journey defers audio and remains recoverable", async ({
@@ -967,6 +985,32 @@ test("catalog and player remain usable at narrow width with reduced motion", asy
     page.getByRole("heading", { name: "Rainy Apartment" }),
   ).toBeVisible();
   await expect(page.getByRole("button", { name: /Play/ })).toBeVisible();
+
+  const assertPlayerFitsViewport = async () => {
+    for (const locator of [
+      page.locator("header"),
+      page.locator('section[aria-labelledby="atmosphere-title"]'),
+      page.getByRole("heading", { name: "Rainy Apartment" }),
+      page.getByText(
+        "A quiet evening while the city disappears behind the rain.",
+        { exact: true },
+      ),
+      page.getByRole("button", { name: "Atmospheres" }),
+      page.getByRole("button", { name: "Preferences" }),
+      page.getByRole("link", { name: "Back to atmospheres" }),
+      page.getByRole("slider"),
+      page.getByRole("button", { name: "Play Rainy Apartment" }),
+      page.getByText("Audio", { exact: true }),
+    ]) {
+      await expectNoHorizontalClipping(page, locator);
+    }
+  };
+
+  await assertPlayerFitsViewport();
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.reload();
+  await assertPlayerFitsViewport();
+
   await page.getByRole("button", { name: "Focus", exact: true }).click();
   await expect(page.getByRole("button", { name: "Exit focus" })).toBeVisible();
   const hasHorizontalOverflow = await page.evaluate(

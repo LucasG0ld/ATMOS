@@ -1,6 +1,8 @@
 # Références visuelles
 
-Ces captures figent la composition approuvée après la Gate A et le raccordement audio. Elles utilisent Chromium, une date fixe au 2026-08-10 à 20:07, le mouvement réduit et les actifs locaux.
+Ces captures figent la composition de référence de la version 1.0 après
+l'assainissement visuel du 15 août 2026. Elles utilisent Chromium, une date fixe
+au 2026-08-10 à 20:07, le mouvement réduit et les actifs locaux.
 
 ## Desktop — 1440 × 900
 
@@ -20,10 +22,10 @@ npm run visual:capture
 
 Une différence n’est acceptée qu’après vérification desktop/mobile. Ces fichiers servent de référence de revue ; les contrôles comportementaux restent dans Playwright afin d’éviter une dépendance excessive aux différences de rastérisation entre systèmes.
 
-## Identités 0.2 — Lot 11
+## Identités 1.0
 
 Les captures suivantes figent les visuels générés, leurs recadrages responsive,
-les overlays et les fallbacks approuvés le 2026-08-10.
+les overlays et les états audio actifs de la version 1.0.
 
 | Ambiance          | Desktop 1440 × 900                                    | Mobile 375 × 812                                     |
 | ----------------- | ----------------------------------------------------- | ---------------------------------------------------- |

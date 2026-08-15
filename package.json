@@ -32,6 +32,7 @@
     "performance:composer": "node scripts/measure-composer-runtime.mjs",
     "audit:prod": "npm audit --omit=dev",
     "visual:capture": "npm run build && node scripts/capture-visual-references.mjs",
+    "design:audit:capture": "npm run build && node scripts/audit-design-capture.mjs",
     "format": "prettier --check .",
     "format:write": "prettier --write ."
   },
