@@ -40,6 +40,7 @@ export type Atmosphere = {
   name: string;
   displayName: readonly string[];
   description: string;
+  catalogueDescription: string;
   theme: AtmosphereTheme;
   visuals: AtmosphereVisuals;
   sounds: readonly SoundLayer[];

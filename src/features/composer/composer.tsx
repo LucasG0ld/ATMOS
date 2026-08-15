@@ -181,6 +181,8 @@ export function Composer() {
   const activeSoundKeys = new Set(
     layers.map(({ sound }) => getSoundReferenceKey(sound)),
   );
+  const hasMultipleOrigins =
+    new Set(layers.map(({ sound }) => sound.atmosphereId)).size > 1;
   const isFull = layers.length >= MAX_LAYERS;
   const isHydrated = preferences?.isHydrated ?? true;
   const playbackState = session?.playbackState ?? "idle";
@@ -458,6 +460,7 @@ export function Composer() {
               <div className={styles.headerActions}>
                 {preferences?.savedMixes.length ? (
                   <button
+                    aria-haspopup="dialog"
                     className={`text-label ${styles.mixesButton}`}
                     onClick={openMixes}
                     ref={mixesTriggerRef}
@@ -474,7 +477,7 @@ export function Composer() {
                   ref={backLinkRef}
                 >
                   <ArrowLeft aria-hidden="true" size={16} />
-                  <span>Back to scene</span>
+                  <span>Scene</span>
                 </Link>
               </div>
             </header>
@@ -579,10 +582,18 @@ export function Composer() {
                     const isOnlyLayer = layers.length === 1;
                     return (
                       <li className={styles.layer} key={soundKey}>
-                        <p className={styles.origin}>{entry.atmosphereName}</p>
+                        {hasMultipleOrigins ? (
+                          <p className={styles.origin} data-layer-origin="">
+                            {entry.atmosphereName}
+                          </p>
+                        ) : null}
                         <div className={styles.layerControls}>
                           <AtmosSlider
-                            accessibleLabel={`${entry.sound.name} from ${entry.atmosphereName}`}
+                            accessibleLabel={
+                              hasMultipleOrigins
+                                ? `${entry.sound.name} from ${entry.atmosphereName}`
+                                : entry.sound.name
+                            }
                             disabled={
                               !isHydrated ||
                               session?.unavailableLayerIds.has(soundKey)
@@ -623,6 +634,7 @@ export function Composer() {
 
                 <div className={styles.actions}>
                   <button
+                    aria-haspopup="dialog"
                     className={`text-label ${styles.addButton}`}
                     onClick={openLibrary}
                     ref={libraryTriggerRef}
@@ -633,6 +645,7 @@ export function Composer() {
                   </button>
                   <button
                     aria-describedby={saveNoteId}
+                    aria-haspopup={currentMixId ? undefined : "dialog"}
                     className={`text-label ${styles.saveButton}`}
                     disabled={
                       !preferences?.isHydrated ||
@@ -676,7 +689,7 @@ export function Composer() {
         <dialog
           aria-describedby={libraryDescriptionId}
           aria-labelledby={libraryTitleId}
-          className={styles.dialog}
+          className={`${styles.dialog} ${styles.expansiveDialog}`}
           onClose={() => libraryTriggerRef.current?.focus()}
           ref={libraryDialogRef}
         >
@@ -756,7 +769,7 @@ export function Composer() {
         <dialog
           aria-describedby={nameDescriptionId}
           aria-labelledby={nameTitleId}
-          className={styles.dialog}
+          className={`${styles.dialog} ${styles.compactDialog}`}
           onClose={() => nameTriggerRef.current?.focus()}
           ref={nameDialogRef}
         >
@@ -841,7 +854,7 @@ export function Composer() {
         <dialog
           aria-describedby={mixesDescriptionId}
           aria-labelledby={mixesTitleId}
-          className={styles.dialog}
+          className={`${styles.dialog} ${styles.expansiveDialog}`}
           onClose={() => mixesTriggerRef.current?.focus()}
           ref={mixesDialogRef}
         >
@@ -894,6 +907,7 @@ export function Composer() {
                       </button>
                       <button
                         aria-label={`Rename ${mix.name}`}
+                        aria-haspopup="dialog"
                         className="text-label"
                         onClick={(event) =>
                           openNameDialog(mix, event.currentTarget)
@@ -904,6 +918,7 @@ export function Composer() {
                       </button>
                       <button
                         aria-label={`Delete ${mix.name}`}
+                        aria-haspopup="dialog"
                         className="text-label"
                         onClick={(event) => {
                           confirmationTriggerRef.current = event.currentTarget;
@@ -929,7 +944,7 @@ export function Composer() {
         <dialog
           aria-describedby={confirmationDescriptionId}
           aria-labelledby={confirmationTitleId}
-          className={styles.dialog}
+          className={`${styles.dialog} ${styles.compactDialog}`}
           onClose={() => confirmationTriggerRef.current?.focus()}
           ref={confirmationDialogRef}
         >

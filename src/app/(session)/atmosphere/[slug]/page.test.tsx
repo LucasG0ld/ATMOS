@@ -23,9 +23,13 @@ describe("AtmospherePage", () => {
       screen.getByRole("heading", { name: "Rainy Apartment" }),
     ).toBeInTheDocument();
     expect(screen.getByText(/22:07|10:07/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "ATMOS — Home" })).toHaveAttribute(
+      "href",
+      "/",
+    );
     expect(
-      screen.getByRole("link", { name: "Back to atmospheres" }),
-    ).toHaveAttribute("href", "/");
+      screen.queryByRole("link", { name: "Back to atmospheres" }),
+    ).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Create a mix" })).toHaveAttribute(
       "href",
       "/compose?scene=rainy-apartment",

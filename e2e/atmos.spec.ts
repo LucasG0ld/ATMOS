@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 
 import { PREFERENCES_STORAGE_KEY } from "../src/features/preferences/preferences-storage";
 
@@ -27,6 +27,24 @@ async function expectNoSeriousAccessibilityViolation(page: Page) {
     ({ impact }) => impact === "critical" || impact === "serious",
   );
   expect(blockingViolations).toEqual([]);
+}
+
+async function expectNoHorizontalClipping(page: Page, locator: Locator) {
+  const viewportWidth = page.viewportSize()?.width;
+  expect(viewportWidth).toBeDefined();
+
+  const boxes = await locator.evaluateAll((elements) =>
+    elements.map((element) => {
+      const { left, right } = element.getBoundingClientRect();
+      return { left, right };
+    }),
+  );
+
+  expect(boxes.length).toBeGreaterThan(0);
+  for (const box of boxes) {
+    expect(box.left).toBeGreaterThanOrEqual(-1);
+    expect(box.right).toBeLessThanOrEqual((viewportWidth ?? 0) + 1);
+  }
 }
 
 test("critical journey defers audio and remains recoverable", async ({
@@ -216,7 +234,7 @@ test("favorites and volumes persist locally and reset to catalogue defaults", as
       name: "Remove from favorites",
     }),
   ).toHaveAttribute("aria-pressed", "true");
-  await page.getByRole("link", { name: "Back to atmospheres" }).click();
+  await page.getByRole("link", { name: "ATMOS — Home" }).click();
   const rainyLink = page.locator('[data-atmosphere-link="rainy-apartment"]');
   await expect(rainyLink).toBeVisible();
   await expect(rainyLink.getByText("Saved")).toBeVisible();
@@ -382,11 +400,11 @@ test("Focus Mode keeps essentials, expires the timer and restores focus", async 
   await expectNoSeriousAccessibilityViolation(page);
 
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("button", { name: /Timer ·/ })).toBeFocused();
-  await page.keyboard.press("Tab");
   await expect(
     page.getByRole("button", { name: "Play Rainy Apartment" }),
   ).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: /Timer ·/ })).toBeFocused();
 
   await page.clock.fastForward("15:00");
   await expect(page.locator('p[role="status"]')).toHaveText("Timer finished.");
@@ -586,11 +604,12 @@ test("keyboard order follows the visual reading order", async ({
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Preferences" })).toBeFocused();
   await page.keyboard.press("Tab");
-  await expect(
-    page.getByRole("link", { name: "Back to atmospheres" }),
-  ).toBeFocused();
-  await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "Create a mix" })).toBeFocused();
+
+  await page.keyboard.press("Tab");
+  await expect(
+    page.getByRole("button", { name: "Play Rainy Apartment" }),
+  ).toBeFocused();
 
   for (const name of ["Rain", "Window Rain", "Distant Thunder"]) {
     await page.keyboard.press("Tab");
@@ -608,10 +627,6 @@ test("keyboard order follows the visual reading order", async ({
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("button", { name: "Focus", exact: true }),
-  ).toBeFocused();
-  await page.keyboard.press("Tab");
-  await expect(
-    page.getByRole("button", { name: "Play Rainy Apartment" }),
   ).toBeFocused();
 });
 
@@ -943,6 +958,58 @@ test("home and player have no serious automated accessibility violation", async 
   }
 });
 
+test("validated design baselines reflow at a desktop 200 percent equivalent", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 720, height: 450 });
+  await page.emulateMedia({ contrast: "more", reducedMotion: "reduce" });
+
+  const expectDocumentToFit = async () => {
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth <=
+          document.documentElement.clientWidth,
+      ),
+    ).toBe(true);
+  };
+
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", {
+      name: "What atmosphere do you need today?",
+    }),
+  ).toBeVisible();
+  await expectDocumentToFit();
+
+  await page.goto("/atmosphere/rainy-apartment");
+  await expect(
+    page.getByRole("button", { name: "Play Rainy Apartment" }),
+  ).toBeVisible();
+  await expectDocumentToFit();
+  await page.getByRole("button", { name: "Timer" }).click();
+  const timerDialog = page.getByRole("dialog", { name: "Set a timer" });
+  await expectNoHorizontalClipping(page, timerDialog);
+  await expectNoSeriousAccessibilityViolation(page);
+  await page.keyboard.press("Escape");
+
+  await page.goto("/compose?scene=rainy-apartment");
+  await expect(
+    page.getByRole("heading", { name: "Untitled mix" }),
+  ).toBeVisible();
+  await expectDocumentToFit();
+  await page.getByRole("button", { name: "Save mix" }).click();
+  const nameDialog = page.getByRole("dialog", { name: "Name your mix" });
+  await expectNoHorizontalClipping(page, nameDialog);
+  await expectNoSeriousAccessibilityViolation(page);
+  await page.keyboard.press("Escape");
+
+  await page.getByRole("button", { name: "Add sound" }).click();
+  const libraryDialog = page.getByRole("dialog", { name: "Add a sound" });
+  await expectNoHorizontalClipping(page, libraryDialog);
+  await expectNoSeriousAccessibilityViolation(page);
+});
+
 test("catalog and player remain usable at narrow width with reduced motion", async ({
   page,
 }) => {
@@ -953,20 +1020,79 @@ test("catalog and player remain usable at narrow width with reduced motion", asy
   await expect(
     page.getByRole("navigation", { name: "Atmospheres" }).getByRole("link"),
   ).toHaveCount(4);
-  expect(
-    await page.evaluate(
-      () =>
-        document.documentElement.scrollWidth <=
-        document.documentElement.clientWidth,
-    ),
-  ).toBe(true);
+  const assertHomeFitsViewport = async () => {
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth <=
+          document.documentElement.clientWidth,
+      ),
+    ).toBe(true);
+    await expect(page.getByText("01", { exact: true })).toBeVisible();
+    await expect(
+      page.getByText("Rain on glass, city lights within.", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(
+        "A quiet evening while the city disappears behind the rain.",
+        { exact: true },
+      ),
+    ).toBeHidden();
+    for (const locator of [
+      page.locator("header"),
+      page.getByRole("heading", {
+        name: "What atmosphere do you need today?",
+      }),
+      page.getByRole("navigation", { name: "Atmospheres" }).getByRole("link"),
+    ]) {
+      await expectNoHorizontalClipping(page, locator);
+    }
+  };
 
+  await assertHomeFitsViewport();
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.reload();
+  await assertHomeFitsViewport();
+
+  await page.setViewportSize({ width: 320, height: 568 });
   await page.goto("/atmosphere/rainy-apartment");
 
   await expect(
     page.getByRole("heading", { name: "Rainy Apartment" }),
   ).toBeVisible();
   await expect(page.getByRole("button", { name: /Play/ })).toBeVisible();
+
+  const assertPlayerFitsViewport = async () => {
+    for (const locator of [
+      page.locator("header"),
+      page.locator('section[aria-labelledby="atmosphere-title"]'),
+      page.getByRole("heading", { name: "Rainy Apartment" }),
+      page.getByText(
+        "A quiet evening while the city disappears behind the rain.",
+        { exact: true },
+      ),
+      page.getByRole("button", { name: "Atmospheres" }),
+      page.getByRole("button", { name: "Preferences" }),
+      page.getByRole("slider"),
+      page.getByRole("button", { name: "Play Rainy Apartment" }),
+    ]) {
+      await expectNoHorizontalClipping(page, locator);
+    }
+  };
+
+  await assertPlayerFitsViewport();
+  await page.getByRole("button", { name: "Timer" }).click();
+  const narrowTimerDialog = page.getByRole("dialog", { name: "Set a timer" });
+  await expect(narrowTimerDialog).toBeVisible();
+  await expectNoHorizontalClipping(page, narrowTimerDialog);
+  await expect(
+    narrowTimerDialog.getByRole("button", { name: /minutes/ }),
+  ).toHaveCount(5);
+  await page.keyboard.press("Escape");
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.reload();
+  await assertPlayerFitsViewport();
+
   await page.getByRole("button", { name: "Focus", exact: true }).click();
   await expect(page.getByRole("button", { name: "Exit focus" })).toBeVisible();
   const hasHorizontalOverflow = await page.evaluate(
@@ -980,13 +1106,54 @@ test("catalog and player remain usable at narrow width with reduced motion", asy
   await expect(
     page.getByRole("heading", { name: "Untitled mix" }),
   ).toBeVisible();
+  const assertComposerFitsViewport = async () => {
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth <=
+          document.documentElement.clientWidth,
+      ),
+    ).toBe(true);
+    for (const locator of [
+      page.locator("header"),
+      page.getByRole("heading", { name: "Untitled mix" }),
+      page.getByRole("button", { name: "Play Untitled mix" }),
+      page.getByRole("slider"),
+      page.getByRole("button", { name: "Add sound" }),
+      page.getByRole("button", { name: "Save mix" }),
+    ]) {
+      await expectNoHorizontalClipping(page, locator);
+    }
+  };
+
+  await assertComposerFitsViewport();
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.reload();
+  await assertComposerFitsViewport();
+
+  await page.getByRole("button", { name: "Save mix" }).click();
+  const narrowNameDialog = page.getByRole("dialog", { name: "Name your mix" });
+  await expectNoHorizontalClipping(page, narrowNameDialog);
   expect(
-    await page.evaluate(
-      () =>
-        document.documentElement.scrollWidth <=
-        document.documentElement.clientWidth,
+    await narrowNameDialog.evaluate(
+      (element) => element.getBoundingClientRect().left,
     ),
-  ).toBe(true);
+  ).toBeGreaterThanOrEqual(15);
+  await page.keyboard.press("Escape");
+
+  await page.getByRole("button", { name: "Add sound" }).click();
+  const narrowLibraryDialog = page.getByRole("dialog", {
+    name: "Add a sound",
+  });
+  await expectNoHorizontalClipping(page, narrowLibraryDialog);
+  const libraryGeometry = await narrowLibraryDialog.evaluate((element) => {
+    const { left, right } = element.getBoundingClientRect();
+    return { left, right, viewportWidth: document.documentElement.clientWidth };
+  });
+  expect(libraryGeometry.left).toBeLessThanOrEqual(1);
+  expect(libraryGeometry.right).toBeGreaterThanOrEqual(
+    libraryGeometry.viewportWidth - 1,
+  );
 });
 
 test("visual composer builds a four-sound draft without loading audio", async ({
@@ -1005,9 +1172,8 @@ test("visual composer builds a four-sound draft without loading audio", async ({
     page.getByRole("heading", { name: "Untitled mix" }),
   ).toBeVisible();
   await expect(page.getByRole("slider")).toHaveCount(3);
-  await expect(
-    page.getByRole("slider", { name: "Forest Air from Deep Forest" }),
-  ).toBeVisible();
+  await expect(page.getByRole("slider", { name: "Forest Air" })).toBeVisible();
+  await expect(page.locator("[data-layer-origin]")).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "Play Untitled mix" }),
   ).toBeEnabled();
@@ -1018,6 +1184,7 @@ test("visual composer builds a four-sound draft without loading audio", async ({
     .getByRole("button", { name: "Add Rain from Rainy Apartment" })
     .click();
   await expect(page.getByRole("slider")).toHaveCount(4);
+  await expect(page.locator("[data-layer-origin]")).toHaveCount(4);
   await expect(
     page.getByRole("button", { name: "Mix full · 4 sounds" }),
   ).toBeVisible();
@@ -1191,9 +1358,7 @@ test("a local mix survives reload, updates by stable ID and deletes safely", asy
     page.getByRole("button", { name: "Play Forest rest" }),
   ).toBeVisible();
 
-  await page
-    .getByRole("slider", { name: "Forest Air from Deep Forest" })
-    .fill("31");
+  await page.getByRole("slider", { name: "Forest Air" }).fill("31");
   await expect(
     page.getByText("Unsaved changes", { exact: true }),
   ).toBeVisible();

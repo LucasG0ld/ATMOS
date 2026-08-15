@@ -7,6 +7,7 @@ export const rainyApartment = defineAtmosphere({
   name: "Rainy Apartment",
   displayName: ["Rainy", "Apartment"],
   description: "A quiet evening while the city disappears behind the rain.",
+  catalogueDescription: "Rain on glass, city lights within.",
   theme: {
     background: "#0d141c",
     foreground: "#f4f0e8",

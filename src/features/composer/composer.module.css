@@ -22,7 +22,7 @@
 .headerActions {
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: var(--space-5);
+  gap: var(--space-6);
 }
 
 .mixesButton {
@@ -60,7 +60,7 @@
   align-self: center;
   display: grid;
   grid-template-columns: minmax(18rem, 1fr) minmax(20rem, 28rem);
-  gap: clamp(3rem, 8vw, 9rem);
+  gap: clamp(3rem, 6vw, 6rem);
   width: min(100%, 82rem);
   margin-inline: auto;
 }
@@ -127,8 +127,8 @@
 
 .sessionActions {
   flex-wrap: wrap;
-  gap: var(--space-5);
-  margin-top: var(--space-5);
+  gap: var(--space-6);
+  margin-top: var(--space-6);
 }
 
 .focusButton {
@@ -194,13 +194,13 @@
 }
 
 .layer {
-  padding-block: var(--space-4);
+  padding-block: var(--space-3);
   border-bottom: 1px solid
     color-mix(in srgb, var(--atmos-muted) 24%, transparent);
 }
 
 .origin {
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-2);
 }
 
 .layerControls {
@@ -222,7 +222,7 @@
   padding: 0;
   color: var(--atmos-muted);
   cursor: pointer;
-  background: transparent;
+  background: color-mix(in srgb, var(--atmos-surface) 52%, transparent);
   border: 0;
   border-radius: 999px;
   transition:
@@ -246,8 +246,9 @@
 }
 
 .actions {
+  flex-wrap: wrap;
   justify-content: space-between;
-  margin-top: var(--space-6);
+  margin-top: var(--space-4);
   gap: var(--space-4);
 }
 
@@ -266,12 +267,31 @@
 }
 
 .saveButton {
+  padding-inline: var(--space-4);
   color: var(--atmos-accent);
+  border: 1px solid color-mix(in srgb, var(--atmos-accent) 52%, transparent);
+  border-radius: 999px;
+  transition:
+    color var(--duration-control) var(--ease-out),
+    background-color var(--duration-control) var(--ease-out),
+    border-color var(--duration-control) var(--ease-out);
+}
+
+.saveButton:is(:hover, :focus-visible) {
+  color: var(--atmos-background);
+  background: var(--atmos-accent);
+  border-color: var(--atmos-accent);
 }
 
 .saveButton:disabled {
   cursor: not-allowed;
   opacity: 0.55;
+}
+
+.saveButton:disabled:hover {
+  color: var(--atmos-accent);
+  background: transparent;
+  border-color: color-mix(in srgb, var(--atmos-accent) 52%, transparent);
 }
 
 .announcement {
@@ -283,11 +303,16 @@
   width: min(calc(100% - 2rem), 42rem);
   max-height: min(46rem, calc(100dvh - 2rem));
   padding: 0;
+  margin: auto;
   color: var(--atmos-foreground);
   background: color-mix(in srgb, var(--atmos-background) 94%, black);
   border: 1px solid color-mix(in srgb, var(--atmos-muted) 32%, transparent);
   border-radius: var(--radius-medium);
   box-shadow: 0 2rem 6rem rgb(0 0 0 / 45%);
+}
+
+.compactDialog {
+  width: min(calc(100% - 2rem), 34rem);
 }
 
 .dialog::backdrop {
@@ -302,7 +327,7 @@
 }
 
 .compactPanel {
-  width: min(100%, 34rem);
+  width: 100%;
 }
 
 .dialogHeader {
@@ -411,7 +436,7 @@
 
 .dialogActions {
   justify-content: flex-end;
-  gap: var(--space-5);
+  gap: var(--space-6);
   margin-top: var(--space-8);
 }
 
@@ -426,7 +451,7 @@
 }
 
 .primaryButton {
-  padding-inline: var(--space-5);
+  padding-inline: var(--space-6);
   color: var(--atmos-background);
   background: var(--atmos-foreground);
   border-radius: 999px;
@@ -439,8 +464,20 @@
 }
 
 .dangerButton {
-  padding: 0;
+  padding-inline: var(--space-6);
   color: var(--atmos-foreground);
+  border: 1px solid color-mix(in srgb, var(--atmos-foreground) 38%, transparent);
+  border-radius: 999px;
+  transition:
+    color var(--duration-control) var(--ease-out),
+    background-color var(--duration-control) var(--ease-out),
+    border-color var(--duration-control) var(--ease-out);
+}
+
+.dangerButton:is(:hover, :focus-visible) {
+  color: var(--atmos-background);
+  background: var(--atmos-foreground);
+  border-color: var(--atmos-foreground);
 }
 
 .savedMixList {
@@ -453,9 +490,9 @@
 .savedMix {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--space-5);
+  gap: var(--space-6);
   align-items: center;
-  padding-block: var(--space-5);
+  padding-block: var(--space-6);
   border-bottom: 1px solid
     color-mix(in srgb, var(--atmos-muted) 24%, transparent);
 }
@@ -483,7 +520,7 @@
   .stage {
     align-self: end;
     grid-template-columns: 1fr;
-    gap: var(--space-12);
+    gap: var(--space-8);
   }
 
   .title {
@@ -491,6 +528,11 @@
   }
 
   .dialog {
+    width: calc(100% - var(--safe-left) - var(--safe-right));
+    max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom));
+  }
+
+  .expansiveDialog {
     width: 100%;
     max-width: none;
     max-height: 100dvh;
@@ -499,7 +541,7 @@
     border-radius: 0;
   }
 
-  .dialogPanel {
+  .expansiveDialog .dialogPanel {
     min-height: 100dvh;
     padding-block: var(--safe-top) var(--safe-bottom);
     padding-inline: var(--safe-left) var(--safe-right);
@@ -519,11 +561,6 @@
 
   .backLink span {
     max-width: 7rem;
-  }
-
-  .actions {
-    align-items: flex-start;
-    flex-direction: column;
   }
 
   .savedMix {
@@ -548,7 +585,9 @@
 @media (prefers-reduced-motion: reduce) {
   .backLink,
   .removeButton,
-  .closeButton {
+  .closeButton,
+  .saveButton,
+  .dangerButton {
     transition-duration: 0ms;
   }
 

@@ -8,6 +8,7 @@ export const deepForest = defineAtmosphere({
   displayName: ["Deep", "Forest"],
   description:
     "Cool air, moving leaves, and a path that seems to continue beyond the trees.",
+  catalogueDescription: "Cool air, leaves, and a distant stream.",
   theme: {
     background: "#0d1711",
     foreground: "#eef2e8",

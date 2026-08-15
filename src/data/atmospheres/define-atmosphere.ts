@@ -27,6 +27,14 @@ export function defineAtmosphere<const T extends Atmosphere>(
     atmosphere.description.trim().length > 0,
     "description cannot be empty",
   );
+  assert(
+    atmosphere.catalogueDescription.trim().length > 0,
+    "catalogue description cannot be empty",
+  );
+  assert(
+    atmosphere.catalogueDescription.length <= 64,
+    "catalogue description must not exceed 64 characters",
+  );
 
   for (const [role, color] of Object.entries(atmosphere.theme)) {
     assert(colorPattern.test(color), `invalid ${role} color "${color}"`);

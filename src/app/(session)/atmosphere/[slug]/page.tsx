@@ -1,4 +1,3 @@
-import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -67,14 +66,6 @@ export default async function AtmospherePage({ params }: AtmospherePageProps) {
                   currentSlug={atmosphere.slug}
                 />
                 <PreferencesDialog />
-                <Link
-                  aria-label="Back to atmospheres"
-                  className={`text-label ${styles.backLink}`}
-                  href="/"
-                >
-                  <ArrowLeft aria-hidden="true" size={16} />
-                  <span className={styles.backLabel}>Back</span>
-                </Link>
               </div>
             </header>
           </FocusModeSecondary>

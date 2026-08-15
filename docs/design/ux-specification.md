@@ -46,8 +46,9 @@ La salutation rend d’abord le texte neutre `Hello.` côté serveur et au premi
 ## Parcours 2 — Ajuster et écouter
 
 1. Le player affiche d’abord le contexte : heure, titre, description.
-2. Les trois sons et le contrôle principal apparaissent dans le même ordre visuel et clavier.
-3. L’utilisateur peut régler une valeur avant de lancer l’audio.
+2. Play/Pause précède les trois sons dans le même ordre visuel et clavier.
+3. L’utilisateur peut lancer immédiatement l’ambiance ou régler une valeur avant
+   de lancer l’audio.
 4. Play déclenche l’initialisation audio après le geste explicite.
 5. Pause réduit progressivement le master ; Resume revient aux valeurs précédentes.
 
@@ -59,16 +60,20 @@ Une valeur de couche à zéro signifie muet pour cette couche sans la confondre 
 
 - Canvas plein écran avec background couvrant.
 - Wordmark/navigation dans la zone supérieure.
-- Horloge, titre et description dans une zone éditoriale dominante.
-- Réglages regroupés dans une colonne légère, sans carte opaque massive.
-- Contrôle principal proche des réglages.
+- Titre et description dans une zone éditoriale dominante ; horloge informative
+  mais secondaire.
+- Contrôle principal plein au début de la colonne d'écoute.
+- Réglages regroupés après Play dans une colonne légère, sans carte opaque massive.
 - Espace négatif conservé entre contexte et contrôles.
 
 ### Mobile
 
 - Hauteur minimum fondée sur `100dvh`, sans supposer une hauteur fixe.
 - Contenu critique dans la zone sûre ; navigation et play facilement atteignables.
-- Réglages en bloc inférieur intégré ou panneau léger si nécessaire, jamais cachés par défaut dans le MVP.
+- Play avant les réglages afin de permettre un démarrage immédiat.
+- Réglages en bloc inférieur intégré, jamais cachés par défaut.
+- Le wordmark retourne à l'accueil ; `Atmospheres` permet le changement direct
+  de scène sans ajouter un second lien Back.
 - Défilement vertical autorisé sur petits écrans et au zoom ; aucune information essentielle ne doit être coupée.
 
 Les breakpoints sont choisis selon le contenu, pas selon un appareil particulier. Les états de référence à vérifier sont 320 px, 375 px, 768 px, 1024 px et 1440 px, portrait et paysage lorsque pertinent.

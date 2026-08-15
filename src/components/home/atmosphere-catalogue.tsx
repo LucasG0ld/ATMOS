@@ -147,6 +147,11 @@ export function AtmosphereCatalogue({ atmospheres }: AtmosphereCatalogueProps) {
                       <span className={`text-body ${styles.description}`}>
                         {atmosphere.description}
                       </span>
+                      <span
+                        className={`text-body ${styles.catalogueDescription}`}
+                      >
+                        {atmosphere.catalogueDescription}
+                      </span>
                     </span>
                     <ArrowUpRight aria-hidden="true" className={styles.icon} />
                   </Link>

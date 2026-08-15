@@ -102,6 +102,25 @@ Lucide est la source unique initiale. Taille et épaisseur cohérentes ; chaque 
 - États hover, focus, pressé, disabled et loading distincts.
 - L’état focus n’est jamais supprimé sans remplacement visible.
 
+### Dialogues
+
+Conserver l'élément natif `dialog`, son backdrop modal, la fermeture par
+Échap et la restauration du focus. La profondeur suit trois formats :
+
+| Format         | Usage                                     | Comportement mobile          |
+| -------------- | ----------------------------------------- | ---------------------------- |
+| Court centré   | nommage, confirmation, suppression, reset | carte avec marges sûres      |
+| Panneau centré | Timer et Preferences                      | carte avec scène perceptible |
+| Étendu         | bibliothèque sonore et liste des mixes    | plein écran avec safe areas  |
+
+- Maintenir la hiérarchie titre, explication, contenu, actions.
+- Séparer clairement action secondaire et action principale ou destructive.
+- Réserver le plein écran aux contenus susceptibles de devenir longs.
+- Employer un fond dense, une bordure discrète et un flou limité ; désactiver
+  ce dernier avec `prefers-reduced-motion`.
+- Ne pas introduire de rouge systématique : le libellé et la hiérarchie doivent
+  rendre la conséquence explicite sans dramatisation.
+
 ## Mouvement
 
 Tokens indicatifs :

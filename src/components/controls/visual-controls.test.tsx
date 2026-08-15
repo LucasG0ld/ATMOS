@@ -203,10 +203,14 @@ describe("VisualControls", () => {
     ).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("keeps every control in a natural keyboard order", async () => {
+  it("puts playback before adjustments in the natural keyboard order", async () => {
     const user = userEvent.setup();
     renderControls();
 
+    await user.tab();
+    expect(
+      screen.getByRole("button", { name: "Play Rainy Apartment" }),
+    ).toHaveFocus();
     await user.tab();
     expect(screen.getByRole("slider", { name: "Rain" })).toHaveFocus();
     await user.tab();
@@ -215,13 +219,9 @@ describe("VisualControls", () => {
     expect(
       screen.getByRole("slider", { name: "Distant Thunder" }),
     ).toHaveFocus();
-    await user.tab();
     expect(
       screen.queryByRole("button", { name: /favorites/ }),
     ).not.toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Play Rainy Apartment" }),
-    ).toHaveFocus();
   });
 
   it("loads and plays after the explicit user action, then pauses", async () => {

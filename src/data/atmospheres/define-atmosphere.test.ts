@@ -21,6 +21,20 @@ describe("defineAtmosphere", () => {
     ).toThrow('Invalid atmosphere: invalid slug "Rainy Apartment"');
   });
 
+  it("requires a concise catalogue description", () => {
+    expect(() =>
+      defineAtmosphere({ ...rainyApartment, catalogueDescription: "" }),
+    ).toThrow("Invalid atmosphere: catalogue description cannot be empty");
+    expect(() =>
+      defineAtmosphere({
+        ...rainyApartment,
+        catalogueDescription: "A".repeat(65),
+      }),
+    ).toThrow(
+      "Invalid atmosphere: catalogue description must not exceed 64 characters",
+    );
+  });
+
   it("rejects duplicate sound identifiers", () => {
     expect(() =>
       defineAtmosphere({

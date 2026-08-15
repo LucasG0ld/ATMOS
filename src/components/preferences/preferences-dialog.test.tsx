@@ -70,6 +70,9 @@ describe("PreferencesDialog", () => {
     expect(adapter.reset).toHaveBeenCalledTimes(1);
     expect(screen.getByText("Nothing saved yet")).toBeVisible();
     expect(screen.getByText("Saved preferences reset.")).toBeVisible();
+    expect(
+      screen.queryByRole("button", { name: "Reset saved preferences" }),
+    ).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Close preferences" }));
     expect(trigger).toHaveFocus();
